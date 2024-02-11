@@ -1,9 +1,14 @@
+import javax.swing.JFrame;
 
 public class mainMenu {
-
+	
+	static JFrame frame;
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		mainMenu m = new mainMenu(); //calls constructer
+	}
+	
+	public mainMenu(){
+		frame = new JFrame();
 	}
 
 }
