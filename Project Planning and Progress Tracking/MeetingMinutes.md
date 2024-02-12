@@ -15,3 +15,9 @@
 - Met the customer and heard her requests
 - Discussed what we could do by the first delivery
 - Provided estimate delivery time
+
+## Feb 10th
+- Meeting over discord to discuss designation of work.
+- Finalized user stories and software used to diagram work 
+- Created User Story Cards
+- Organizing potential classes needed for Iteration 0,1. 
