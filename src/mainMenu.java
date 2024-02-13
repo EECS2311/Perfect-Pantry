@@ -71,6 +71,12 @@ public class mainMenu implements ActionListener, ComponentListener{
 		
 		
 	}
+	
+	private void addNewContainer() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	@Override
 	public void componentResized(ComponentEvent e) {
@@ -100,6 +106,9 @@ public class mainMenu implements ActionListener, ComponentListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		if (e.getSource() == addNewContainerButton) {
+			addNewContainer();
+		}
 		
 	}
 
