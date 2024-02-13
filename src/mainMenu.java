@@ -8,6 +8,7 @@ public class mainMenu {
 	
 	static JFrame frame;
 	private JPanel mainMenuPanel;
+	private JPanel titlePanel;
 	
 	
 	public static void main(String[] args) {
@@ -32,6 +33,12 @@ public class mainMenu {
 		mainMenuPanel.setLayout(null);
 		frame.getContentPane().add(mainMenuPanel);
 		
+		//Initialize TitlePanel 
+		titlePanel = new JPanel();
+		titlePanel.setSize(800, 90);
+		titlePanel.setLocation(0, 0);
+		titlePanel.setBackground(new Color (245, 223, 162));
+		mainMenuPanel.add(titlePanel);
 		
 		
 		
