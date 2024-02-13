@@ -83,7 +83,9 @@ public class mainMenu implements ActionListener, ComponentListener{
 	private void addNewContainer() {
 		// TODO Auto-generated method stub
 		 String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
-		 
+		 if(nameOfContainer != null) {
+			 listOfContainers.add(new perfectPantryContainer(nameOfContainer));
+		 }
 	}
 
 
