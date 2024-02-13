@@ -115,9 +115,8 @@ public class mainMenu implements ActionListener, ComponentListener{
 				containerButtonsPanel.add(b);
 			}
 		}
-		
 		containerButtonsPanel.revalidate();
-		//containerButtonsPanel.repaint();
+
 	}
 
 
