@@ -21,6 +21,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 	private JLabel titleLabel;
 	private JPanel mainMenuButtonsPanel;
 	private JButton addNewContainerButton;
+	private JPanel containerButtonsPanel;
 	
 	private ArrayList<perfectPantryContainer> listOfContainers;
 
@@ -51,7 +52,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 		titlePanel = new JPanel();
 		titlePanel.setSize(800, 90);
 		titlePanel.setLocation(0, 0);
-		titlePanel.setBackground(new Color (245, 223, 162));
+		titlePanel.setBackground(new Color (255, 223, 162));
 		mainMenuPanel.add(titlePanel);
 		
 		//Initialize titleLabel
@@ -74,8 +75,12 @@ public class mainMenu implements ActionListener, ComponentListener{
 		addNewContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 		addNewContainerButton.addActionListener(this);
 		mainMenuButtonsPanel.add(addNewContainerButton);
-
 		
+		//initialize containerButtonsPanel
+		containerButtonsPanel = new JPanel();
+		containerButtonsPanel.setBounds(0, 90, frame.getWidth(), frame.getHeight() - 120);
+		containerButtonsPanel.setBackground(new Color(245, 213, 152));
+		mainMenuPanel.add(containerButtonsPanel);
 		
 		
 	}
