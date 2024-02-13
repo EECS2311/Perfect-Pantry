@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,6 +21,9 @@ public class mainMenu implements ActionListener, ComponentListener{
 	private JLabel titleLabel;
 	private JPanel mainMenuButtonsPanel;
 	private JButton addNewContainerButton;
+	
+	private ArrayList<perfectPantryContainer> listOfContainers;
+
 	
 	public static void main(String[] args) {
 		mainMenu m = new mainMenu(); //calls constructer
@@ -62,6 +66,9 @@ public class mainMenu implements ActionListener, ComponentListener{
 		mainMenuPanel.add(mainMenuButtonsPanel);
 		
 		//Components of mainMenuButtonsPanel
+		//Initilize listOfContainers
+		listOfContainers = new ArrayList<perfectPantryContainer>();
+
 		//initialize addNewContainerButton
 		addNewContainerButton = new JButton("Add New Container");
 		addNewContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
