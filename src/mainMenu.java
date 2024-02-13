@@ -1,7 +1,9 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class mainMenu {
@@ -9,6 +11,7 @@ public class mainMenu {
 	static JFrame frame;
 	private JPanel mainMenuPanel;
 	private JPanel titlePanel;
+	private JLabel titleLabel;
 	
 	
 	public static void main(String[] args) {
@@ -39,6 +42,11 @@ public class mainMenu {
 		titlePanel.setLocation(0, 0);
 		titlePanel.setBackground(new Color (245, 223, 162));
 		mainMenuPanel.add(titlePanel);
+		
+		//Initialize titleLabel
+		titleLabel = new JLabel("PERFECT PANTRY");
+		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
+		titlePanel.add(titleLabel);
 		
 		
 		
