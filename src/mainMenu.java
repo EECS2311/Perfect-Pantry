@@ -1,12 +1,16 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class mainMenu {
+public class mainMenu implements ActionListener, ComponentListener{
 	
 	static JFrame frame;
 	private JPanel mainMenuPanel;
@@ -26,7 +30,7 @@ public class mainMenu {
 		frame.setVisible(true);
 		frame.setMinimumSize(new Dimension(800, 800));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
-		
+		frame.addComponentListener(this);
 		initializeMainMenuGUI();
 		
 	}
@@ -57,6 +61,37 @@ public class mainMenu {
 		
 		
 		
+		
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		titlePanel.setSize(frame.getWidth(), 90);
+		mainMenuButtonsPanel.setBounds(0, frame.getHeight() - 120, frame.getWidth(), 120);
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 
