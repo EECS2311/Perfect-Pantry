@@ -12,6 +12,7 @@ public class mainMenu {
 	private JPanel mainMenuPanel;
 	private JPanel titlePanel;
 	private JLabel titleLabel;
+	private JPanel mainMenuButtonsPanel;
 	
 	
 	public static void main(String[] args) {
@@ -48,6 +49,11 @@ public class mainMenu {
 		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
 		titlePanel.add(titleLabel);
 		
+		//initialize mainMenuButtonsPanel 
+		mainMenuButtonsPanel = new JPanel();
+		mainMenuButtonsPanel.setBackground(new Color(192, 237, 203));
+		mainMenuButtonsPanel.setBounds(0, 680, 800, 90);
+		mainMenuPanel.add(mainMenuButtonsPanel);
 		
 		
 		
