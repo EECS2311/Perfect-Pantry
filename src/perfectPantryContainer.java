@@ -12,6 +12,11 @@ public class perfectPantryContainer {
 	public String getName() {
 		return this.name;
 	}
+
+	public void getGUI() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }
