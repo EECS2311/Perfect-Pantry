@@ -9,6 +9,7 @@ import java.awt.event.ComponentListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class mainMenu implements ActionListener, ComponentListener{
@@ -74,7 +75,8 @@ public class mainMenu implements ActionListener, ComponentListener{
 	
 	private void addNewContainer() {
 		// TODO Auto-generated method stub
-		
+		 String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
+		 
 	}
 
 
