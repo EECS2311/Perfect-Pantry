@@ -28,7 +28,8 @@ public class mainMenu implements ActionListener, ComponentListener{
 	//private ArrayList<perfectPantryContainer> listOfContainers;
 	//private ArrayList<JButton> listOfContainerButtons;
 	
-	private HashMap<perfectPantryContainer, JButton> containerMap;
+	//private HashMap<perfectPantryContainer, JButton> containerMap;
+	private HashMap<JButton, perfectPantryContainer> containerMap;
 
 	
 	public static void main(String[] args) {
@@ -73,7 +74,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 		
 		//Components of mainMenuButtonsPanel
 		//Initilize containerMap
-		containerMap = new HashMap<perfectPantryContainer, JButton>();
+		containerMap = new HashMap<JButton, perfectPantryContainer>();
 
 		//initialize addNewContainerButton
 		addNewContainerButton = new JButton("Add New Container");
@@ -101,7 +102,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 		 String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
 		 if(nameOfContainer != null) {
 			 JButton b = new JButton(nameOfContainer);
-			 containerMap.put(new perfectPantryContainer(nameOfContainer), b);
+			 containerMap.put(b, new perfectPantryContainer(nameOfContainer));
 			 
 			 b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 			 addContainerButtons();
@@ -111,7 +112,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 	
 	private void addContainerButtons() {
 		containerButtonsPanel.removeAll();
-		for(JButton b : containerMap.values()) {
+		for(JButton b : containerMap.keySet()) {
 			b.addActionListener(this);
 			containerButtonsPanel.add(b);
 		}
@@ -155,7 +156,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 			addNewContainer();
 		}
 		
-		for(JButton b : containerMap.values()) {
+		for(JButton b : containerMap.keySet()) {
 			if (e.getSource() == b) {
 				
 			}
