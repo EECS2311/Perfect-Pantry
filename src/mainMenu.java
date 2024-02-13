@@ -99,6 +99,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 		// TODO Auto-generated method stub
 		titlePanel.setSize(frame.getWidth(), 90);
 		mainMenuButtonsPanel.setBounds(0, frame.getHeight() - 120, frame.getWidth(), 120);
+		containerButtonsPanel.setBounds(0, 90, frame.getWidth(), frame.getHeight()-120);
 	}
 
 	@Override
