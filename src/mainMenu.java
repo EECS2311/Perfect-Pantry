@@ -158,7 +158,8 @@ public class mainMenu implements ActionListener, ComponentListener{
 		
 		for(JButton b : containerMap.keySet()) {
 			if (e.getSource() == b) {
-				
+				perfectPantryContainer c = containerMap.get(b);
+				c.getGUI();
 			}
 		}
 		
