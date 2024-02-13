@@ -135,7 +135,6 @@ public class mainMenu implements ActionListener, ComponentListener{
 	@Override
 	public void componentShown(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		addContainerButtons();
 		
 	}
 
