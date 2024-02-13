@@ -83,6 +83,8 @@ public class mainMenu implements ActionListener, ComponentListener{
 		mainMenuPanel.add(containerButtonsPanel);
 		
 		
+		mainMenuPanel.setVisible(true);
+		
 	}
 	
 	private void addNewContainer() {
