@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,7 +18,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 	private JPanel titlePanel;
 	private JLabel titleLabel;
 	private JPanel mainMenuButtonsPanel;
-	
+	private JButton addNewContainerButton;
 	
 	public static void main(String[] args) {
 		mainMenu m = new mainMenu(); //calls constructer
@@ -59,6 +60,13 @@ public class mainMenu implements ActionListener, ComponentListener{
 		mainMenuButtonsPanel.setBounds(0, 680, 800, 90);
 		mainMenuPanel.add(mainMenuButtonsPanel);
 		
+		//Components of mainMenuButtonsPanel
+		//initialize addNewContainerButton
+		addNewContainerButton = new JButton("Add New Container");
+		addNewContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
+		addNewContainerButton.addActionListener(this);
+		mainMenuButtonsPanel.add(addNewContainerButton);
+
 		
 		
 		
