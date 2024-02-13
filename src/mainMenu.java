@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,8 +25,10 @@ public class mainMenu implements ActionListener, ComponentListener{
 	private JButton addNewContainerButton;
 	private JPanel containerButtonsPanel;
 	
-	private ArrayList<perfectPantryContainer> listOfContainers;
-	private ArrayList<JButton> listOfContainerButtons;
+	//private ArrayList<perfectPantryContainer> listOfContainers;
+	//private ArrayList<JButton> listOfContainerButtons;
+	
+	private HashMap<perfectPantryContainer, JButton> container;
 
 	
 	public static void main(String[] args) {
@@ -70,7 +73,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 		
 		//Components of mainMenuButtonsPanel
 		//Initilize listOfContainers
-		listOfContainers = new ArrayList<perfectPantryContainer>();
+		container = new HashMap<perfectPantryContainer, JButton>();
 
 		//initialize addNewContainerButton
 		addNewContainerButton = new JButton("Add New Container");
@@ -83,7 +86,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 		containerButtonsPanel.setBounds(0, 90, frame.getWidth(), frame.getHeight() - 120);
 		containerButtonsPanel.setBackground(new Color(245, 213, 152));
 		containerButtonsPanel.setLayout(new FlowLayout());
-		listOfContainerButtons = new ArrayList<JButton>();
+		
 		addContainerButtons();
 		
 		mainMenuPanel.add(containerButtonsPanel);
@@ -97,9 +100,8 @@ public class mainMenu implements ActionListener, ComponentListener{
 		// TODO Auto-generated method stub
 		 String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
 		 if(nameOfContainer != null) {
-			 listOfContainers.add(new perfectPantryContainer(nameOfContainer));
 			 JButton b = new JButton(nameOfContainer);
-			 listOfContainerButtons.add(b);
+			 container.put(new perfectPantryContainer(nameOfContainer), b);
 			 
 			 b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 			 addContainerButtons();
@@ -109,12 +111,12 @@ public class mainMenu implements ActionListener, ComponentListener{
 	
 	private void addContainerButtons() {
 		containerButtonsPanel.removeAll();
-		if (listOfContainerButtons.size() != 0) {
-			for(JButton b : listOfContainerButtons) {
-				b.addActionListener(this);
-				containerButtonsPanel.add(b);
-			}
+		for(JButton b : container.values()) {
+			b.addActionListener(this);
+			containerButtonsPanel.add(b);
 		}
+		
+
 		containerButtonsPanel.revalidate();
 
 	}
@@ -151,6 +153,12 @@ public class mainMenu implements ActionListener, ComponentListener{
 		// TODO Auto-generated method stub
 		if (e.getSource() == addNewContainerButton) {
 			addNewContainer();
+		}
+		
+		for(JButton b : container.values()) {
+			if (e.getSource() == b) {
+				
+			}
 		}
 		
 	}
