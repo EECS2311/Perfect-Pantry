@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 	private JPanel containerButtonsPanel;
 	
 	private ArrayList<perfectPantryContainer> listOfContainers;
+	private ArrayList<JButton> listOfContainerButtons;
 
 	
 	public static void main(String[] args) {
@@ -80,6 +82,10 @@ public class mainMenu implements ActionListener, ComponentListener{
 		containerButtonsPanel = new JPanel();
 		containerButtonsPanel.setBounds(0, 90, frame.getWidth(), frame.getHeight() - 120);
 		containerButtonsPanel.setBackground(new Color(245, 213, 152));
+		containerButtonsPanel.setLayout(new FlowLayout());
+		listOfContainerButtons = new ArrayList<JButton>();
+		addContainerButtons();
+		
 		mainMenuPanel.add(containerButtonsPanel);
 		
 		
@@ -92,7 +98,23 @@ public class mainMenu implements ActionListener, ComponentListener{
 		 String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
 		 if(nameOfContainer != null) {
 			 listOfContainers.add(new perfectPantryContainer(nameOfContainer));
+			 JButton b = new JButton(nameOfContainer);
+			 listOfContainerButtons.add(b);
+			 
+			 b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
+			 addContainerButtons();
+
 		 }
+	}
+	
+	private void addContainerButtons() {
+		containerButtonsPanel.removeAll();
+		if (listOfContainerButtons.size() != 0) {
+			for(JButton b : listOfContainerButtons) {
+				b.addActionListener(this);
+				containerButtonsPanel.add(b);
+			}
+		}
 	}
 
 
@@ -113,6 +135,7 @@ public class mainMenu implements ActionListener, ComponentListener{
 	@Override
 	public void componentShown(ComponentEvent e) {
 		// TODO Auto-generated method stub
+		addContainerButtons();
 		
 	}
 
