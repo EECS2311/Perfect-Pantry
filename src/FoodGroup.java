@@ -1,9 +1,9 @@
 
 public enum FoodGroup implements Tag {
-    GRAINS("grains"),
+    GRAIN("grain"),
     PROTEIN("protein"),
-    VEGETABLES("vegetables"),
-    FRUITS("fruits"),
+    VEGETABLE("vegetable"),
+    FRUIT("fruit"),
     DAIRY("dairy");
 
     private final String displayName;
@@ -16,12 +16,4 @@ public enum FoodGroup implements Tag {
         return displayName;
     }
 
-    public static FoodGroup fromString(String text) {
-        for (FoodGroup b : FoodGroup.values()) {
-            if (b.displayName.equalsIgnoreCase(text)) {
-                return b;
-            }
-        }
-        throw new IllegalArgumentException("No constant with text " + text + " found");
-    }
 }

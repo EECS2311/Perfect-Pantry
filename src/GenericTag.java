@@ -1,5 +1,6 @@
 import java.util.Objects;
 
+
 public class GenericTag<T extends Tag> {
     private T tag;
 
@@ -7,8 +8,20 @@ public class GenericTag<T extends Tag> {
         this.tag = tag;
     }
 
+    public GenericTag(GenericTag<T>  tag) {
+        this(tag.getValue());
+    }
+
+
     public void setValue(T newValue) {
         this.tag = newValue;
+    }
+
+    public void setValue(GenericTag<T> newValue) {
+        // Ensure newValue is not null to prevent NullPointerException
+        if (newValue != null && newValue.getValue() != null) {
+            this.tag = newValue.getValue();
+        }
     }
 
     public T getValue() {
@@ -33,6 +46,4 @@ public class GenericTag<T extends Tag> {
         return Objects.hash(tag);
     }
 
-    // Static method workaround: Provide a method that works similarly to fromString
-    // This method will need to be implemented externally, possibly in a utility class or as a static method in the specific enum class
 }
