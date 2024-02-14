@@ -82,7 +82,7 @@ public class Home implements ActionListener, ComponentListener{
 		//Initialse mainMenuPanel
 		homePanel = new JPanel(); //will hold all the components of mainMenuGUI
 		homePanel.setLayout(null);
-		frame.getContentPane().add(homePanel); 
+		getFrame().getContentPane().add(homePanel); 
 		
 		//Initialize TitlePanel 
 		titlePanel = new JPanel();
@@ -114,7 +114,7 @@ public class Home implements ActionListener, ComponentListener{
 		
 		//initialize containerButtonsPanel
 		containerButtonsPanel = new JPanel();
-		containerButtonsPanel.setBounds(0, 90, frame.getWidth(), frame.getHeight() - 120);
+		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight() - 120);
 		containerButtonsPanel.setBackground(new Color(245, 213, 152));
 		containerButtonsPanel.setLayout(new FlowLayout());
 		addContainerButtons();
@@ -161,12 +161,16 @@ public class Home implements ActionListener, ComponentListener{
 	}
 
 
+	public static JFrame getFrame() {
+		return frame;
+	}
+
 	@Override
 	public void componentResized(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		titlePanel.setSize(frame.getWidth(), 90);
-		homeButtonsPanel.setBounds(0, frame.getHeight() - 120, frame.getWidth(), 120);
-		containerButtonsPanel.setBounds(0, 90, frame.getWidth(), frame.getHeight()-120);
+		titlePanel.setSize(getFrame().getWidth(), 90);
+		homeButtonsPanel.setBounds(0, getFrame().getHeight() - 120, getFrame().getWidth(), 120);
+		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight()-120);
 	}
 
 	@Override
