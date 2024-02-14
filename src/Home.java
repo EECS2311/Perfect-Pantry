@@ -47,6 +47,8 @@ public class Home implements ActionListener, ComponentListener{
 	 */
 	private JButton addNewContainerButton;
 	
+	private JButton editContainerButton;
+	
 	/**
 	 * Hold buttons pertaining to its containers
 	 */
@@ -112,6 +114,12 @@ public class Home implements ActionListener, ComponentListener{
 		addNewContainerButton.addActionListener(this);
 		homeButtonsPanel.add(addNewContainerButton);
 		
+		//Initialize EditContainerButton
+		editContainerButton = new JButton("Edit Containers");
+		editContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
+		editContainerButton.addActionListener(this);
+		homeButtonsPanel.add(editContainerButton);
+		
 		//initialize containerButtonsPanel
 		containerButtonsPanel = new JPanel();
 		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight() - 120);
@@ -173,6 +181,7 @@ public class Home implements ActionListener, ComponentListener{
 		titlePanel.setSize(getFrame().getWidth(), 90);
 		homeButtonsPanel.setBounds(0, getFrame().getHeight() - 120, getFrame().getWidth(), 120);
 		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight()-120);
+		frame.revalidate();
 	}
 
 	@Override
@@ -197,6 +206,10 @@ public class Home implements ActionListener, ComponentListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addNewContainerButton) {
 			addNewContainer();
+		}
+		
+		if (e.getSource() == editContainerButton) {
+			
 		}
 		
 		for(JButton b : containerMap.keySet()) {
