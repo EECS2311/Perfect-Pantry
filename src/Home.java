@@ -17,18 +17,44 @@ import javax.swing.JPanel;
 
 public class Home implements ActionListener, ComponentListener{
 	
+	/**
+	 * Frame window of the application
+	 */
 	static JFrame frame;
-	private JPanel mainMenuPanel;
+	
+	/**
+	 * home panel of the application, will hold all components pertaining to home screen
+	 */
+	private JPanel homePanel;
+	
+	/**
+	 * Title part of home screen
+	 */
 	private JPanel titlePanel;
+	
+	/**
+	 * Title name
+	 */
 	private JLabel titleLabel;
-	private JPanel mainMenuButtonsPanel;
+	
+	/**
+	 * Hold all buttons pertaining to the home screen
+	 */
+	private JPanel homeButtonsPanel;
+	
+	/**
+	 * Button that will add new container, apart of homeButtonsPanel
+	 */
 	private JButton addNewContainerButton;
+	
+	/**
+	 * Hold buttons pertaining to its containers
+	 */
 	private JPanel containerButtonsPanel;
 	
-	//private ArrayList<perfectPantryContainer> listOfContainers;
-	//private ArrayList<JButton> listOfContainerButtons;
-	
-	//private HashMap<perfectPantryContainer, JButton> containerMap;
+	/**
+	 * Map of button and its corresponding Container object
+	 */
 	private HashMap<JButton, Container> containerMap;
 
 	
@@ -37,29 +63,33 @@ public class Home implements ActionListener, ComponentListener{
 	}
 	
 	public Home(){
+		//Initialize frame
 		frame = new JFrame();
 		frame.setTitle("Perfect Pantry");
-		frame.setDefaultCloseOperation(3);
+		frame.setDefaultCloseOperation(3); //Close on exit
 		frame.setVisible(true);
-		frame.setMinimumSize(new Dimension(800, 800));
+		frame.setMinimumSize(new Dimension(800, 800)); //resizable with minimum size
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
 		frame.addComponentListener(this);
 		initializeHomeGUI();
 		
 	}
 	
+	/**
+	 * Initializes the GUI of the home screen
+	 */
 	public void initializeHomeGUI() {
 		//Initialse mainMenuPanel
-		mainMenuPanel = new JPanel(); //will hold all the components of mainMenuGUI
-		mainMenuPanel.setLayout(null);
-		frame.getContentPane().add(mainMenuPanel);
+		homePanel = new JPanel(); //will hold all the components of mainMenuGUI
+		homePanel.setLayout(null);
+		frame.getContentPane().add(homePanel); 
 		
 		//Initialize TitlePanel 
 		titlePanel = new JPanel();
 		titlePanel.setSize(800, 90);
 		titlePanel.setLocation(0, 0);
 		titlePanel.setBackground(new Color (255, 223, 162));
-		mainMenuPanel.add(titlePanel);
+		homePanel.add(titlePanel);
 		
 		//Initialize titleLabel
 		titleLabel = new JLabel("PERFECT PANTRY");
@@ -67,10 +97,10 @@ public class Home implements ActionListener, ComponentListener{
 		titlePanel.add(titleLabel);
 		
 		//initialize mainMenuButtonsPanel 
-		mainMenuButtonsPanel = new JPanel();
-		mainMenuButtonsPanel.setBackground(new Color(192, 237, 203));
-		mainMenuButtonsPanel.setBounds(0, 680, 800, 90);
-		mainMenuPanel.add(mainMenuButtonsPanel);
+		homeButtonsPanel = new JPanel();
+		homeButtonsPanel.setBackground(new Color(192, 237, 203));
+		homeButtonsPanel.setBounds(0, 680, 800, 90);
+		homePanel.add(homeButtonsPanel);
 		
 		//Components of mainMenuButtonsPanel
 		//Initilize containerMap
@@ -80,25 +110,24 @@ public class Home implements ActionListener, ComponentListener{
 		addNewContainerButton = new JButton("Add New Container");
 		addNewContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 		addNewContainerButton.addActionListener(this);
-		mainMenuButtonsPanel.add(addNewContainerButton);
+		homeButtonsPanel.add(addNewContainerButton);
 		
 		//initialize containerButtonsPanel
 		containerButtonsPanel = new JPanel();
 		containerButtonsPanel.setBounds(0, 90, frame.getWidth(), frame.getHeight() - 120);
 		containerButtonsPanel.setBackground(new Color(245, 213, 152));
 		containerButtonsPanel.setLayout(new FlowLayout());
-		
 		addContainerButtons();
 		
-		mainMenuPanel.add(containerButtonsPanel);
-		
-		
-		mainMenuPanel.setVisible(true);
+		homePanel.add(containerButtonsPanel);
+		homePanel.setVisible(true);
 		
 	}
 	
+	/**
+	 * Adds a new container object and a new button associated with it
+	 */
 	private void addNewContainer() {
-		// TODO Auto-generated method stub
 		 String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
 		 if(nameOfContainer != null) {
 			 JButton b = new JButton(nameOfContainer);
@@ -110,6 +139,9 @@ public class Home implements ActionListener, ComponentListener{
 		 }
 	}
 	
+	/**
+	 * Adds container objects as buttons on the home GUI
+	 */
 	private void addContainerButtons() {
 		containerButtonsPanel.removeAll();
 		for(JButton b : containerMap.keySet()) {
@@ -117,8 +149,7 @@ public class Home implements ActionListener, ComponentListener{
 			containerButtonsPanel.add(b);
 		}
 		
-
-		containerButtonsPanel.revalidate();
+		containerButtonsPanel.revalidate(); //refresh panel
 
 	}
 
@@ -127,7 +158,7 @@ public class Home implements ActionListener, ComponentListener{
 	public void componentResized(ComponentEvent e) {
 		// TODO Auto-generated method stub
 		titlePanel.setSize(frame.getWidth(), 90);
-		mainMenuButtonsPanel.setBounds(0, frame.getHeight() - 120, frame.getWidth(), 120);
+		homeButtonsPanel.setBounds(0, frame.getHeight() - 120, frame.getWidth(), 120);
 		containerButtonsPanel.setBounds(0, 90, frame.getWidth(), frame.getHeight()-120);
 	}
 
@@ -151,7 +182,6 @@ public class Home implements ActionListener, ComponentListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getSource() == addNewContainerButton) {
 			addNewContainer();
 		}
