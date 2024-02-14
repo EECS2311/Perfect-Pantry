@@ -15,6 +15,14 @@ public class Container {
 	public String getName() {
 		return this.name;
 	}
+	
+	/**
+	 * Add new items into the container
+	 */
+	public void addNewItem() {
+		
+		
+	}
 
 	public void getGUI() {
 		Home.setupHomeGUI(false);
