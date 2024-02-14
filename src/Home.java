@@ -25,7 +25,7 @@ public class Home implements ActionListener, ComponentListener{
 	/**
 	 * home panel of the application, will hold all components pertaining to home screen
 	 */
-	private JPanel homePanel;
+	private static JPanel homePanel;
 	
 	/**
 	 * Title part of home screen
@@ -127,8 +127,9 @@ public class Home implements ActionListener, ComponentListener{
 	/**
 	 * Sets up home gui
 	 */
-	public void setupHomeGUI() {
-		homePanel.setVisible(true);
+	public static void setupHomeGUI(boolean b) {
+		homePanel.setVisible(b);
+		Home.getFrame().revalidate();
 	}
 	
 	/**
@@ -138,7 +139,8 @@ public class Home implements ActionListener, ComponentListener{
 		 String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
 		 if(nameOfContainer != null) {
 			 JButton b = new JButton(nameOfContainer);
-			 containerMap.put(b, new Container(nameOfContainer));
+			 Container c = new Container(nameOfContainer);
+			 containerMap.put(b, c);
 			 
 			 b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 			 addContainerButtons();
