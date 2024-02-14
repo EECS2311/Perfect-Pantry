@@ -20,7 +20,7 @@ public class Home implements ActionListener, ComponentListener{
 	/**
 	 * Frame window of the application
 	 */
-	static JFrame frame;
+	private static JFrame frame;
 	
 	/**
 	 * home panel of the application, will hold all components pertaining to home screen
@@ -122,6 +122,13 @@ public class Home implements ActionListener, ComponentListener{
 		homePanel.add(containerButtonsPanel);
 		homePanel.setVisible(true);
 		
+	}
+	
+	/**
+	 * Sets up home gui
+	 */
+	public void setupHomeGUI() {
+		homePanel.setVisible(true);
 	}
 	
 	/**
