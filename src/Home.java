@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class mainMenu implements ActionListener, ComponentListener{
+public class Home implements ActionListener, ComponentListener{
 	
 	static JFrame frame;
 	private JPanel mainMenuPanel;
@@ -33,10 +33,10 @@ public class mainMenu implements ActionListener, ComponentListener{
 
 	
 	public static void main(String[] args) {
-		mainMenu m = new mainMenu(); //calls constructer
+		Home m = new Home(); //calls constructer
 	}
 	
-	public mainMenu(){
+	public Home(){
 		frame = new JFrame();
 		frame.setTitle("Perfect Pantry");
 		frame.setDefaultCloseOperation(3);
@@ -44,11 +44,11 @@ public class mainMenu implements ActionListener, ComponentListener{
 		frame.setMinimumSize(new Dimension(800, 800));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
 		frame.addComponentListener(this);
-		initializeMainMenuGUI();
+		initializeHomeGUI();
 		
 	}
 	
-	public void initializeMainMenuGUI() {
+	public void initializeHomeGUI() {
 		//Initialse mainMenuPanel
 		mainMenuPanel = new JPanel(); //will hold all the components of mainMenuGUI
 		mainMenuPanel.setLayout(null);
