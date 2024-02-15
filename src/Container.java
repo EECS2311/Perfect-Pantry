@@ -29,6 +29,11 @@ public class Container {
 		containerViewgui.setupContainerViewGUI(true);
 		
 	}
+
+	public void setName(String nameOfContainer) {
+		this.name = nameOfContainer;
+		
+	}
 	
 	
 }

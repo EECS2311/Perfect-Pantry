@@ -19,7 +19,7 @@ public class ContainerView implements ActionListener {
 			back = new JButton("Back");
 			back.addActionListener(this);
 			containerView.add(back);
-			Home.getFrame().add(containerView);
+			Home.frame.add(containerView);
 			hasclicked = true;
 		}
 		
