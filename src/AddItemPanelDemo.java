@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class AddItemPanelTest {
+public class AddItemPanelDemo {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Items Management");
