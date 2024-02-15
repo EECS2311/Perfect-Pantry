@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A JPanel subclass that provides a user interface for adding items with name, quantity, and expiration date.
@@ -12,7 +12,7 @@ public class AddItemPanel extends JPanel {
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
 
-    private ArrayList<Item> items;
+    private List<Item> items;
     private JTextArea displayArea;
 
     /**
@@ -21,7 +21,7 @@ public class AddItemPanel extends JPanel {
      * @param items The list where added items will be stored.
      * @param displayArea The text area where details of added items will be displayed.
      */
-    public AddItemPanel(ArrayList<Item> items, JTextArea displayArea) {
+    public AddItemPanel(List<Item> items, JTextArea displayArea) {
         this.items = items;
         this.displayArea = displayArea;
 
@@ -33,6 +33,8 @@ public class AddItemPanel extends JPanel {
         add(new JLabel("Expiration Date (dd-MMMM-yyyy):"));
         add(itemExpiryField);
         add(addButton);
+
+        updateDisplayArea();
 
         addButton.addActionListener(e -> addItem());
     }
