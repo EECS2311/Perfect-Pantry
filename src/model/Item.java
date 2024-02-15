@@ -1,3 +1,5 @@
+package model;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -105,7 +107,7 @@ public class Item implements Comparable<Item>{
      * @throws IllegalArgumentException if quantity is less than or equal to 0.
      */
     public static Item getInstance(String name, int quantity){
-        if(quantity <= 0) throw new IllegalArgumentException();
+        if(quantity <= 0) throw new IllegalArgumentException("Quantity cannot be 0 or less.");
         return new Item(name, quantity);
     }
 
@@ -256,7 +258,7 @@ public class Item implements Comparable<Item>{
      * @throws IllegalArgumentException if quantity is less than or equal to 0.
      */
     public void setQuantity(int quantity) {
-        if(quantity <= 0) throw new IllegalArgumentException();
+        if(quantity <= 0) throw new IllegalArgumentException("Quantity cannot be 0 or less.");
         this.quantity = quantity;
     }
 

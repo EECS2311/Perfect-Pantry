@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Represents the freshness levels of food items.
  */

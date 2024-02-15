@@ -1,6 +1,10 @@
+package ui;
+
+import model.Item;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+
 
 public class AddItemPanelDemo {
 
@@ -12,7 +16,7 @@ public class AddItemPanelDemo {
         displayArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(displayArea);
 
-        // Pass the items list and the display area to the AddItemPanel
+        // Pass the items list and the display area to the ui.AddItemPanel
         AddItemPanel addItemPanel = new AddItemPanel(items, displayArea);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

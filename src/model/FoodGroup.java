@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Represents the food group categories.
  */

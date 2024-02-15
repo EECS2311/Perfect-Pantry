@@ -1,3 +1,6 @@
+package ui;
+import model.Item;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ public class AddItemPanel extends JPanel {
     private JTextArea displayArea;
 
     /**
-     * Constructs a new AddItemPanel with references to a list of items and a display area.
+     * Constructs a new ui.AddItemPanel with references to a list of items and a display area.
      *
      * @param items The list where added items will be stored.
      * @param displayArea The text area where details of added items will be displayed.
