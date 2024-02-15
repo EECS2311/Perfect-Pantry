@@ -1,13 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class AddItemPanelDemo {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Items Management");
-        ArrayList<Item> items = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
 
         JTextArea displayArea = new JTextArea(10, 30);
         displayArea.setEditable(false);
