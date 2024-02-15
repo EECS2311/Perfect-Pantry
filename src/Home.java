@@ -47,8 +47,9 @@ public class Home implements ActionListener, ComponentListener{
 	 */
 	private JButton addNewContainerButton;
 	
-	private JButton editContainerButton;
+	private JButton editContainerNameButton;
 	
+	private JButton deleteContainerButton;
 	/**
 	 * Hold buttons pertaining to its containers
 	 */
@@ -58,6 +59,8 @@ public class Home implements ActionListener, ComponentListener{
 	 * Map of button and its corresponding Container object
 	 */
 	private HashMap<JButton, Container> containerMap;
+	
+	private int stage;
 
 	
 	public static void main(String[] args) {
@@ -65,6 +68,7 @@ public class Home implements ActionListener, ComponentListener{
 	}
 	
 	public Home(){
+		stage = 0;
 		//Initialize frame
 		frame = new JFrame();
 		frame.setTitle("Perfect Pantry");
@@ -114,12 +118,17 @@ public class Home implements ActionListener, ComponentListener{
 		addNewContainerButton.addActionListener(this);
 		homeButtonsPanel.add(addNewContainerButton);
 		
-		//Initialize EditContainerButton
-		editContainerButton = new JButton("Edit Containers");
-		editContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		editContainerButton.addActionListener(this);
-		homeButtonsPanel.add(editContainerButton);
+		//Initialize editContainerNameButton
+		editContainerNameButton = new JButton("Edit Container Name");
+		editContainerNameButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
+		editContainerNameButton.addActionListener(this);
+		homeButtonsPanel.add(editContainerNameButton);
 		
+		//Initialize EditContainerButton
+		deleteContainerButton = new JButton("Delete Container");
+		deleteContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
+		deleteContainerButton.addActionListener(this);
+		homeButtonsPanel.add(deleteContainerButton);
 		//initialize containerButtonsPanel
 		containerButtonsPanel = new JPanel();
 		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight() - 120);
@@ -130,6 +139,21 @@ public class Home implements ActionListener, ComponentListener{
 		homePanel.add(containerButtonsPanel);
 		homePanel.setVisible(true);
 		
+	}
+	
+	JPanel deleteContainersPanel;
+	JPanel editNameOfContainerPanel;
+	
+	
+	public void changeStageOfHome() {
+		if(stage == 0) {
+			homePanel.setVisible(true);
+			
+		}
+		
+		if (stage == 1) {
+			
+		}
 	}
 	
 	/**
@@ -208,7 +232,7 @@ public class Home implements ActionListener, ComponentListener{
 			addNewContainer();
 		}
 		
-		if (e.getSource() == editContainerButton) {
+		if (e.getSource() == editContainerNameButton) {
 			
 		}
 		
