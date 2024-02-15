@@ -50,7 +50,6 @@ public class Home implements ActionListener{
 
 	private JButton editContainerNameButton;
 
-	private JButton deleteContainerButton;
 	/**
 	 * Hold buttons pertaining to its containers
 	 */
@@ -61,7 +60,47 @@ public class Home implements ActionListener{
 	 */
 	private HashMap<JButton, Container> containerMap;
 
-	private int stage;
+	/**
+	 * Stages of the home screen
+	 * 0 = home
+	 * 1 = edit screen
+	 */
+	private int stage; 
+	
+	/**
+	 * main components of edit view
+	 */
+	private JPanel editPanel;
+	
+	/**
+	 * Hold components of editView
+	 */
+	private JPanel editNameOfContainerPanel;
+	
+	/**
+	 * Title panel of edit view
+	 */
+	private JPanel editNameOfContainerTitlePanel;
+	
+	/**
+	 * Text of edit view
+	 */
+	private JLabel editNameLabel;
+	
+	/**
+	 * Holds buttons of edit view
+	 */
+	private JPanel editGUIButtonsPanel;
+	
+	/**
+	 * Button to go back from edit screen to home screen
+	 */
+	private JButton editBackToHome;
+	
+	/**
+	 * Panel to hold container buttons
+	 */
+	private JPanel editContainerButtonsPanel = new JPanel();
 
 
 	public static void main(String[] args) {
@@ -75,10 +114,10 @@ public class Home implements ActionListener{
 		frame.setTitle("Perfect Pantry");
 		frame.setDefaultCloseOperation(3); //Close on exit
 		frame.setVisible(true);
-		frame.setResizable(false); //unable to resize
-		frame.setMinimumSize(new Dimension(800, 800)); //resizable with minimum size
+		frame.setResizable(false); //stop resize
+		frame.setMinimumSize(new Dimension(800, 800));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
-		//		frame.addComponentListener(this);
+
 		initializeHomeGUI();
 
 	}
@@ -126,11 +165,6 @@ public class Home implements ActionListener{
 		editContainerNameButton.addActionListener(this);
 		homeButtonsPanel.add(editContainerNameButton);
 
-		//Initialize EditContainerButton
-		deleteContainerButton = new JButton("Delete Container");
-		deleteContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		deleteContainerButton.addActionListener(this);
-		homeButtonsPanel.add(deleteContainerButton);
 		//initialize containerButtonsPanel
 		containerButtonsPanel = new JPanel();
 		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight() - 120);
@@ -143,19 +177,11 @@ public class Home implements ActionListener{
 
 	}
 
-	JPanel editPanel;
-	JPanel deleteContainersPanel;
-	JPanel editNameOfContainerPanel;
-	JPanel editNameOfContainerTitlePanel;
-	JLabel editNameLabel;
-	JPanel editGUIButtonsPanel;
-	JButton editBackToHome;
-	JPanel editContainerButtonsPanel;
-	boolean okToIterateThroughMap = true;
 
 	public void changeStageOfHome() {
-		containerButtonsPanel.removeAll();
-
+		containerButtonsPanel.removeAll(); //reset containerButtonsPanel
+		editContainerButtonsPanel.removeAll();
+		
 		if(stage == 0) { //Home screen
 			editPanel.setVisible(false);
 			homePanel.setVisible(true);
@@ -163,15 +189,12 @@ public class Home implements ActionListener{
 			addContainerButtons(containerButtonsPanel);
 
 			addNewContainerButton.addActionListener(this);
-			deleteContainerButton.addActionListener(this);
 			editContainerNameButton.addActionListener(this);
-			if(	okToIterateThroughMap = true) {
-				okToIterateThroughMap = false;
-				for(JButton b : containerMap.keySet()) {
-					b.addActionListener(this);
-				}
-				okToIterateThroughMap = true;
+
+			for(JButton b : containerMap.keySet()) {
+				b.addActionListener(this);
 			}
+
 
 
 		}
@@ -226,9 +249,6 @@ public class Home implements ActionListener{
 
 		}
 
-		if(stage == 2) { //Delete Container screen
-
-		}
 	}
 
 	/**
@@ -244,32 +264,27 @@ public class Home implements ActionListener{
 	 */
 	private void addNewContainer() {
 		String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
-		if(nameOfContainer != null) {
-			if(okToIterateThroughMap = true) {
-				okToIterateThroughMap = false;
-				Container c = new Container(nameOfContainer);
-				JButton b = new JButton(c.getName());
-				containerMap.put(b, c);
+		if(nameOfContainer != null) { //if not cancelled
+			Container c = new Container(nameOfContainer);
+			JButton b = new JButton(c.getName());
+			containerMap.put(b, c);
 
-				b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-				okToIterateThroughMap = true;
-				addContainerButtons(containerButtonsPanel);
-			}
+			b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
+
+			addContainerButtons(containerButtonsPanel);
+
 		}
 	}
 
 	/**
-	 * Adds container objects as buttons on the home GUI
+	 * Adds container objects as buttons on the given panel
 	 */
 	private void addContainerButtons(JPanel p) {
-		if(	okToIterateThroughMap = true) {
-			okToIterateThroughMap = false;
-			p.removeAll();
-			for(JButton b : containerMap.keySet()) {
-				b.addActionListener(this);
-				p.add(b);
-			}
-			okToIterateThroughMap = true;
+		p.removeAll();
+		for(JButton b : containerMap.keySet()) {
+			b.addActionListener(this);
+			p.add(b);
+
 		}
 
 		p.revalidate(); //refresh panel
@@ -277,13 +292,10 @@ public class Home implements ActionListener{
 	}
 
 	public void renameContainerButton(JButton b) {
-		if(okToIterateThroughMap = true) {
-			okToIterateThroughMap = false;
-			Container c = containerMap.get(b);
-			String nameOfContainer = JOptionPane.showInputDialog("What would you like to rename container " + c.getName() + " to?");
-			if (!(nameOfContainer.equals(null))) {
-				c.setName(nameOfContainer);
-			}
+		Container c = containerMap.get(b);
+		String nameOfContainer = JOptionPane.showInputDialog("What would you like to rename container " + c.getName() + " to?");
+		if (!(nameOfContainer.equals(null))) {
+			c.setName(nameOfContainer);
 
 			//replace button in hashmap
 			containerMap.remove(b);
@@ -291,7 +303,6 @@ public class Home implements ActionListener{
 			temp.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 			containerMap.put(temp, c);
 			stage = 0;
-			okToIterateThroughMap = true;
 			changeStageOfHome();
 		}
 	}
@@ -303,47 +314,43 @@ public class Home implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(stage == 0) {
+		if(stage == 0) { //home screen
 			if (e.getSource() == addNewContainerButton) {
 				addNewContainer();
 			}
 			else if (e.getSource() == editContainerNameButton) {
-				stage = 1;
+				stage = 1; 
 				changeStageOfHome();
 			}
-			if(okToIterateThroughMap == true) {
-				okToIterateThroughMap = false;
-				for(JButton b : containerMap.keySet()) {
-					if (e.getSource() == b) {
-						Container c = containerMap.get(b);
-						okToIterateThroughMap = true;
-						c.getGUI();
-					}
+
+			for(JButton b : containerMap.keySet()) {
+				if (e.getSource() == b) {
+					Container c = containerMap.get(b);
+
+					c.getGUI();
 				}
 			}
 		}
+
 
 		else if(stage == 1) {
 			if (e.getSource() == editBackToHome) {
 				stage = 0;
 				changeStageOfHome();
 			}
-			okToIterateThroughMap = true;
-			if(okToIterateThroughMap == true) {
-				okToIterateThroughMap = false;
-				for(JButton b : containerMap.keySet()) {
-					if (e.getSource() == b) {
-						okToIterateThroughMap = true;
-						renameContainerButton(b);
-					}
+
+			for(JButton b : containerMap.keySet()) {
+				if (e.getSource() == b) {
+					renameContainerButton(b);
 				}
 			}
-
 		}
-
-
 
 	}
 
+
+
 }
+
+
 
