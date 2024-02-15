@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * A JPanel subclass that provides a user interface for adding items with name, quantity, and expiration date.
+ * It validates user input, adds created items to a provided list, and updates a display area to show all added items.
+ */
 public class AddItemPanel extends JPanel {
     private JTextField itemNameField = new JTextField(10);
     private JTextField itemQuantityField = new JTextField(5);
@@ -11,6 +15,12 @@ public class AddItemPanel extends JPanel {
     private ArrayList<Item> items;
     private JTextArea displayArea;
 
+    /**
+     * Constructs a new AddItemPanel with references to a list of items and a display area.
+     *
+     * @param items The list where added items will be stored.
+     * @param displayArea The text area where details of added items will be displayed.
+     */
     public AddItemPanel(ArrayList<Item> items, JTextArea displayArea) {
         this.items = items;
         this.displayArea = displayArea;
@@ -27,6 +37,12 @@ public class AddItemPanel extends JPanel {
         addButton.addActionListener(e -> addItem());
     }
 
+    /**
+     * Attempts to add a new item based on the user input from the text fields.
+     * Validates the input and shows error messages if the validation fails.
+     * If the input is valid, creates a new Item, adds it to the items list, updates the display area,
+     * and clears the input fields for the next entry.
+     */
     private void addItem() {
         try {
             String name = itemNameField.getText().trim(); // Trim to remove leading and trailing spaces
@@ -66,7 +82,10 @@ public class AddItemPanel extends JPanel {
         }
     }
 
-
+    /**
+     * Updates the display area with the current list of items.
+     * Iterates over all items in the list, appending their string representation to the display area.
+     */
     private void updateDisplayArea() {
         StringBuilder sb = new StringBuilder();
         for (Item item : items) {
