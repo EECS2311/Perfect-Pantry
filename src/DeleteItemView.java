@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class DeleteComponent implements ActionListener {
+public class DeleteItemView implements ActionListener {
 
 	private JFrame deleteFrame;
 	private JPanel deletePanel;
@@ -16,23 +16,38 @@ public class DeleteComponent implements ActionListener {
 	private JLabel t;
 	private JTextField searchField;
 
-	public DeleteComponent() {
+	public DeleteItemView() {
 
 		// Setup Jframe
 		deleteFrame = new JFrame("*Delete Item from Pantry");
-		String item = JOptionPane.showInputDialog(deleteFrame, "Type the name of the item to delete",
-				"*Delete Item from Pantry", 3);
+		deletePanel = new JPanel();
+		String item;
+
+		do {
+			item = JOptionPane.showInputDialog(deletePanel, "Type the name of the item to delete",
+					"*Delete Item from Pantry", 3);
+
+			if (verifyItem(item) == false) {
+
+				JOptionPane.showMessageDialog(deletePanel, "This item does not exist in your pantry!", item, 0);
+			}
+
+		} while (item != null);
+
+		JOptionPane.showMessageDialog(deleteFrame, "Item Successfully Deleted!", item, 3);
 
 		deleteFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 
 	public static void main(String[] args) {
-		new DeleteComponent();
+		new DeleteItemView();
 
 	}
 
-	public void verifyItem() {
+	public Boolean verifyItem(String itemName) {
+
+		return false;
 
 	}
 
