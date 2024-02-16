@@ -32,9 +32,24 @@ public class User {
 		this.setName(name);
 		this.listOfItems = new ArrayList<>();
 		for(Item item : listOfItems) {
-			this.listOfItems.add(item);
+			Item copiedItem = Item.getInstance(item);
+			this.listOfItems.add(copiedItem);
 		}
 	}
+	/*
+	 * Constructor that adds a new user by copying an existing user.
+	 * @param user The user being copied.
+	 */
+	private User(User user) {
+		this.setName(user.getName());
+		this.listOfItems = new ArrayList<>();
+		ArrayList<Item> userItems = user.getListOfItems();
+		for(Item item : userItems) {
+			Item copiedItem = Item.getInstance(item);
+			this.listOfItems.add(copiedItem);
+		}
+	}
+	
 	//Factory method to create an instance of User with default properties.
 	public static User getInstance() {
 		User user = User.getInstance();
@@ -69,6 +84,12 @@ public class User {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	/*
+	 * Returns the list of items owned by the user.
+	 */
+	public ArrayList<Item> getListOfItems(){
+		return this.listOfItems;
 	}
 	
 	
