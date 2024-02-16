@@ -1,20 +1,31 @@
 package gui;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class ContainerView implements ActionListener {
 	private JPanel containerView;
 	private JButton back;
+	private JButton delete;
+	private JButton add;
 	private Home home;
 
 	public ContainerView(Home home) {
 		this.home = home;
 		containerView = new JPanel();
 		back = new JButton("Back");
+		delete = new JButton("Delete Item");
+		add = new JButton("Add Item");
+
 		back.addActionListener(this);
+		delete.addActionListener(this);
 		containerView.add(back);
+		containerView.add(add);
+		containerView.add(delete);
 	}
 
 	public void setupContainerViewGUI(boolean isVisible) {
@@ -29,13 +40,19 @@ public class ContainerView implements ActionListener {
 		}
 		frame.revalidate();
 		frame.repaint();
-		// Instead of toggling JFrame visibility, ensure the content pane is correctly updated
+		// Instead of toggling JFrame visibility, ensure the content pane is correctly
+		// updated
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == back) {
 			setupContainerViewGUI(false); // Hide this view
+		}
+
+		if (e.getSource() == delete) {
+
+			new DeleteItemView(containerView);
 		}
 	}
 }
