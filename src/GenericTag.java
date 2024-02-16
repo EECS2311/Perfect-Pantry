@@ -88,4 +88,20 @@ public class GenericTag<T extends Tag> {
     public int hashCode() {
         return Objects.hash(tag);
     }
+    
+    /**
+     * Converts a String displayName to the associated Tag value and returns it
+     * @param <T>
+     * @param enumType
+     * @param displayName
+     * @return the tag object provided form the displayName string
+     */
+    public static <T extends Enum<T> & Tag> GenericTag<T> fromString(Class<T> enumType, String displayName) {
+        for (T enumConstant : enumType.getEnumConstants()) {
+            if (enumConstant.getDisplayName().equalsIgnoreCase(displayName)) {
+                return new GenericTag<T>(enumConstant);
+            }
+        }
+        throw new IllegalArgumentException("No enum constant with display name " + displayName + " found in " + enumType.getSimpleName());
+    }
 }
