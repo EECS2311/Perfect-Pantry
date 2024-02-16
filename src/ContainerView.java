@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 public class ContainerView implements ActionListener {
     private JPanel containerView;
     private JButton back;
-    private Home home; // Reference to Home instance
+    private Home home;
 
     public ContainerView(Home home) {
         this.home = home;

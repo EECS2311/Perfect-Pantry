@@ -5,7 +5,7 @@ public class Container {
     private ArrayList<Item> listOfItems;
     private ContainerView containerViewgui;
 
-    public Container(String n, Home home) { // Pass Home instance
+    public Container(String n, Home home) {
         this.name = n;
         listOfItems = new ArrayList<>();
         containerViewgui = new ContainerView(home); // Pass Home instance to ContainerView
@@ -15,7 +15,10 @@ public class Container {
         return name;
     }
 
-    public void addNewItem(Item item) { // Assuming you want to add an item
+    /**
+     * Add new items into the container
+     */
+    public void addNewItem(Item item) {
         listOfItems.add(item);
     }
 
