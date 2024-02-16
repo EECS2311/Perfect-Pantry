@@ -1,0 +1,74 @@
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.*;
+
+import org.junit.jupiter.api.Test;
+
+class TagsTest {
+
+	@Test
+	void FoodGroupTest() {
+		FoodGroup g = FoodGroup.GRAIN;
+		FoodGroup d = FoodGroup.DAIRY;
+		FoodGroup p = FoodGroup.PROTEIN;
+		FoodGroup v = FoodGroup.VEGETABLE;
+		FoodGroup f = FoodGroup.FRUIT;
+		GenericTag<Tag> expected = new GenericTag<Tag>(g);
+		GenericTag<Tag> expected2 = new GenericTag<Tag>(d);
+		
+		assertEquals(expected, GenericTag.fromString(FoodGroup.class, "grain"));
+		assertNotEquals(expected2, GenericTag.fromString(FoodGroup.class, "grAin"));
+		assertEquals(expected, GenericTag.fromString(FoodGroup.class, "GRAIN"));
+		assertEquals(expected2, GenericTag.fromString(FoodGroup.class, "dairy"));
+		
+		assertNotEquals(expected, GenericTag.fromString(FoodGroup.class, "dairy"));
+		assertThrows(IllegalArgumentException.class, () -> GenericTag.fromString(FoodGroup.class, "expired"));
+		
+		List<FoodGroup> groupList = new ArrayList<FoodGroup>();
+		groupList.add(g);
+		groupList.add(p);
+		groupList.add(v);
+		groupList.add(f);
+		groupList.add(d);
+		
+		assertIterableEquals(groupList, TagUtility.getAllEnumValues(FoodGroup.class));
+		
+		List<String> groupNamesList = new ArrayList<String>();
+		for (FoodGroup i : groupList) {
+			groupNamesList.add(i.getDisplayName());
+		}
+		assertIterableEquals(groupNamesList, TagUtility.getAllDisplayNames(FoodGroup.class));
+		
+	}
+	
+	@Test
+	void FoodFreshnessTest() {
+		FoodFreshness e = FoodFreshness.EXPIRED;
+		FoodFreshness f = FoodFreshness.FRESH;
+		FoodFreshness n = FoodFreshness.NEAR_EXPIRY;
+		GenericTag<Tag> expected = new GenericTag<Tag>(f);
+		GenericTag<Tag> expected2 = new GenericTag<Tag>(e);
+		
+		assertEquals(expected2, GenericTag.fromString(FoodFreshness.class, "expired"));
+		assertEquals(expected, GenericTag.fromString(FoodFreshness.class, "fresh"));
+		assertNotEquals(expected, GenericTag.fromString(FoodFreshness.class, "expired"));
+		assertThrows(IllegalArgumentException.class, () -> GenericTag.fromString(FoodFreshness.class, "grain"));
+		
+		List<FoodFreshness> freshnessList = new ArrayList<FoodFreshness>();
+		freshnessList.add(e);
+		freshnessList.add(f);
+		freshnessList.add(n);
+
+		
+		assertIterableEquals(freshnessList, TagUtility.getAllEnumValues(FoodFreshness.class));
+		
+		List<String> freshnessNamesList = new ArrayList<String>();
+		for (FoodFreshness i : freshnessList) {
+			freshnessNamesList.add(i.getDisplayName());
+		}
+		assertIterableEquals(freshnessNamesList, TagUtility.getAllDisplayNames(FoodFreshness.class));
+		 
+	}
+
+}

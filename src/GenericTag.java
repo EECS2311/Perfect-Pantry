@@ -99,7 +99,7 @@ public class GenericTag<T extends Tag> {
     public static <T extends Enum<T> & Tag> GenericTag<T> fromString(Class<T> enumType, String displayName) {
         for (T enumConstant : enumType.getEnumConstants()) {
             if (enumConstant.getDisplayName().equalsIgnoreCase(displayName)) {
-                return new GenericTag<>(enumConstant);
+                return new GenericTag<T>(enumConstant);
             }
         }
         throw new IllegalArgumentException("No enum constant with display name " + displayName + " found in " + enumType.getSimpleName());
