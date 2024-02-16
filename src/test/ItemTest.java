@@ -1,7 +1,4 @@
-import static org.junit.jupiter.api.Assertions.*;
-
-import domain.logic.Item;
-
+package test;
 
 class ItemTest {
 
