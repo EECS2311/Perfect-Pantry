@@ -184,7 +184,7 @@ public class Item implements Comparable<Item>{
     public Set<GenericTag<FoodGroup>> getFoodGroupTags() {
         Set<GenericTag<FoodGroup>> temp = new HashSet<>();
         for(GenericTag<FoodGroup> tag: this.foodGroupTags){
-            temp.add(new GenericTag<>(tag.getValue()));
+            temp.add(new GenericTag<>(tag.getTag()));
         }
         return temp;
     }
