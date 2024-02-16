@@ -25,7 +25,7 @@ public class GenericTag<T extends Tag> {
      * @param tag another GenericTag to copy.
      */
     public GenericTag(GenericTag<T> tag) {
-        this(tag.getValue());
+        this(tag.getTag());
     }
 
     /**
@@ -33,7 +33,7 @@ public class GenericTag<T extends Tag> {
      *
      * @param newValue the new value of the tag.
      */
-    public void setValue(T newValue) {
+    public void setTag(T newValue) {
         this.tag = newValue;
     }
 
@@ -42,9 +42,9 @@ public class GenericTag<T extends Tag> {
      *
      * @param newValue another GenericTag whose value is to be used.
      */
-    public void setValue(GenericTag<T> newValue) {
-        if (newValue != null && newValue.getValue() != null) {
-            this.tag = newValue.getValue();
+    public void setTag(GenericTag<T> newValue) {
+        if (newValue != null && newValue.getTag() != null) {
+            this.tag = newValue.getTag();
         }
     }
 
@@ -53,7 +53,7 @@ public class GenericTag<T extends Tag> {
      *
      * @return the current value of the tag.
      */
-    public T getValue() {
+    public T getTag() {
         return tag;
     }
 
