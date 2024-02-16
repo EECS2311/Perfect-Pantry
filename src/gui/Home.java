@@ -1,9 +1,13 @@
 package gui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ConcurrentHashMap;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import domain.logic.Container;
+
 public class Home implements ActionListener {
 
 	/**
@@ -19,7 +24,8 @@ public class Home implements ActionListener {
 	static JFrame frame;
 
 	/**
-	 * home panel of the application, will hold all components pertaining to home screen
+	 * home panel of the application, will hold all components pertaining to home
+	 * screen
 	 */
 	private static JPanel homePanel;
 
@@ -55,9 +61,7 @@ public class Home implements ActionListener {
 	private ConcurrentHashMap<JButton, Container> containerMap;
 
 	/**
-	 * Stages of the home screen
-	 * 0 = home
-	 * 1 = edit screen
+	 * Stages of the home screen 0 = home 1 = edit screen
 	 */
 	private int stage;
 
@@ -103,15 +107,15 @@ public class Home implements ActionListener {
 	public Home() {
 		stage = 0;
 
-		//Initialize frame
+		// Initialize frame
 		frame = new JFrame("Perfect Pantry");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Close on exit
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
-		frame.setResizable(false); //stop resize
+		frame.setResizable(false); // stop resize
 		frame.setMinimumSize(new Dimension(800, 800));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
 
-		//Initilize containerMap
+		// Initilize containerMap
 		containerMap = new ConcurrentHashMap<>();
 
 		initializeHomeGUI();
@@ -121,43 +125,44 @@ public class Home implements ActionListener {
 	 * Initializes the GUI of the home screen
 	 */
 	public void initializeHomeGUI() {
-		//Initialse mainMenuPanel
-		homePanel = new JPanel(); //will hold all the components of mainMenuGUI
+		// Initialse mainMenuPanel
+		homePanel = new JPanel(); // will hold all the components of mainMenuGUI
 		homePanel.setLayout(null);
 		frame.getContentPane().add(homePanel);
+		frame.setLocationRelativeTo(null);
 
-		//Initialize TitlePanel
+		// Initialize TitlePanel
 		titlePanel = new JPanel();
 		titlePanel.setSize(800, 90);
 		titlePanel.setLocation(0, 0);
 		titlePanel.setBackground(new Color(255, 223, 162));
 		homePanel.add(titlePanel);
 
-		//Initialize titleLabel
+		// Initialize titleLabel
 		titleLabel = new JLabel("PERFECT PANTRY");
 		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
 		titlePanel.add(titleLabel);
 
-		//initialize mainMenuButtonsPanel
+		// initialize mainMenuButtonsPanel
 		homeButtonsPanel = new JPanel();
 		homeButtonsPanel.setBackground(new Color(192, 237, 203));
 		homeButtonsPanel.setBounds(0, 680, 800, 90);
 		homePanel.add(homeButtonsPanel);
 
-		//Components of mainMenuButtonsPanel
-		//initialize addNewContainerButton
+		// Components of mainMenuButtonsPanel
+		// initialize addNewContainerButton
 		addNewContainerButton = new JButton("Add New Container");
 		addNewContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 		addNewContainerButton.addActionListener(this);
 		homeButtonsPanel.add(addNewContainerButton);
 
-		//Initialize editContainerNameButton
+		// Initialize editContainerNameButton
 		editContainerNameButton = new JButton("Edit Container Name");
 		editContainerNameButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 		editContainerNameButton.addActionListener(this);
 		homeButtonsPanel.add(editContainerNameButton);
 
-		//initialize containerButtonsPanel
+		// initialize containerButtonsPanel
 		containerButtonsPanel = new JPanel();
 		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight() - 120);
 		containerButtonsPanel.setBackground(new Color(245, 213, 152));
@@ -215,7 +220,7 @@ public class Home implements ActionListener {
 	 */
 	private void addNewContainer() {
 		String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
-		if (nameOfContainer != null && !nameOfContainer.trim().isEmpty()) { //if not cancelled nor empty
+		if (nameOfContainer != null && !nameOfContainer.trim().isEmpty()) { // if not cancelled nor empty
 
 			Container c = new Container(nameOfContainer, this);
 			JButton b = new JButton(c.getName());
@@ -234,12 +239,13 @@ public class Home implements ActionListener {
 		containerMap.forEach((button, container) -> {
 			p.add(button);
 		});
-		p.revalidate(); //refresh panel
+		p.revalidate(); // refresh panel
 	}
 
 	private void renameContainerButton(JButton b) {
 		Container c = containerMap.get(b);
-		String nameOfContainer = JOptionPane.showInputDialog("What would you like to rename container " + c.getName() + " to?");
+		String nameOfContainer = JOptionPane
+				.showInputDialog("What would you like to rename container " + c.getName() + " to?");
 		if (nameOfContainer != null && !nameOfContainer.trim().isEmpty()) {
 			c.setName(nameOfContainer);
 			b.setText(c.getName()); // Update the button text directly instead of replacing the button in the map
@@ -252,7 +258,7 @@ public class Home implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 
-		if (stage == 0) { //home screen
+		if (stage == 0) { // home screen
 			if (source == addNewContainerButton) {
 				addNewContainer();
 			} else if (source == editContainerNameButton) {
@@ -276,7 +282,6 @@ public class Home implements ActionListener {
 			}
 		}
 	}
-
 
 	public static JFrame getFrame() {
 		return frame;

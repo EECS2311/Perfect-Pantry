@@ -1,4 +1,5 @@
 package gui;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,6 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import domain.logic.Container;
+
 public class DeleteItemView implements ActionListener {
 
 	private JFrame deleteFrame;
@@ -17,37 +20,34 @@ public class DeleteItemView implements ActionListener {
 	private JLabel t;
 	private JTextField searchField;
 
-	public DeleteItemView() {
+	public DeleteItemView(JPanel containerPanel) {
 
-		// Setup Jframe
-		deleteFrame = new JFrame("*Delete Item from Pantry");
-		deletePanel = new JPanel();
-		String item;
+		String item = null;
+		Boolean success;
+		Container c;
 
 		do {
-			item = JOptionPane.showInputDialog(deletePanel, "Type the name of the item to delete",
+			item = JOptionPane.showInputDialog(containerPanel, "Type the name of the item to delete",
 					"*Delete Item from Pantry", 3);
+			if (item == null) {
+				break;
+			}
 
-			if (verifyItem(item) == false) {
+			success = verifyItem(item);
 
-				JOptionPane.showMessageDialog(deletePanel, "This item does not exist in your pantry!", item, 0);
+			if (success) {
+				JOptionPane.showMessageDialog(containerPanel, "Item Successfully Deleted!", item, 3);
+				item = null;
+
+			} else {
+				JOptionPane.showMessageDialog(containerPanel, "This item does not exist in your pantry!", item, 0);
 			}
 
 		} while (item != null);
 
-		JOptionPane.showMessageDialog(deleteFrame, "Item Successfully Deleted!", item, 3);
-
-		deleteFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-	}
-
-	public static void main(String[] args) {
-		new DeleteItemView();
-
 	}
 
 	public Boolean verifyItem(String itemName) {
-
 		return false;
 
 	}
