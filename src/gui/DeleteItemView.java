@@ -26,24 +26,21 @@ public class DeleteItemView implements ActionListener {
 		Boolean success;
 		Container c;
 
-		do {
-			item = JOptionPane.showInputDialog(containerPanel, "Type the name of the item to delete",
-					"*Delete Item from Pantry", 3);
-			if (item == null) {
-				break;
-			}
+		item = JOptionPane.showInputDialog(containerPanel, "Type the name of the item to delete",
+				"*Delete Item from Pantry", 3);
 
-			success = verifyItem(item);
+		success = verifyItem(item);
 
-			if (success) {
-				JOptionPane.showMessageDialog(containerPanel, "Item Successfully Deleted!", item, 3);
-				item = null;
+		if (success) {
+			JOptionPane.showMessageDialog(containerPanel, "Item Successfully Deleted!", item, 3);
+			item = null;
 
-			} else {
+		} else {
+			if (item != null) {
 				JOptionPane.showMessageDialog(containerPanel, "This item does not exist in your pantry!", item, 0);
 			}
 
-		} while (item != null);
+		}
 
 	}
 
