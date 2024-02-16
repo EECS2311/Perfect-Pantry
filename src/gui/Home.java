@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import database.DB;
 import domain.logic.Container;
 
 public class Home implements ActionListener {
@@ -22,6 +23,8 @@ public class Home implements ActionListener {
 	 * Frame window of the application
 	 */
 	static JFrame frame;
+
+	static DB data = new DB();
 
 	/**
 	 * home panel of the application, will hold all components pertaining to home
@@ -227,6 +230,7 @@ public class Home implements ActionListener {
 			b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 			b.addActionListener(this);
 			containerMap.put(b, c);
+			data.addContainer(nameOfContainer, c);
 			addContainerButtons(containerButtonsPanel);
 		}
 	}
