@@ -1,6 +1,9 @@
+package gui;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import domain.logic.Item;
 
 /**
  * A JPanel subclass that provides a user interface for adding items with name, quantity, and expiration date.

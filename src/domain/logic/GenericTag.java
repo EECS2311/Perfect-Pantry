@@ -1,3 +1,5 @@
+package domain.logic;
+
 import java.util.Objects;
 
 /**
@@ -94,7 +96,7 @@ public class GenericTag<T extends Tag> {
      * @param <T>
      * @param enumType
      * @param displayName
-     * @return the tag object provided form the displayName string
+     * @return the tag object provided from the displayName string
      */
     public static <T extends Enum<T> & Tag> GenericTag<T> fromString(Class<T> enumType, String displayName) {
         for (T enumConstant : enumType.getEnumConstants()) {

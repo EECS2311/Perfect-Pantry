@@ -1,3 +1,8 @@
+package domain.logic;
+
+import gui.ContainerView;
+import gui.Home;
+
 import java.util.ArrayList;
 
 public class Container {

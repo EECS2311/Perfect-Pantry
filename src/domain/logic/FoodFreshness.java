@@ -1,3 +1,5 @@
+package domain.logic;
+
 /**
  * Represents the freshness levels of food items.
  */
