@@ -1,7 +1,13 @@
+package domain.logic;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Utility class for working with Enum types that implement the Tag interface.
+ * Provides methods to retrieve all enum values or their display names from an Enum class that implements the Tag interface.
+ */
 public class TagUtility {
 	
 	 /**

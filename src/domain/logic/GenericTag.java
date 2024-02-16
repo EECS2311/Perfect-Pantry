@@ -1,3 +1,5 @@
+package domain.logic;
+
 import java.util.Objects;
 
 /**

@@ -1,9 +1,12 @@
+package demo;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import domain.logic.Item;
+import gui.AddItemPanel;
 public class AddItemPanelDemo {
 
     public static void main(String[] args) {

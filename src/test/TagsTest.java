@@ -1,9 +1,18 @@
+package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import domain.logic.FoodGroup;
+import domain.logic.FoodFreshness;
+import domain.logic.GenericTag;
+import domain.logic.TagUtility;
+import domain.logic.Tag;
+
 
 class TagsTest {
 
@@ -17,12 +26,12 @@ class TagsTest {
 		GenericTag<Tag> expected = new GenericTag<Tag>(g);
 		GenericTag<Tag> expected2 = new GenericTag<Tag>(d);
 		
-		assertEquals(expected, GenericTag.fromString(FoodGroup.class, "grain"));
-		assertNotEquals(expected2, GenericTag.fromString(FoodGroup.class, "grAin"));
-		assertEquals(expected, GenericTag.fromString(FoodGroup.class, "GRAIN"));
-		assertEquals(expected2, GenericTag.fromString(FoodGroup.class, "dairy"));
+		Assertions.assertEquals(expected, GenericTag.fromString(FoodGroup.class, "grain"));
+		Assertions.assertNotEquals(expected2, GenericTag.fromString(FoodGroup.class, "grAin"));
+		Assertions.assertEquals(expected, GenericTag.fromString(FoodGroup.class, "GRAIN"));
+		Assertions.assertEquals(expected2, GenericTag.fromString(FoodGroup.class, "dairy"));
 		
-		assertNotEquals(expected, GenericTag.fromString(FoodGroup.class, "dairy"));
+		Assertions.assertNotEquals(expected, GenericTag.fromString(FoodGroup.class, "dairy"));
 		assertThrows(IllegalArgumentException.class, () -> GenericTag.fromString(FoodGroup.class, "expired"));
 		
 		List<FoodGroup> groupList = new ArrayList<FoodGroup>();
@@ -50,9 +59,9 @@ class TagsTest {
 		GenericTag<Tag> expected = new GenericTag<Tag>(f);
 		GenericTag<Tag> expected2 = new GenericTag<Tag>(e);
 		
-		assertEquals(expected2, GenericTag.fromString(FoodFreshness.class, "expired"));
-		assertEquals(expected, GenericTag.fromString(FoodFreshness.class, "fresh"));
-		assertNotEquals(expected, GenericTag.fromString(FoodFreshness.class, "expired"));
+		Assertions.assertEquals(expected2, GenericTag.fromString(FoodFreshness.class, "expired"));
+		Assertions.assertEquals(expected, GenericTag.fromString(FoodFreshness.class, "fresh"));
+		Assertions.assertNotEquals(expected, GenericTag.fromString(FoodFreshness.class, "expired"));
 		assertThrows(IllegalArgumentException.class, () -> GenericTag.fromString(FoodFreshness.class, "grain"));
 		
 		List<FoodFreshness> freshnessList = new ArrayList<FoodFreshness>();
