@@ -1,26 +1,23 @@
+package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.*;
 import java.awt.*;
 
 	import java.util.Vector;
 
-	public class Itemslist2 {
+	public class Itemslist {
 		
 		public static void main(String[] args) {
-	        Itemslist2 app = new Itemslist2();
+	        Itemslist app = new Itemslist();
 	        app.setupGUI(); // Setup and display the GUI
 	    }
 
 	    private JList<String> itemList;
 	    private Vector<String> itemsVector; // Using Vector to easily manage items dynamically
 
-	    public Itemslist2() {
+	    public Itemslist() {
 	        itemsVector = new Vector<>();
 	    }
 
@@ -177,4 +174,4 @@ import java.awt.*;
 //    }
 	
 	    // Method to display items in the console
-
+	 
