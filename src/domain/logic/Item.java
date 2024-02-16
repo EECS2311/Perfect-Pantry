@@ -148,6 +148,16 @@ public class Item implements Comparable<Item>{
         return Item.getInstance(name, quantity, date);
     }
 
+    /**
+     * Factory method to create an Item instance from another Item.
+     *
+     * @param item The Item object of interest.
+     * @return A new Item instance with the same properties as the item parameter.
+     */
+    public static Item getInstance(Item item){
+        return Item.getInstance(item.getName(), item.getFoodGroupTags(), item.getFoodFreshnessTag(), item.getQuantity(), item.getExpiryDate());
+    }
+
     // Helper method to parse date strings
     private static Date parseDate(String dateString) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMMM-yyyy", Locale.ENGLISH);
