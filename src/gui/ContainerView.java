@@ -1,7 +1,12 @@
 package gui;
 
+import domain.logic.Item;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,21 +16,33 @@ public class ContainerView implements ActionListener {
 	private JPanel containerView;
 	private JButton back;
 	private JButton delete;
-	private JButton add;
+	// private JButton add;
 	private Home home;
 
-	public ContainerView(Home home) {
+	private Itemslist itemsListPanel;
+	private AddItemPanel addItemPanel;
+	private List<Item> items;
+
+	public ContainerView(Home home, List<Item> items) {
 		this.home = home;
 		containerView = new JPanel();
 		back = new JButton("Back");
 		delete = new JButton("Delete Item");
-		add = new JButton("Add Item");
+		// add = new JButton("Add Item");
+		//items = new ArrayList<>();
+		this.items = items;
+		Itemslist itemsListPanel = new Itemslist();
+		AddItemPanel addItemPanel = new AddItemPanel(items, itemsListPanel);
 
 		back.addActionListener(this);
 		delete.addActionListener(this);
+
 		containerView.add(back);
-		containerView.add(add);
+		// containerView.add(add);
 		containerView.add(delete);
+
+		containerView.add(addItemPanel, BorderLayout.SOUTH);
+		containerView.add(itemsListPanel, BorderLayout.CENTER);
 	}
 
 	public void setupContainerViewGUI(boolean isVisible) {
@@ -40,8 +57,7 @@ public class ContainerView implements ActionListener {
 		}
 		frame.revalidate();
 		frame.repaint();
-		// Instead of toggling JFrame visibility, ensure the content pane is correctly
-		// updated
+		// Instead of toggling JFrame visibility, ensure the content pane is correctly updated
 	}
 
 	@Override

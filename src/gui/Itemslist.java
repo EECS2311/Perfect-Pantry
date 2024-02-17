@@ -17,13 +17,13 @@ import javax.swing.table.TableModel;
 public class Itemslist extends JPanel {
 	private DefaultTableModel tableModel;
 	private JTable table;
-	private List<Item> items; // Assuming you have a list of items to influence the dropdowns
+	private List<Item> items;
 
 	public Itemslist() {
 		setLayout(new BorderLayout());
 		tableModel = new DefaultTableModel();
 		table = new JTable(tableModel);
-		items = new ArrayList<>(); // Initialize your list of items
+		items = new ArrayList<>();
 
 		// Define table columns
 		tableModel.addColumn("Name");
