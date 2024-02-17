@@ -1,20 +1,24 @@
 package gui;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.util.EnumSet;
 import java.util.Set;
 
-import database.DB;
-import domain.logic.GenericTag;
-import domain.logic.Container;
-
-import domain.logic.Item;
-import domain.logic.FoodGroup;
-import domain.logic.FoodFreshness;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
+import database.DB;
+import domain.logic.Container;
+import domain.logic.FoodFreshness;
+import domain.logic.FoodGroup;
+import domain.logic.Item;
+
 public class Itemslist extends JPanel {
 	private DefaultTableModel tableModel;
 	private JTable table;
@@ -27,7 +31,7 @@ public class Itemslist extends JPanel {
 
 	/**
 	 *
-	 * @param home The reference to the home GUI.
+	 * @param home      The reference to the home GUI.
 	 * @param container The reference to Container object.
 	 */
 	public Itemslist(Home home, Container container) {
@@ -46,7 +50,6 @@ public class Itemslist extends JPanel {
 		tableModel.addColumn("Food Group");
 		tableModel.addColumn("Food Freshness");
 
-
 		// Add a model listener to capture changes to the table model
 		tableModel.addTableModelListener(e -> {
 			if (e.getType() == TableModelEvent.UPDATE) {
@@ -57,7 +60,6 @@ public class Itemslist extends JPanel {
 				}
 			}
 		});
-
 
 		// Populate JComboBoxes with enum values
 		JComboBox<FoodGroup> foodGroupComboBox = new JComboBox<>(FoodGroup.values());
@@ -71,17 +73,24 @@ public class Itemslist extends JPanel {
 	}
 
 	public void addItem(Item item) {
-		tableModel.addRow(new Object[]{
-				item.getName(),
-				item.getQuantity(),
-				item.getExpiryDate().toString(),
-				null,
-				null
-		});
-		data.addItem(container, item.getName(), item);  // Keep track of the added item
+		tableModel.addRow(
+				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
+		data.addItem(container, item.getName(), item); // Keep track of the added item
 		home.data.printItems();
+
 	}
 
+	public void removeItem(String itemName) {
+		// Iterate through the table to find the row with the given item name
+		for (int i = 0; i < tableModel.getRowCount(); i++) {
+			if (itemName.equals(tableModel.getValueAt(i, 0))) {
+
+				// Remove the row from the table model
+				tableModel.removeRow(i);
+				break;
+			}
+		}
+	}
 
 	private void updateItemFromTable(int row, int column) {
 		// Get the item name from the table model, in the first column
@@ -94,24 +103,23 @@ public class Itemslist extends JPanel {
 		if (item != null) {
 			TableModel model = table.getModel();
 			switch (column) {
-				case 3: // Food Group column
-					FoodGroup selectedGroup = (FoodGroup) model.getValueAt(row, column);
-					// Create a Set containing just the selected FoodGroup
-					Set<FoodGroup> foodGroupSet = EnumSet.of(selectedGroup);
-					item.setFoodGroupTagsEnum(foodGroupSet);
-					break;
-				case 4: // Food Freshness column
-					FoodFreshness selectedFreshness = (FoodFreshness) model.getValueAt(row, column);
-					item.setFoodFreshnessTag(selectedFreshness);
-					break;
-				default:
-					break;
+			case 3: // Food Group column
+				FoodGroup selectedGroup = (FoodGroup) model.getValueAt(row, column);
+				// Create a Set containing just the selected FoodGroup
+				Set<FoodGroup> foodGroupSet = EnumSet.of(selectedGroup);
+				item.setFoodGroupTagsEnum(foodGroupSet);
+				break;
+			case 4: // Food Freshness column
+				FoodFreshness selectedFreshness = (FoodFreshness) model.getValueAt(row, column);
+				item.setFoodFreshnessTag(selectedFreshness);
+				break;
+			default:
+				break;
 			}
 			home.data.printItems();
 		} else {
 			// Handle the case where the item is not found
 		}
 	}
-
 
 }

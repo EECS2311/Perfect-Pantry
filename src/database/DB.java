@@ -40,6 +40,13 @@ public class DB {
 
 	}
 
+	public void removeItem(Container c, String name, Item ite) {
+
+		// Any method that calls removeItem() will ensure that the item exists.
+		items.get(c).remove(name);
+
+	}
+
 	// Method to retrieve an Item by its Container and name.
 	public Item getItem(Container container, String itemName) {
 		if (items.containsKey(container) && items.get(container).containsKey(itemName)) {
@@ -64,8 +71,5 @@ public class DB {
 			}
 		}
 	}
-
-
-
 
 }

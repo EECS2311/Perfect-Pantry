@@ -1,17 +1,15 @@
 package gui;
 
-import domain.logic.Item;
-import domain.logic.Container;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import domain.logic.Container;
 
 public class ContainerView implements ActionListener {
 	private JPanel containerView;
@@ -58,7 +56,8 @@ public class ContainerView implements ActionListener {
 		}
 		frame.revalidate();
 		frame.repaint();
-		// Instead of toggling JFrame visibility, ensure the content pane is correctly updated
+		// Instead of toggling JFrame visibility, ensure the content pane is correctly
+		// updated
 	}
 
 	@Override
@@ -69,7 +68,7 @@ public class ContainerView implements ActionListener {
 
 		if (e.getSource() == delete) {
 
-			new DeleteItemView(containerView);
+			new DeleteItemView(containerView, container, itemsListPanel);
 		}
 	}
 }
