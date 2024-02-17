@@ -8,7 +8,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import database.DB;
 import domain.logic.GenericTag;
+import domain.logic.Container;
+
 import domain.logic.Item;
 import domain.logic.FoodGroup;
 import domain.logic.FoodFreshness;
@@ -17,13 +20,27 @@ import javax.swing.table.TableModel;
 public class Itemslist extends JPanel {
 	private DefaultTableModel tableModel;
 	private JTable table;
-	private List<Item> items;
+	// private List<Item> items;
 
-	public Itemslist() {
+	private Home home;
+
+	private DB data;
+	private Container container;
+
+
+	/**
+	 *
+	 * @param home The reference to the home GUI.
+	 * @param container The reference to Container object.
+	 */
+	public Itemslist(Home home, Container container) {
+		this.home = home;
+		this.data = home.data;
+		this.container = container;
 		setLayout(new BorderLayout());
 		tableModel = new DefaultTableModel();
 		table = new JTable(tableModel);
-		items = new ArrayList<>();
+		// items = new ArrayList<>();
 
 		// Define table columns
 		tableModel.addColumn("Name");
@@ -64,27 +81,39 @@ public class Itemslist extends JPanel {
 				null,
 				null
 		});
-		items.add(item); // Keep track of the added item
+		data.addItem(container, item.getName(), item);  // Keep track of the added item
 		// Optionally, update dropdowns or other UI elements based on the new item list
 	}
 
+
 	private void updateItemFromTable(int row, int column) {
-		Item item = items.get(row);
-		TableModel model = table.getModel();
-		switch (column) {
-			case 3: // Food Group column
-				FoodGroup selectedGroup = (FoodGroup) model.getValueAt(row, column);
-				// Create a Set containing just the selected FoodGroup
-				Set<FoodGroup> foodGroupSet = EnumSet.of(selectedGroup);
-				item.setFoodGroupTagsEnum(foodGroupSet);
-				break;
-			case 4: // Food Freshness column
-				FoodFreshness selectedFreshness = (FoodFreshness) model.getValueAt(row, column);
-				item.setFoodFreshnessTag(selectedFreshness);
-				break;
-			default:
-				break;
+		// Get the item name from the table model, in the first column
+		String itemName = (String) table.getModel().getValueAt(row, 0);
+
+		// Retrieve the Item object from the DB using the container and item name
+		Item item = data.getItem(container, itemName);
+
+		// Proceed only if the item was successfully retrieved
+		if (item != null) {
+			TableModel model = table.getModel();
+			switch (column) {
+				case 3: // Food Group column
+					FoodGroup selectedGroup = (FoodGroup) model.getValueAt(row, column);
+					// Create a Set containing just the selected FoodGroup
+					Set<FoodGroup> foodGroupSet = EnumSet.of(selectedGroup);
+					item.setFoodGroupTagsEnum(foodGroupSet);
+					break;
+				case 4: // Food Freshness column
+					FoodFreshness selectedFreshness = (FoodFreshness) model.getValueAt(row, column);
+					item.setFoodFreshnessTag(selectedFreshness);
+					break;
+				default:
+					break;
+			}
+		} else {
+			// Handle the case where the item is not found
 		}
 	}
+
 
 }

@@ -34,8 +34,8 @@ public class ContainerView implements ActionListener {
 		//items = new ArrayList<>();
 
 
-		Itemslist itemsListPanel = new Itemslist();
-		AddItemPanel addItemPanel = new AddItemPanel(home, container, itemsListPanel);
+		Itemslist itemsListPanel = new Itemslist(home, container);
+		AddItemPanel addItemPanel = new AddItemPanel(itemsListPanel);
 
 		back.addActionListener(this);
 		delete.addActionListener(this);

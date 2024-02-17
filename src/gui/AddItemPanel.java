@@ -19,29 +19,20 @@ public class AddItemPanel extends JPanel {
 
     // private List<Item> items;
 
-    private DB data;
-
-    private Home home;
 
     private JTextArea displayArea;
 
-    private Container container;
 
     private Itemslist itemsListPanel; // Add a reference to ItemsListPanel
 
     /**
      * Constructs a new AddItemPanel with references to a list of items and a display area.
      *
-     * @param home The reference to the home GUI.
-     * @param container The reference to Container object.
      * @param itemsListPanel The text area where details of added items will be displayed.
      */
 
-    public AddItemPanel(Home home, Container container, Itemslist itemsListPanel) {
+    public AddItemPanel(Itemslist itemsListPanel) {
         // this.items = items;
-        this.home = home;
-        this.data = home.data;
-        this.container = container;
         this.itemsListPanel = itemsListPanel; // Initialize the reference
 
         setLayout(new FlowLayout());
@@ -91,10 +82,11 @@ public class AddItemPanel extends JPanel {
             // Create and add the item
             Item item = Item.getInstance(name, quantity, expiryDate);
             // items.add(item);
-            data.addItem(container, item.getName(), item);
+            // data.addItem(container, item.getName(), item);
 
             // Update display area
             // updateDisplayArea();
+
             itemsListPanel.addItem(item); // Update the items list panel
 
             // Clear the fields for new inputs
