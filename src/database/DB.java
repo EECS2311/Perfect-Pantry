@@ -54,14 +54,12 @@ public class DB {
 			Container container = containerEntry.getKey();
 			HashMap<String, Item> itemsInContainer = containerEntry.getValue();
 
-			// Assuming Container has a meaningful toString() method
 			System.out.println("Container: " + container);
 
 			for (Map.Entry<String, Item> itemEntry : itemsInContainer.entrySet()) {
 				String itemName = itemEntry.getKey();
 				Item item = itemEntry.getValue();
 
-				// Assuming Item has a meaningful toString() method
 				System.out.println("\tItem Name: " + itemName + " -> Item: " + item);
 			}
 		}

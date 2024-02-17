@@ -26,7 +26,6 @@ public class AddItemPanel extends JPanel {
      */
 
     public AddItemPanel(Itemslist itemsListPanel) {
-        // this.items = items;
         this.itemsListPanel = itemsListPanel; // Initialize the reference
 
         setLayout(new FlowLayout());
@@ -37,8 +36,6 @@ public class AddItemPanel extends JPanel {
         add(new JLabel("Expiration Date (dd-MMMM-yyyy):"));
         add(itemExpiryField);
         add(addButton);
-
-         // updateDisplayArea();
 
         addButton.addActionListener(e -> addItem());
 
@@ -75,13 +72,9 @@ public class AddItemPanel extends JPanel {
 
             // Create and add the item
             Item item = Item.getInstance(name, quantity, expiryDate);
-            // items.add(item);
-            // data.addItem(container, item.getName(), item);
 
-            // Update display area
-            // updateDisplayArea();
-
-            itemsListPanel.addItem(item); // Update the items list panel
+            // Update the items list panel
+            itemsListPanel.addItem(item);
 
             // Clear the fields for new inputs
             itemNameField.setText("");
