@@ -37,7 +37,7 @@
 - Since every member has varying levels of knowledge on git and github, some basic operations needed a bit more explanation. 
 
 ### User Stories
-1. Create Home Class
+1. Create Home Class (Sarah)
 Dev Tasks..
 - Create the container class. A container represents a pantry/fridge of items that users can add and delete from. 
 - Create Home and ContainerView, using java.swing to develop the UI.
@@ -49,7 +49,7 @@ Actual Working time: 7 Days
 - Setting up this user story took longer than estimated. It also served as the foundation for other user stories as there must be consistent logic for setting up the UI and data binding.
 
 
-2. Add Items Class
+2. Add Items Class (Nina)
 Dev Tasks..
 - Create item class to represent a food added to a user's pantry.
 - Setup the AddItemPanel view to receive user input. 
@@ -58,21 +58,31 @@ Dev Tasks..
 - Test implementation of adding an item
 
 Estimated Working time: 2 Days
-Actual Working time: 7 Days
+Actual Working time: 3 Days
 
-3. Remove Item from Pantry'
+3. Remove Item from Pantry (Michel)
 - Create DeleteItemView to prompt user for the item they want to remove from their pantry.
 - Implement error handling on user input to ensure that items actually exist in the database.
 - Test implementation of deleting an item 
 
 Estimated Working time: 2 Days
-Actual Working time: 7 Days
+Actual Working time: 3 Days
  
-4. Tagging Food Groups
+4. Tagging Food Groups (Edison)
 - Create tag class and several "tag" classes.
 - Implement tagging test cases 
 
-5. See Full List of items 
+5. See Full List of items (Allen)
+- Create ItemsList view to display list of items 
+- Display this view over top the containerView
 
-6. Add User
+Estimated Working time: 2 Days
+Actual Working time: 1 Days
+
+6. Add User (Ning)
+- Setup user class to implement user logins in future iterations
+
+Estimated Working time: 2 Days
+Actual Working time: 1 Days
+
 
