@@ -11,6 +11,9 @@ import javax.swing.JPanel;
 
 import domain.logic.Container;
 
+/**
+ * Represents the GUI view for a container. It allows users to interact with a container and its items through a graphical interface, including viewing items, adding new items, and deleting existing items.
+ */
 public class ContainerView implements ActionListener {
 	private JPanel containerView;
 	private JButton back;
@@ -21,6 +24,11 @@ public class ContainerView implements ActionListener {
 	private AddItemPanel addItemPanel;
 	private Container container;
 
+	/**
+	 * Constructs a new ContainerView associated with a specific container and home.
+	 * @param home The Home instance that this view is part of.
+	 * @param container The container to be managed and displayed in this view.
+	 */
 	public ContainerView(Home home, Container container) {
 		this.home = home;
 		this.container = container;
@@ -44,6 +52,10 @@ public class ContainerView implements ActionListener {
 		containerView.add(addItemPanel, BorderLayout.SOUTH); // Add the add item panel to the bottom
 	}
 
+	/**
+	 * Sets up and displays the container view GUI. This method adjusts the visibility and content of the main application frame based on the specified visibility flag.
+	 * @param isVisible Specifies whether the container view should be made visible.
+	 */
 	public void setupContainerViewGUI(boolean isVisible) {
 		JFrame frame = Home.getFrame(); // Get the main frame
 		if (isVisible) {
@@ -60,6 +72,10 @@ public class ContainerView implements ActionListener {
 		// updated
 	}
 
+	/**
+	 * Handles action events triggered by GUI components (e.g., buttons). This method processes events such as navigating back to the home view and deleting an item.
+	 * @param e The action event that was triggered.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == back) {
