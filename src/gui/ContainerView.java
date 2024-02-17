@@ -1,6 +1,7 @@
 package gui;
 
 import domain.logic.Item;
+import domain.logic.Container;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,23 +17,25 @@ public class ContainerView implements ActionListener {
 	private JPanel containerView;
 	private JButton back;
 	private JButton delete;
+
 	// private JButton add;
 	private Home home;
-
 	private Itemslist itemsListPanel;
 	private AddItemPanel addItemPanel;
-	private List<Item> items;
+	private Container container;
 
-	public ContainerView(Home home, List<Item> items) {
+	public ContainerView(Home home, Container container) {
 		this.home = home;
+		this.container = container;
 		containerView = new JPanel();
 		back = new JButton("Back");
 		delete = new JButton("Delete Item");
 		// add = new JButton("Add Item");
 		//items = new ArrayList<>();
-		this.items = items;
+
+
 		Itemslist itemsListPanel = new Itemslist();
-		AddItemPanel addItemPanel = new AddItemPanel(items, itemsListPanel);
+		AddItemPanel addItemPanel = new AddItemPanel(home, container, itemsListPanel);
 
 		back.addActionListener(this);
 		delete.addActionListener(this);

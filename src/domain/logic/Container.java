@@ -15,7 +15,7 @@ public class Container {
 	public Container(String n, Home home) {
 		this.name = n;
 		listOfItems = new ArrayList<>();
-		containerViewgui = new ContainerView(home, listOfItems); // Pass Home instance to ContainerView
+		containerViewgui = new ContainerView(home, this); // Pass Home instance to ContainerView
 	}
 	
 	public Container(String name) {
