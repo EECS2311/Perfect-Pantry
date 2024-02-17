@@ -3,9 +3,7 @@ package gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 import database.DB;
@@ -26,7 +24,6 @@ public class Itemslist extends JPanel {
 
 	private DB data;
 	private Container container;
-
 
 	/**
 	 *

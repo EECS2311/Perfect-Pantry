@@ -18,7 +18,6 @@ public class ContainerView implements ActionListener {
 	private JButton back;
 	private JButton delete;
 
-	// private JButton add;
 	private Home home;
 	private Itemslist itemsListPanel;
 	private AddItemPanel addItemPanel;
@@ -27,25 +26,24 @@ public class ContainerView implements ActionListener {
 	public ContainerView(Home home, Container container) {
 		this.home = home;
 		this.container = container;
-		containerView = new JPanel();
+		containerView = new JPanel(new BorderLayout()); // Set BorderLayout for the main panel
 		back = new JButton("Back");
 		delete = new JButton("Delete Item");
 		// add = new JButton("Add Item");
-		//items = new ArrayList<>();
 
-
-		Itemslist itemsListPanel = new Itemslist(home, container);
-		AddItemPanel addItemPanel = new AddItemPanel(itemsListPanel);
+		itemsListPanel = new Itemslist(home, container);
+		addItemPanel = new AddItemPanel(itemsListPanel);
 
 		back.addActionListener(this);
 		delete.addActionListener(this);
 
-		containerView.add(back);
-		// containerView.add(add);
-		containerView.add(delete);
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Create a panel for buttons with FlowLayout
+		buttonPanel.add(back); // Add back button to the button panel
+		buttonPanel.add(delete); // Add delete button to the button panel
 
-		containerView.add(addItemPanel, BorderLayout.SOUTH);
-		containerView.add(itemsListPanel, BorderLayout.CENTER);
+		containerView.add(buttonPanel, BorderLayout.NORTH); // Add the button panel to the top of the main panel
+		containerView.add(itemsListPanel, BorderLayout.CENTER); // Add the items list panel to the center
+		containerView.add(addItemPanel, BorderLayout.SOUTH); // Add the add item panel to the bottom
 	}
 
 	public void setupContainerViewGUI(boolean isVisible) {

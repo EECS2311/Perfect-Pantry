@@ -85,4 +85,10 @@ public class AddItemPanel extends JPanel {
         }
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(super.getPreferredSize().width, 100); // You can adjust the height as needed.
+    }
+
+
 }
