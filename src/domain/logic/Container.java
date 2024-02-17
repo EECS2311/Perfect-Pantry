@@ -4,17 +4,18 @@ import gui.ContainerView;
 import gui.Home;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Container {
 	private String name;
-	private ArrayList<Item> listOfItems;
+	private List<Item> listOfItems;
 	private ContainerView containerViewgui;
 
 	public Container(String n, Home home) {
 		this.name = n;
 		listOfItems = new ArrayList<>();
-		containerViewgui = new ContainerView(home); // Pass Home instance to ContainerView
+		containerViewgui = new ContainerView(home, this); // Pass Home instance to ContainerView
 	}
 	
 	public Container(String name) {
@@ -25,13 +26,13 @@ public class Container {
 	public Container(Container container) {
 		this.name = container.getName();
 		this.listOfItems = new ArrayList<>();
-		ArrayList<Item> containerItems = container.getItems();
+		List<Item> containerItems = container.getItems();
 		for(Item item : containerItems) {
 			this.listOfItems.add(item);
 		}		
 	}
 	
-	public Container(String name, ArrayList<Item> items) {
+	public Container(String name, List<Item> items) {
 		this.name = name;
 		this.listOfItems = new ArrayList<>();
 		for(Item item : items) {
@@ -61,7 +62,7 @@ public class Container {
         return Objects.equals(this.name, container.getName());
     }
 	
-	public ArrayList<Item> getItems(){
+	public List<Item> getItems(){
 		return this.listOfItems;
 	}
 

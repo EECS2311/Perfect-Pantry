@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import domain.logic.Item;
+import database.DB;
+import domain.logic.Container;
 
 /**
  * A JPanel subclass that provides a user interface for adding items with name, quantity, and expiration date.
@@ -15,18 +17,16 @@ public class AddItemPanel extends JPanel {
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
 
-    private List<Item> items;
-    private JTextArea displayArea;
+    private Itemslist itemsListPanel;
 
     /**
-     * Constructs a new ui.AddItemPanel with references to a list of items and a display area.
+     * Constructs a new AddItemPanel with references to a list of items and a display area.
      *
-     * @param items The list where added items will be stored.
-     * @param displayArea The text area where details of added items will be displayed.
+     * @param itemsListPanel The text area where details of added items will be displayed.
      */
-    public AddItemPanel(List<Item> items, JTextArea displayArea) {
-        this.items = items;
-        this.displayArea = displayArea;
+
+    public AddItemPanel(Itemslist itemsListPanel) {
+        this.itemsListPanel = itemsListPanel; // Initialize the reference
 
         setLayout(new FlowLayout());
         add(new JLabel("Item Name:"));
@@ -37,9 +37,8 @@ public class AddItemPanel extends JPanel {
         add(itemExpiryField);
         add(addButton);
 
-        updateDisplayArea();
-
         addButton.addActionListener(e -> addItem());
+
     }
 
     /**
@@ -73,10 +72,9 @@ public class AddItemPanel extends JPanel {
 
             // Create and add the item
             Item item = Item.getInstance(name, quantity, expiryDate);
-            items.add(item);
 
-            // Update display area
-            updateDisplayArea();
+            // Update the items list panel
+            itemsListPanel.addItem(item);
 
             // Clear the fields for new inputs
             itemNameField.setText("");
@@ -87,16 +85,10 @@ public class AddItemPanel extends JPanel {
         }
     }
 
-    /**
-     * Updates the display area with the current list of items.
-     * Iterates over all items in the list, appending their string representation to the display area.
-     */
-    private void updateDisplayArea() {
-        StringBuilder sb = new StringBuilder();
-        for (Item item : items) {
-            sb.append(item).append("\n");
-        }
-        displayArea.setText(sb.toString());
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(super.getPreferredSize().width, 100); // You can adjust the height as needed.
     }
+
 
 }

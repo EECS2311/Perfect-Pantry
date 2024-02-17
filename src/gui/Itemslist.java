@@ -1,177 +1,117 @@
 package gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.EnumSet;
+import java.util.Set;
 
-	import java.util.Vector;
+import database.DB;
+import domain.logic.GenericTag;
+import domain.logic.Container;
 
-	public class Itemslist {
-		
-		public static void main(String[] args) {
-	        Itemslist app = new Itemslist();
-	        app.setupGUI(); // Setup and display the GUI
-	    }
+import domain.logic.Item;
+import domain.logic.FoodGroup;
+import domain.logic.FoodFreshness;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableModel;
+public class Itemslist extends JPanel {
+	private DefaultTableModel tableModel;
+	private JTable table;
+	// private List<Item> items;
 
-	    private JList<String> itemList;
-	    private Vector<String> itemsVector; // Using Vector to easily manage items dynamically
+	private Home home;
 
-	    public Itemslist() {
-	        itemsVector = new Vector<>();
-	    }
+	private DB data;
+	private Container container;
 
-	    // Method to print items to the console
-	    private void printItemsToConsole() {
-	        System.out.println("Current Items in List:");
-	        for (String item : itemsVector) {
-	            System.out.println(item);
-	        }
-	        System.out.println("--- End of List ---\n");
-	    }
+	/**
+	 *
+	 * @param home The reference to the home GUI.
+	 * @param container The reference to Container object.
+	 */
+	public Itemslist(Home home, Container container) {
+		this.home = home;
+		this.data = home.data;
+		this.container = container;
+		setLayout(new BorderLayout());
+		tableModel = new DefaultTableModel();
+		table = new JTable(tableModel);
+		// items = new ArrayList<>();
 
-	    // GUI setup method
-	    private void setupGUI() {
-	        // Creating the main frame
-	        JFrame frame = new JFrame("Combined List Display");
-	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        frame.setSize(400, 300);
+		// Define table columns
+		tableModel.addColumn("Name");
+		tableModel.addColumn("Quantity");
+		tableModel.addColumn("Expiry Date");
+		tableModel.addColumn("Food Group");
+		tableModel.addColumn("Food Freshness");
 
-	        // Main panel
-	        JPanel panel = new JPanel(new BorderLayout());
 
-	        // Input panel with text field and buttons
-	        JPanel inputPanel = new JPanel();
-	        JTextField itemInputField = new JTextField(20);
-	        JButton addButton = new JButton("Add Item");
-	        JButton clearButton = new JButton("Clear List");
+		// Add a model listener to capture changes to the table model
+		tableModel.addTableModelListener(e -> {
+			if (e.getType() == TableModelEvent.UPDATE) {
+				int row = e.getFirstRow();
+				int column = e.getColumn();
+				if (row >= 0 && column >= 0) {
+					updateItemFromTable(row, column);
+				}
+			}
+		});
 
-	        // Add components to input panel
-	        inputPanel.add(itemInputField);
-	        inputPanel.add(addButton);
-	        inputPanel.add(clearButton);
 
-	        // List setup
-	        itemList = new JList<>(itemsVector);
-	        JScrollPane scrollPane = new JScrollPane(itemList);
+		// Populate JComboBoxes with enum values
+		JComboBox<FoodGroup> foodGroupComboBox = new JComboBox<>(FoodGroup.values());
+		JComboBox<FoodFreshness> foodFreshnessComboBox = new JComboBox<>(FoodFreshness.values());
 
-	        // Adding action listeners to buttons
-	        addButton.addActionListener(new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	                String item = itemInputField.getText().trim();
-	                if (!item.isEmpty()) {
-	                    itemsVector.add(item); // Add item to the vector
-	                    itemList.setListData(itemsVector); // Refresh the JList
-	                    itemInputField.setText(""); // Clear input field
-	                    printItemsToConsole(); // Print updated list to console
-	                }
-	            }
-	        });
+		// Set up the food group and food freshness columns with JComboBoxes
+		table.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(foodGroupComboBox));
+		table.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(foodFreshnessComboBox));
 
-	        clearButton.addActionListener(new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	                itemsVector.clear(); // Clear all items from the vector
-	                itemList.setListData(itemsVector); // Refresh the JList
-	                printItemsToConsole(); // Print updated list to console
-	            }
-	        });
-
-	        // Adding components to the main panel
-	        panel.add(inputPanel, BorderLayout.NORTH);
-	        panel.add(scrollPane, BorderLayout.CENTER);
-
-	        // Adding the main panel to the frame
-	        frame.getContentPane().add(panel);
-
-	        // Display the GUI
-	        SwingUtilities.invokeLater(() -> frame.setVisible(true));
-	    }
-
-	  
+		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-//	 // Method to display items in the console
-//    public void displayItemsConsole(String[] items) {
-//        System.out.println("Displaying Items in Console:");
-//        for (String item : items) {
-//            System.out.println(item);
-//        }
-//    }
-//
-//    // Method to display items in a GUI
-//    public void displayItemsGUI(String[] items) {
-//        // Creating the frame for the GUI
-//        JFrame frame = new JFrame("List of Items in GUI");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.setSize(300, 200);
-//
-//        // Creating the JList and setting its data
-//        JList<String> itemList = new JList<>(items);
-//
-//        // Adding the JList to a JScrollPane
-//        JScrollPane scrollPane = new JScrollPane(itemList);
-//        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-//
-//        // Displaying the GUI
-//        SwingUtilities.invokeLater(() -> frame.setVisible(true));
-//    }
-//
-//    public static void main(String[] args) {
-//        // Sample list of items
-//        String[] items = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
-//
-//        Items app = new Items();
-//
-//        // Display items in console
-//        app.displayItemsConsole(items);
-//
-//        // Display items in GUI
-//        app.displayItemsGUI(items);
-//    }
+	public void addItem(Item item) {
+		tableModel.addRow(new Object[]{
+				item.getName(),
+				item.getQuantity(),
+				item.getExpiryDate().toString(),
+				null,
+				null
+		});
+		data.addItem(container, item.getName(), item);  // Keep track of the added item
+		home.data.printItems();
+	}
 
-//
-//	public static void main(String[] args) {
-//
-//        // Sample list of items
-//        String[] items = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
-//
-//        // Displaying each item in the console
-//        for (String item : items) {
-//            System.out.println(item);
-//        }
-//    }
-//	
-//	public static void main(String[] args) {
-//        // Sample list of items
-//        String[] items = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
-//
-//        // Creating the frame for the GUI
-//        JFrame frame = new JFrame("List of Items");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.setSize(300, 200);
-//
-//        // Creating the JList and setting its data
-//        JList<String> itemList = new JList<>(items);
-//
-//        // Adding the JList to a JScrollPane in case of many items
-//        JScrollPane scrollPane = new JScrollPane(itemList);
-//
-//        // Adding the JScrollPane to the frame
-//        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-//
-//        // Displaying the GUI
-//        frame.setVisible(true);
-//    }
-	
-	    // Method to display items in the console
-	 
+
+	private void updateItemFromTable(int row, int column) {
+		// Get the item name from the table model, in the first column
+		String itemName = (String) table.getModel().getValueAt(row, 0);
+
+		// Retrieve the Item object from the DB using the container and item name
+		Item item = data.getItem(container, itemName);
+
+		// Proceed only if the item was successfully retrieved
+		if (item != null) {
+			TableModel model = table.getModel();
+			switch (column) {
+				case 3: // Food Group column
+					FoodGroup selectedGroup = (FoodGroup) model.getValueAt(row, column);
+					// Create a Set containing just the selected FoodGroup
+					Set<FoodGroup> foodGroupSet = EnumSet.of(selectedGroup);
+					item.setFoodGroupTagsEnum(foodGroupSet);
+					break;
+				case 4: // Food Freshness column
+					FoodFreshness selectedFreshness = (FoodFreshness) model.getValueAt(row, column);
+					item.setFoodFreshnessTag(selectedFreshness);
+					break;
+				default:
+					break;
+			}
+			home.data.printItems();
+		} else {
+			// Handle the case where the item is not found
+		}
+	}
+
+
+}

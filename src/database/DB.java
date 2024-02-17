@@ -1,6 +1,7 @@
 package database;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import domain.logic.Container;
 import domain.logic.Item;
@@ -38,5 +39,33 @@ public class DB {
 		}
 
 	}
+
+	// Method to retrieve an Item by its Container and name.
+	public Item getItem(Container container, String itemName) {
+		if (items.containsKey(container) && items.get(container).containsKey(itemName)) {
+			return items.get(container).get(itemName);
+		}
+		// Return null if the Container or Item is not found.
+		return null;
+	}
+
+	public void printItems() {
+		for (Map.Entry<Container, HashMap<String, Item>> containerEntry : items.entrySet()) {
+			Container container = containerEntry.getKey();
+			HashMap<String, Item> itemsInContainer = containerEntry.getValue();
+
+			System.out.println("Container: " + container);
+
+			for (Map.Entry<String, Item> itemEntry : itemsInContainer.entrySet()) {
+				String itemName = itemEntry.getKey();
+				Item item = itemEntry.getValue();
+
+				System.out.println("\tItem Name: " + itemName + " -> Item: " + item);
+			}
+		}
+	}
+
+
+
 
 }
