@@ -19,6 +19,10 @@ import domain.logic.FoodFreshness;
 import domain.logic.FoodGroup;
 import domain.logic.Item;
 
+/**
+ * Represents a panel that displays a list of items within a container.
+ * It provides functionalities to add and remove items, and update item properties directly from the table.
+ */
 public class Itemslist extends JPanel {
 	private DefaultTableModel tableModel;
 	private JTable table;
@@ -30,9 +34,9 @@ public class Itemslist extends JPanel {
 	private Container container;
 
 	/**
-	 *
-	 * @param home      The reference to the home GUI.
-	 * @param container The reference to Container object.
+	 * Constructs an Itemslist panel associated with a specific container.
+	 * @param home The reference to the Home GUI, allowing for interaction with the main application frame.
+	 * @param container The container whose items are to be displayed and managed.
 	 */
 	public Itemslist(Home home, Container container) {
 		this.home = home;
@@ -72,6 +76,11 @@ public class Itemslist extends JPanel {
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
+
+	/**
+	 * Adds an item to the table and updates the underlying container.
+	 * @param item The item to be added.
+	 */
 	public void addItem(Item item) {
 		tableModel.addRow(
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
@@ -80,6 +89,10 @@ public class Itemslist extends JPanel {
 
 	}
 
+	/**
+	 * Removes an item from the table based on its name.
+	 * @param itemName The name of the item to be removed.
+	 */
 	public void removeItem(String itemName) {
 		// Iterate through the table to find the row with the given item name
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
@@ -92,6 +105,11 @@ public class Itemslist extends JPanel {
 		}
 	}
 
+	/**
+	 * Updates an item's properties based on changes made within the table.
+	 * @param row The row index of the item in the table.
+	 * @param column The column index of the property that was changed.
+	 */
 	private void updateItemFromTable(int row, int column) {
 		// Get the item name from the table model, in the first column
 		String itemName = (String) table.getModel().getValueAt(row, 0);
