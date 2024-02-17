@@ -20,16 +20,15 @@ public class DeleteItemView implements ActionListener {
 	private JLabel t;
 	private JTextField searchField;
 
-	public DeleteItemView(JPanel containerPanel) {
+	public DeleteItemView(JPanel containerPanel, Container c, Itemslist itemsListPanel) {
 
 		String item = null;
 		Boolean success;
-		Container c;
 
 		item = JOptionPane.showInputDialog(containerPanel, "Type the name of the item to delete",
 				"*Delete Item from Pantry", 3);
 
-		success = verifyItem(item);
+		success = verifyItem(item, c, itemsListPanel);
 
 		if (success) {
 			JOptionPane.showMessageDialog(containerPanel, "Item Successfully Deleted!", item, 3);
@@ -44,8 +43,18 @@ public class DeleteItemView implements ActionListener {
 
 	}
 
-	public Boolean verifyItem(String itemName) {
-		return false;
+	public Boolean verifyItem(String itemName, Container con, Itemslist list) {
+
+		// Checking to see if item is in the database
+		if (Home.data.getItem(con, itemName) != null) {
+			// Remove the item if its present
+			Home.data.removeItem(con, itemName, null);
+
+			// Remove the item from the datalist
+			list.removeItem(itemName);
+			return true;
+		} else
+			return false;
 
 	}
 
