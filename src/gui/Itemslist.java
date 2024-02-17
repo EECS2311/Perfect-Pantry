@@ -82,7 +82,7 @@ public class Itemslist extends JPanel {
 				null
 		});
 		data.addItem(container, item.getName(), item);  // Keep track of the added item
-		// Optionally, update dropdowns or other UI elements based on the new item list
+		home.data.printItems();
 	}
 
 
@@ -110,6 +110,7 @@ public class Itemslist extends JPanel {
 				default:
 					break;
 			}
+			home.data.printItems();
 		} else {
 			// Handle the case where the item is not found
 		}

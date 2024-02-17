@@ -17,13 +17,7 @@ public class AddItemPanel extends JPanel {
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
 
-    // private List<Item> items;
-
-
-    private JTextArea displayArea;
-
-
-    private Itemslist itemsListPanel; // Add a reference to ItemsListPanel
+    private Itemslist itemsListPanel;
 
     /**
      * Constructs a new AddItemPanel with references to a list of items and a display area.
@@ -96,18 +90,6 @@ public class AddItemPanel extends JPanel {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error adding item: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    /**
-     * Updates the display area with the current list of items.
-     * Iterates over all items in the list, appending their string representation to the display area.
-     */
-    private void updateDisplayArea() {
-        StringBuilder sb = new StringBuilder();
-//        for (Item item : items) {
-//            sb.append(item).append("\n");
-//        }
-        displayArea.setText(sb.toString());
     }
 
 }
