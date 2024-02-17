@@ -8,3 +8,6 @@ Nina Dang
 Wan Ning Ma   
 Michel Nwoye-Vincent    
 Edison Tran  
+
+Run Project: 
+src/gui/Home -> Run
