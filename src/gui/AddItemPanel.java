@@ -18,15 +18,19 @@ public class AddItemPanel extends JPanel {
     private List<Item> items;
     private JTextArea displayArea;
 
+    private Itemslist itemsListPanel; // Add a reference to ItemsListPanel
+
     /**
      * Constructs a new ui.AddItemPanel with references to a list of items and a display area.
      *
      * @param items The list where added items will be stored.
-     * @param displayArea The text area where details of added items will be displayed.
+     * @param itemsListPanel The text area where details of added items will be displayed.
      */
-    public AddItemPanel(List<Item> items, JTextArea displayArea) {
+
+    public AddItemPanel(List<Item> items, Itemslist itemsListPanel) {
         this.items = items;
-        this.displayArea = displayArea;
+        this.itemsListPanel = itemsListPanel; // Initialize the reference
+
 
         setLayout(new FlowLayout());
         add(new JLabel("Item Name:"));
@@ -37,9 +41,10 @@ public class AddItemPanel extends JPanel {
         add(itemExpiryField);
         add(addButton);
 
-        updateDisplayArea();
+         // updateDisplayArea();
 
         addButton.addActionListener(e -> addItem());
+
     }
 
     /**
@@ -76,7 +81,8 @@ public class AddItemPanel extends JPanel {
             items.add(item);
 
             // Update display area
-            updateDisplayArea();
+            // updateDisplayArea();
+            itemsListPanel.addItem(item); // Update the items list panel
 
             // Clear the fields for new inputs
             itemNameField.setText("");
