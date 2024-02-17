@@ -31,7 +31,7 @@
 
 ### Big Design Decisions
 - We decided to begin building out the UI's with Java.swing as opposed to JavaFx. More team members were familiar with it so it would be quicker to begin development. Having to install an additional package as opposed to using the built in java.swing, was another consideration.
-- In order to develop the UI, we went with a model with components and Views. The views display the GUI while the components make up the view. This sort of separation of concerns made development much easier to understand.
+- In order to develop the UI, we went with a model with components and Views. The views display the GUI while the components make up the view. This sort of separation of concerns made development much easier.
 
 ### Concerns/Obstacles
 - Since every member has varying levels of knowledge on git and github, some basic operations needed a bit more explanation. 
@@ -61,6 +61,7 @@ Estimated Working time: 2 Days
 Actual Working time: 3 Days
 
 3. Remove Item from Pantry (Michel)
+Dev Tasks...
 - Create DeleteItemView to prompt user for the item they want to remove from their pantry.
 - Implement error handling on user input to ensure that items actually exist in the database.
 - Test implementation of deleting an item 
@@ -69,10 +70,15 @@ Estimated Working time: 2 Days
 Actual Working time: 3 Days
  
 4. Tagging Food Groups (Edison)
+Dev Tasks...
 - Create tag class and several "tag" classes.
 - Implement tagging test cases 
 
+Estimated Working time: 2 Days
+Actual Working time: 1 Days
+
 5. See Full List of items (Allen)
+Dev Tasks...
 - Create ItemsList view to display list of items 
 - Display this view over top the containerView
 
@@ -80,6 +86,7 @@ Estimated Working time: 2 Days
 Actual Working time: 1 Days
 
 6. Add User (Ning)
+Dev Tasks...
 - Setup user class to implement user logins in future iterations
 
 Estimated Working time: 2 Days
