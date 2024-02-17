@@ -17,6 +17,10 @@ import javax.swing.JPanel;
 import database.DB;
 import domain.logic.Container;
 
+/**
+ * The main GUI frame for the application, serving as the entry point for user interaction.
+ * It includes functionality to add and edit container names, and navigate between different views.
+ */
 public class Home implements ActionListener {
 
 	/**
@@ -107,6 +111,9 @@ public class Home implements ActionListener {
 		Home m = new Home();
 	}
 
+	/**
+	 * Launches the application and initializes the main GUI components.
+	 */
 	public Home() {
 		stage = 0;
 
@@ -125,7 +132,7 @@ public class Home implements ActionListener {
 	}
 
 	/**
-	 * Initializes the GUI of the home screen
+	 * Initializes and displays the home screen GUI components.
 	 */
 	public void initializeHomeGUI() {
 		// Initialse mainMenuPanel
@@ -176,6 +183,9 @@ public class Home implements ActionListener {
 		homePanel.setVisible(true);
 	}
 
+	/**
+	 * Changes the stage of the home screen between the main view and the edit view.
+	 */
 	private void changeStageOfHome() {
 		if (stage == 0) { // Home screen
 			if (editPanel != null) {
@@ -219,7 +229,7 @@ public class Home implements ActionListener {
 	}
 
 	/**
-	 * Adds a new container object and a new button associated with it
+	 * Adds a new container and its corresponding button to the GUI.
 	 */
 	private void addNewContainer() {
 		String nameOfContainer = JOptionPane.showInputDialog("Please enter a name for your Container:");
@@ -236,7 +246,8 @@ public class Home implements ActionListener {
 	}
 
 	/**
-	 * Adds container objects as buttons on the given panel
+	 * Dynamically adds container buttons to the specified panel based on the current containerMap state.
+	 * @param p The panel to which container buttons will be added.
 	 */
 	private void addContainerButtons(JPanel p) {
 		p.removeAll();
@@ -246,6 +257,10 @@ public class Home implements ActionListener {
 		p.revalidate(); // refresh panel
 	}
 
+	/**
+	 * Initiates the container renaming process for a given container button.
+	 * @param b The button corresponding to the container to be renamed.
+	 */
 	private void renameContainerButton(JButton b) {
 		Container c = containerMap.get(b);
 		String nameOfContainer = JOptionPane
@@ -287,6 +302,10 @@ public class Home implements ActionListener {
 		}
 	}
 
+	/**
+	 * Provides access to the main application frame.
+	 * @return The main JFrame of the application.
+	 */
 	public static JFrame getFrame() {
 		return frame;
 	}

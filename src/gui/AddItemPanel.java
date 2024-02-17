@@ -24,7 +24,6 @@ public class AddItemPanel extends JPanel {
      *
      * @param itemsListPanel The text area where details of added items will be displayed.
      */
-
     public AddItemPanel(Itemslist itemsListPanel) {
         this.itemsListPanel = itemsListPanel; // Initialize the reference
 
