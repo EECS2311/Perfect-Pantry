@@ -21,7 +21,7 @@ import domain.logic.Container;
  * The main GUI frame for the application, serving as the entry point for user interaction.
  * It includes functionality to add and edit container names, and navigate between different views.
  */
-public class Home implements ActionListener {
+public class HomeView implements ActionListener {
 
 	/**
 	 * Frame window of the application
@@ -108,13 +108,13 @@ public class Home implements ActionListener {
 	private JPanel editContainerButtonsPanel = new JPanel();
 
 	public static void main(String[] args) {
-		Home m = new Home();
+		HomeView m = new HomeView();
 	}
 
 	/**
 	 * Launches the application and initializes the main GUI components.
 	 */
-	public Home() {
+	public HomeView() {
 		stage = 0;
 
 		// Initialize frame

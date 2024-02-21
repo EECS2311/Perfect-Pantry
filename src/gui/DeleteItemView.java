@@ -31,7 +31,7 @@ public class DeleteItemView implements ActionListener {
 	 * @param c The container from which an item is to be deleted.
 	 * @param itemsListPanel The Itemslist panel showing the list of items.
 	 */
-	public DeleteItemView(JPanel containerPanel, Container c, Itemslist itemsListPanel) {
+	public DeleteItemView(JPanel containerPanel, Container c, ItemslistView itemsListPanel) {
 
 		String item = null;
 		Boolean success;
@@ -61,12 +61,12 @@ public class DeleteItemView implements ActionListener {
 	 * @param list The Itemslist panel to update after deletion.
 	 * @return Boolean indicating the success or failure of the item deletion.
 	 */
-	public Boolean verifyItem(String itemName, Container con, Itemslist list) {
+	public Boolean verifyItem(String itemName, Container con, ItemslistView list) {
 
 		// Checking to see if item is in the database
-		if (Home.data.getItem(con, itemName) != null) {
+		if (HomeView.data.getItem(con, itemName) != null) {
 			// Remove the item if its present
-			Home.data.removeItem(con, itemName, null);
+			HomeView.data.removeItem(con, itemName, null);
 
 			// Remove the item from the datalist
 			list.removeItem(itemName);

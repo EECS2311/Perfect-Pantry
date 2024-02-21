@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.logic.Item;
-import gui.AddItemPanel;
-import gui.Itemslist;
+import gui.AddItemView;
+import gui.ItemslistView;
 
 public class AddItemPanelDemo {
 
