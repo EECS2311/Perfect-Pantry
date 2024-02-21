@@ -18,8 +18,9 @@ import database.DB;
 import domain.logic.Container;
 
 /**
- * The main GUI frame for the application, serving as the entry point for user interaction.
- * It includes functionality to add and edit container names, and navigate between different views.
+ * The main GUI frame for the application, serving as the entry point for user
+ * interaction. It includes functionality to add and edit container names, and
+ * navigate between different views.
  */
 public class HomeView implements ActionListener {
 
@@ -28,7 +29,7 @@ public class HomeView implements ActionListener {
 	 */
 	static JFrame frame;
 
-	static DB data = new DB();
+	public static DB data = new DB();
 
 	/**
 	 * home panel of the application, will hold all components pertaining to home
@@ -246,7 +247,9 @@ public class HomeView implements ActionListener {
 	}
 
 	/**
-	 * Dynamically adds container buttons to the specified panel based on the current containerMap state.
+	 * Dynamically adds container buttons to the specified panel based on the
+	 * current containerMap state.
+	 * 
 	 * @param p The panel to which container buttons will be added.
 	 */
 	private void addContainerButtons(JPanel p) {
@@ -259,6 +262,7 @@ public class HomeView implements ActionListener {
 
 	/**
 	 * Initiates the container renaming process for a given container button.
+	 * 
 	 * @param b The button corresponding to the container to be renamed.
 	 */
 	private void renameContainerButton(JButton b) {
@@ -304,6 +308,7 @@ public class HomeView implements ActionListener {
 
 	/**
 	 * Provides access to the main application frame.
+	 * 
 	 * @return The main JFrame of the application.
 	 */
 	public static JFrame getFrame() {
