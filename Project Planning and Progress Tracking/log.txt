@@ -93,3 +93,21 @@ Estimated Working time: 2 Days
 Actual Working time: 1 Days
 
 
+# Up to Deliverable 1 - Meeting minutes
+
+## Feb 20th 
+
+- Discussing what needs
+- Make sure that there's no logic in the GUI folder
+- Ensure that the all the java files in the GUI folder are suffixed with "View"
+- Setup and start working with PostgreSQL database
+- Need to setup database Schema
+
+Focus: 
+- Cleaning up the UI
+- Setting up the Database
+- Writing detailed ITr2 User Stories
+
+
+
+

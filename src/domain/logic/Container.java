@@ -1,7 +1,7 @@
 package domain.logic;
 
 import gui.ContainerView;
-import gui.Home;
+import gui.HomeView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class Container {
 	 * @param n The name of the container.
 	 * @param home The Home instance to associate with this container's GUI view.
 	 */
-	public Container(String n, Home home) {
+	public Container(String n, HomeView home) {
 		this.name = n;
 		listOfItems = new ArrayList<>();
 		containerViewgui = new ContainerView(home, this); // Pass Home instance to ContainerView

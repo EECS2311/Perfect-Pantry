@@ -23,12 +23,12 @@ import domain.logic.Item;
  * Represents a panel that displays a list of items within a container.
  * It provides functionalities to add and remove items, and update item properties directly from the table.
  */
-public class Itemslist extends JPanel {
+public class ItemslistView extends JPanel {
 	private DefaultTableModel tableModel;
 	private JTable table;
 	// private List<Item> items;
 
-	private Home home;
+	private HomeView home;
 
 	private DB data;
 	private Container container;
@@ -38,7 +38,7 @@ public class Itemslist extends JPanel {
 	 * @param home The reference to the Home GUI, allowing for interaction with the main application frame.
 	 * @param container The container whose items are to be displayed and managed.
 	 */
-	public Itemslist(Home home, Container container) {
+	public ItemslistView(HomeView home, Container container) {
 		this.home = home;
 		this.data = home.data;
 		this.container = container;

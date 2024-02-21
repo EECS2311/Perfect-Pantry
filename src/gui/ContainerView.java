@@ -19,9 +19,9 @@ public class ContainerView implements ActionListener {
 	private JButton back;
 	private JButton delete;
 
-	private Home home;
-	private Itemslist itemsListPanel;
-	private AddItemPanel addItemPanel;
+	private HomeView home;
+	private ItemslistView itemsListPanel;
+	private AddItemView addItemPanel;
 	private Container container;
 
 	/**
@@ -29,7 +29,7 @@ public class ContainerView implements ActionListener {
 	 * @param home The Home instance that this view is part of.
 	 * @param container The container to be managed and displayed in this view.
 	 */
-	public ContainerView(Home home, Container container) {
+	public ContainerView(HomeView home, Container container) {
 		this.home = home;
 		this.container = container;
 		containerView = new JPanel(new BorderLayout()); // Set BorderLayout for the main panel
@@ -37,8 +37,8 @@ public class ContainerView implements ActionListener {
 		delete = new JButton("Delete Item");
 		// add = new JButton("Add Item");
 
-		itemsListPanel = new Itemslist(home, container);
-		addItemPanel = new AddItemPanel(itemsListPanel);
+		itemsListPanel = new ItemslistView(home, container);
+		addItemPanel = new AddItemView(itemsListPanel);
 
 		back.addActionListener(this);
 		delete.addActionListener(this);
@@ -57,7 +57,7 @@ public class ContainerView implements ActionListener {
 	 * @param isVisible Specifies whether the container view should be made visible.
 	 */
 	public void setupContainerViewGUI(boolean isVisible) {
-		JFrame frame = Home.getFrame(); // Get the main frame
+		JFrame frame = HomeView.getFrame(); // Get the main frame
 		if (isVisible) {
 			frame.getContentPane().removeAll(); // Clear the frame's content pane
 			frame.getContentPane().add(containerView); // Add this container view

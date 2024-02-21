@@ -11,20 +11,20 @@ import domain.logic.Container;
  * A JPanel subclass that provides a user interface for adding items with name, quantity, and expiration date.
  * It validates user input, adds created items to a provided list, and updates a display area to show all added items.
  */
-public class AddItemPanel extends JPanel {
+public class AddItemView extends JPanel {
     private JTextField itemNameField = new JTextField(10);
     private JTextField itemQuantityField = new JTextField(5);
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
 
-    private Itemslist itemsListPanel;
+    private ItemslistView itemsListPanel;
 
     /**
      * Constructs a new AddItemPanel with references to a list of items and a display area.
      *
      * @param itemsListPanel The text area where details of added items will be displayed.
      */
-    public AddItemPanel(Itemslist itemsListPanel) {
+    public AddItemView(ItemslistView itemsListPanel) {
         this.itemsListPanel = itemsListPanel; // Initialize the reference
 
         setLayout(new FlowLayout());
