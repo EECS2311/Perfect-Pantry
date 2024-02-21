@@ -9,5 +9,8 @@ Wan Ning Ma
 Michel Nwoye-Vincent    
 Edison Tran  
 
-Run Project: 
+
+
+## How to run 
+This project was devloped using Java 17.
 src/gui/Home -> Run
