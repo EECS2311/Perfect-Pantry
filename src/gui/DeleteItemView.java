@@ -1,8 +1,5 @@
 package gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,7 +16,7 @@ import domain.logic.ItemUtility;
  * the item they wish to delete and performs the deletion if the item exists
  * within the container.
  */
-public class DeleteItemView implements ActionListener {
+public class DeleteItemView extends JPanel {
 
 	private JFrame deleteFrame;
 	private JPanel deletePanel;
@@ -54,12 +51,6 @@ public class DeleteItemView implements ActionListener {
 			}
 
 		}
-
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
