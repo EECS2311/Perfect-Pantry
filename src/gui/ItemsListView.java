@@ -36,7 +36,35 @@ public class ItemsListView extends JPanel {
 		this.data = home.data;
 		this.container = container;
 		setLayout(new BorderLayout());
-		tableModel = new DefaultTableModel();
+
+		// Initialize the table model
+		tableModel = new DefaultTableModel() {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				//  "Name" is at index 0, "Quantity" is at index 1, and "Expiry Date" is at index 2
+				return !(column == 0 || column == 1 || column == 2); // columns 0, 1, 2 are not editable
+			}
+
+			// Enforce a certain type for each column
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				switch (columnIndex) {
+					case 0:
+						return String.class;
+					case 1:
+						return Integer.class;
+					case 2:
+						return String.class;
+					case 3:
+						return FoodGroup.class;
+					case 4:
+						return FoodFreshness.class;
+					default:
+						return Object.class;
+				}
+			}
+		};
+
 		table = new JTable(tableModel);
 		// items = new ArrayList<>();
 
@@ -78,7 +106,7 @@ public class ItemsListView extends JPanel {
 		tableModel.addRow(
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
 		data.addItem(container, item.getName(), item); // Keep track of the added item
-		home.data.printItems();
+		// home.data.printItems();
 
 	}
 
@@ -110,6 +138,7 @@ public class ItemsListView extends JPanel {
 		boolean updateSuccess = ItemUtility.updateItem(data, container, row, itemName, newValue, column);
 
 		if (updateSuccess) {
+			// home.data.printItems();
 			JOptionPane.showMessageDialog(this, "Item updated successfully.", "Update", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(this, "Error updating item. Please check the values.", "Error", JOptionPane.ERROR_MESSAGE);
