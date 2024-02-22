@@ -4,6 +4,15 @@ import gui.HomeView;
 import gui.ItemsListView;
 import gui.ItemsListView;
 import java.util.function.Consumer;
+
+import database.DB;
+import domain.logic.Container;
+import domain.logic.FoodGroup;
+import domain.logic.FoodFreshness;
+import domain.logic.Item;
+import java.util.EnumSet;
+import java.util.Set;
+
 public class ItemUtility {
     /**
      * Verifies and deletes an item from the specified container and updates the
@@ -56,6 +65,33 @@ public class ItemUtility {
         } catch (Exception ex) {
             errorHandler.accept("Error adding item: " + ex.getMessage());
         }
+    }
+
+    public static boolean updateItem(DB data, Container container, int row, String itemName, Object newValue, int column) {
+        Item item = data.getItem(container, itemName);
+
+        if (item == null) {
+            return false; // Item not found
+        }
+
+        switch (column) {
+            case 3: // Food Group column
+                if (newValue instanceof FoodGroup) {
+                    FoodGroup selectedGroup = (FoodGroup) newValue;
+                    Set<FoodGroup> foodGroupSet = EnumSet.of(selectedGroup);
+                    item.setFoodGroupTagsEnum(foodGroupSet);
+                }
+                break;
+            case 4: // Food Freshness column
+                if (newValue instanceof FoodFreshness) {
+                    FoodFreshness selectedFreshness = (FoodFreshness) newValue;
+                    item.setFoodFreshnessTag(selectedFreshness);
+                }
+                break;
+            default:
+                return false; // Invalid column for update
+        }
+        return true; // Successfully updated
     }
 
 }

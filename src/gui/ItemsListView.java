@@ -4,20 +4,13 @@ import java.awt.BorderLayout;
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import database.DB;
-import domain.logic.Container;
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.Item;
+import domain.logic.*;
 
 /**
  * Represents a panel that displays a list of items within a container.
@@ -111,32 +104,15 @@ public class ItemsListView extends JPanel {
 	 * @param column The column index of the property that was changed.
 	 */
 	private void updateItemFromTable(int row, int column) {
-		// Get the item name from the table model, in the first column
 		String itemName = (String) table.getModel().getValueAt(row, 0);
+		Object newValue = table.getModel().getValueAt(row, column);
 
-		// Retrieve the Item object from the DB using the container and item name
-		Item item = data.getItem(container, itemName);
+		boolean updateSuccess = ItemUtility.updateItem(data, container, row, itemName, newValue, column);
 
-		// Proceed only if the item was successfully retrieved
-		if (item != null) {
-			TableModel model = table.getModel();
-			switch (column) {
-			case 3: // Food Group column
-				FoodGroup selectedGroup = (FoodGroup) model.getValueAt(row, column);
-				// Create a Set containing just the selected FoodGroup
-				Set<FoodGroup> foodGroupSet = EnumSet.of(selectedGroup);
-				item.setFoodGroupTagsEnum(foodGroupSet);
-				break;
-			case 4: // Food Freshness column
-				FoodFreshness selectedFreshness = (FoodFreshness) model.getValueAt(row, column);
-				item.setFoodFreshnessTag(selectedFreshness);
-				break;
-			default:
-				break;
-			}
-			home.data.printItems();
+		if (updateSuccess) {
+			JOptionPane.showMessageDialog(this, "Item updated successfully.", "Update", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			// Handle the case where the item is not found
+			JOptionPane.showMessageDialog(this, "Error updating item. Please check the values.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
