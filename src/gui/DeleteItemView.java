@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import domain.logic.Container;
-import domain.logic.DeleteItem;
+import domain.logic.ItemUtility;
 
 /**
  * Provides a graphical interface for deleting an item from a specified
@@ -34,7 +34,7 @@ public class DeleteItemView implements ActionListener {
 	 * @param c              The container from which an item is to be deleted.
 	 * @param itemsListPanel The Itemslist panel showing the list of items.
 	 */
-	public DeleteItemView(JPanel containerPanel, Container c, ItemslistView itemsListPanel) {
+	public DeleteItemView(JPanel containerPanel, Container c, ItemsListView itemsListPanel) {
 
 		String item = null;
 		Boolean success;
@@ -42,7 +42,7 @@ public class DeleteItemView implements ActionListener {
 		item = JOptionPane.showInputDialog(containerPanel, "Type the name of the item to delete",
 				"*Delete Item from Pantry", 3);
 
-		success = DeleteItem.verifyItem(item, c, itemsListPanel);
+		success = ItemUtility.verifyDeleteItem(item, c, itemsListPanel);
 
 		if (success) {
 			JOptionPane.showMessageDialog(containerPanel, "Item Successfully Deleted!", item, 3);

@@ -4,26 +4,19 @@ import java.awt.BorderLayout;
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import database.DB;
-import domain.logic.Container;
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.Item;
+import domain.logic.*;
 
 /**
  * Represents a panel that displays a list of items within a container.
  * It provides functionalities to add and remove items, and update item properties directly from the table.
  */
-public class ItemslistView extends JPanel {
+public class ItemsListView extends JPanel {
 	private DefaultTableModel tableModel;
 	private JTable table;
 	// private List<Item> items;
@@ -34,16 +27,44 @@ public class ItemslistView extends JPanel {
 	private Container container;
 
 	/**
-	 * Constructs an Itemslist panel associated with a specific container.
+	 * Constructs an ItemsListView panel associated with a specific container.
 	 * @param home The reference to the Home GUI, allowing for interaction with the main application frame.
 	 * @param container The container whose items are to be displayed and managed.
 	 */
-	public ItemslistView(HomeView home, Container container) {
+	public ItemsListView(HomeView home, Container container) {
 		this.home = home;
 		this.data = home.data;
 		this.container = container;
 		setLayout(new BorderLayout());
-		tableModel = new DefaultTableModel();
+
+		// Initialize the table model
+		tableModel = new DefaultTableModel() {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				//  "Name" is at index 0, "Quantity" is at index 1, and "Expiry Date" is at index 2
+				return !(column == 0 || column == 1 || column == 2); // columns 0, 1, 2 are not editable
+			}
+
+			// Enforce a certain type for each column
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				switch (columnIndex) {
+					case 0:
+						return String.class;
+					case 1:
+						return Integer.class;
+					case 2:
+						return String.class;
+					case 3:
+						return FoodGroup.class;
+					case 4:
+						return FoodFreshness.class;
+					default:
+						return Object.class;
+				}
+			}
+		};
+
 		table = new JTable(tableModel);
 		// items = new ArrayList<>();
 
@@ -85,7 +106,7 @@ public class ItemslistView extends JPanel {
 		tableModel.addRow(
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
 		data.addItem(container, item.getName(), item); // Keep track of the added item
-		home.data.printItems();
+		// home.data.printItems();
 
 	}
 
@@ -111,32 +132,16 @@ public class ItemslistView extends JPanel {
 	 * @param column The column index of the property that was changed.
 	 */
 	private void updateItemFromTable(int row, int column) {
-		// Get the item name from the table model, in the first column
 		String itemName = (String) table.getModel().getValueAt(row, 0);
+		Object newValue = table.getModel().getValueAt(row, column);
 
-		// Retrieve the Item object from the DB using the container and item name
-		Item item = data.getItem(container, itemName);
+		boolean updateSuccess = ItemUtility.updateItem(data, container, row, itemName, newValue, column);
 
-		// Proceed only if the item was successfully retrieved
-		if (item != null) {
-			TableModel model = table.getModel();
-			switch (column) {
-			case 3: // Food Group column
-				FoodGroup selectedGroup = (FoodGroup) model.getValueAt(row, column);
-				// Create a Set containing just the selected FoodGroup
-				Set<FoodGroup> foodGroupSet = EnumSet.of(selectedGroup);
-				item.setFoodGroupTagsEnum(foodGroupSet);
-				break;
-			case 4: // Food Freshness column
-				FoodFreshness selectedFreshness = (FoodFreshness) model.getValueAt(row, column);
-				item.setFoodFreshnessTag(selectedFreshness);
-				break;
-			default:
-				break;
-			}
-			home.data.printItems();
+		if (updateSuccess) {
+			// home.data.printItems();
+			JOptionPane.showMessageDialog(this, "Item updated successfully.", "Update", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			// Handle the case where the item is not found
+			JOptionPane.showMessageDialog(this, "Error updating item. Please check the values.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

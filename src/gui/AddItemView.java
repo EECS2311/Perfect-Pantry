@@ -6,6 +6,7 @@ import java.util.List;
 import domain.logic.Item;
 import database.DB;
 import domain.logic.Container;
+import domain.logic.ItemUtility;
 
 /**
  * A JPanel subclass that provides a user interface for adding items with name, quantity, and expiration date.
@@ -17,14 +18,14 @@ public class AddItemView extends JPanel {
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
 
-    private ItemslistView itemsListPanel;
+    private ItemsListView itemsListPanel;
 
     /**
      * Constructs a new AddItemPanel with references to a list of items and a display area.
      *
      * @param itemsListPanel The text area where details of added items will be displayed.
      */
-    public AddItemView(ItemslistView itemsListPanel) {
+    public AddItemView(ItemsListView itemsListPanel) {
         this.itemsListPanel = itemsListPanel; // Initialize the reference
 
         setLayout(new FlowLayout());
@@ -37,7 +38,6 @@ public class AddItemView extends JPanel {
         add(addButton);
 
         addButton.addActionListener(e -> addItem());
-
     }
 
     /**
@@ -47,42 +47,20 @@ public class AddItemView extends JPanel {
      * and clears the input fields for the next entry.
      */
     private void addItem() {
-        try {
-            String name = itemNameField.getText().trim(); // Trim to remove leading and trailing spaces
-            if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Item name cannot be empty.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return; // Stop the method execution if the name is empty
-            }
-
-            int quantity;
-            try {
-                quantity = Integer.parseInt(itemQuantityField.getText());
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid number for quantity.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return; // Stop the method execution if the quantity is not a valid number
-            }
-
-            if (quantity <= 0) {
-                JOptionPane.showMessageDialog(this, "Quantity must be greater than 0.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return; // Stop the method execution if the quantity is less than or equal to 0
-            }
-
-            String expiryDate = itemExpiryField.getText();
-
-            // Create and add the item
-            Item item = Item.getInstance(name, quantity, expiryDate);
-
-            // Update the items list panel
-            itemsListPanel.addItem(item);
-
-            // Clear the fields for new inputs
-            itemNameField.setText("");
-            itemQuantityField.setText("");
-            itemExpiryField.setText("");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error adding item: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        ItemUtility.verifyAddItem(
+                itemNameField.getText(),
+                itemQuantityField.getText(),
+                itemExpiryField.getText(),
+                itemsListPanel,
+                (errorMsg) -> JOptionPane.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+                () -> {
+                    itemNameField.setText("");
+                    itemQuantityField.setText("");
+                    itemExpiryField.setText("");
+                }
+        );
     }
+
 
     @Override
     public Dimension getPreferredSize() {

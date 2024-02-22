@@ -20,7 +20,7 @@ public class ContainerView implements ActionListener {
 	private JButton delete;
 
 	private HomeView home;
-	private ItemslistView itemsListPanel;
+	private ItemsListView itemsListPanel;
 	private AddItemView addItemPanel;
 	private Container container;
 
@@ -37,7 +37,7 @@ public class ContainerView implements ActionListener {
 		delete = new JButton("Delete Item");
 		// add = new JButton("Add Item");
 
-		itemsListPanel = new ItemslistView(home, container);
+		itemsListPanel = new ItemsListView(home, container);
 		addItemPanel = new AddItemView(itemsListPanel);
 
 		back.addActionListener(this);
