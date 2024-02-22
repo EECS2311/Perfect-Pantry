@@ -7,7 +7,7 @@ import java.util.List;
 
 import domain.logic.Item;
 import gui.AddItemView;
-import gui.ItemslistView;
+import gui.ItemsListView;
 
 public class AddItemPanelDemo {
 

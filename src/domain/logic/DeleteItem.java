@@ -1,7 +1,7 @@
 package domain.logic;
 
 import gui.HomeView;
-import gui.ItemslistView;
+import gui.ItemsListView;
 
 public class DeleteItem {
 
@@ -14,7 +14,7 @@ public class DeleteItem {
 	 * @param list     The Itemslist panel to update after deletion.
 	 * @return Boolean indicating the success or failure of the item deletion.
 	 */
-	public static Boolean verifyItem(String itemName, Container con, ItemslistView list) {
+	public static Boolean verifyItem(String itemName, Container con, ItemsListView list) {
 
 		// Checking to see if item is in the database
 		if (HomeView.data.getItem(con, itemName) != null) {

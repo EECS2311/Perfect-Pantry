@@ -34,7 +34,7 @@ public class DeleteItemView implements ActionListener {
 	 * @param c              The container from which an item is to be deleted.
 	 * @param itemsListPanel The Itemslist panel showing the list of items.
 	 */
-	public DeleteItemView(JPanel containerPanel, Container c, ItemslistView itemsListPanel) {
+	public DeleteItemView(JPanel containerPanel, Container c, ItemsListView itemsListPanel) {
 
 		String item = null;
 		Boolean success;

@@ -17,14 +17,14 @@ public class AddItemView extends JPanel {
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
 
-    private ItemslistView itemsListPanel;
+    private ItemsListView itemsListPanel;
 
     /**
      * Constructs a new AddItemPanel with references to a list of items and a display area.
      *
      * @param itemsListPanel The text area where details of added items will be displayed.
      */
-    public AddItemView(ItemslistView itemsListPanel) {
+    public AddItemView(ItemsListView itemsListPanel) {
         this.itemsListPanel = itemsListPanel; // Initialize the reference
 
         setLayout(new FlowLayout());
@@ -37,7 +37,6 @@ public class AddItemView extends JPanel {
         add(addButton);
 
         addButton.addActionListener(e -> addItem());
-
     }
 
     /**
