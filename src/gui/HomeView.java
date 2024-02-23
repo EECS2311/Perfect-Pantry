@@ -90,7 +90,8 @@ public class HomeView implements ActionListener {
 	/**
 	 * Text of edit view
 	 */
-	private JLabel editNameLabel;
+	private JLabel editNameLabel = new JLabel("Click the Container Button you wish to rename");
+;
 
 	/**
 	 * Holds buttons of edit view
@@ -100,7 +101,8 @@ public class HomeView implements ActionListener {
 	/**
 	 * Button to go back from edit screen to home screen
 	 */
-	private JButton editBackToHome;
+	private JButton editBackToHome = new JButton("Back to Home");
+;
 
 	/**
 	 * Panel to hold container buttons
@@ -140,6 +142,7 @@ public class HomeView implements ActionListener {
 		viewContainers.addActionListener(this);
 		viewOfContainer2HomeButton.addActionListener(this);
 		editContainerNameButton.addActionListener(this);
+		editBackToHome.addActionListener(this);
 		
 		stage = 0; //home stage
 		
@@ -190,30 +193,24 @@ public class HomeView implements ActionListener {
 		} else if (stage == 1) { // Edit name of container screen
 			homePanel.setVisible(false);
 			viewOfContainerPanel.setVisible(false);
-			editPanel = new JPanel();
+			
 			editPanel.setLayout(null);
-			frame.getContentPane().add(editPanel);
+			frame.add(editPanel);
 
-			editNameOfContainerPanel = new JPanel();
-			editNameOfContainerPanel.setSize(800, 90);
+			editNameOfContainerPanel.setBounds(0, 0, 800, 90);
 			editNameOfContainerPanel.setBackground(new Color(179, 245, 223));
 			editPanel.add(editNameOfContainerPanel);
 
-			editNameLabel = new JLabel("Click the Container Button you wish to rename");
 			editNameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
 			editNameOfContainerPanel.add(editNameLabel);
 
-			editGUIButtonsPanel = new JPanel();
 			editGUIButtonsPanel.setBackground(new Color(179, 245, 223));
-			editGUIButtonsPanel.setBounds(0, 680, 800, 90);
+			editGUIButtonsPanel.setBounds(0, 420, 800, 50);
 			editPanel.add(editGUIButtonsPanel);
 
-			editBackToHome = new JButton("Back to Home");
-			editBackToHome.addActionListener(this);
 			editGUIButtonsPanel.add(editBackToHome);
 
-			editContainerButtonsPanel = new JPanel();
-			editContainerButtonsPanel.setBounds(0, 90, frame.getWidth(), frame.getHeight() - 120);
+			editContainerButtonsPanel.setBounds(0, 90, 800, 350);
 			editContainerButtonsPanel.setBackground(new Color(149, 245, 203));
 			editContainerButtonsPanel.setLayout(new FlowLayout());
 			addContainerButtons(editContainerButtonsPanel);
