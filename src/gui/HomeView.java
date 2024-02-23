@@ -142,83 +142,17 @@ public class HomeView implements ActionListener {
 		viewContainers.addActionListener(this);
 		viewOfContainer2HomeButton.addActionListener(this);
 		
-		initializeHomeGUI();
-	}
-
-	/**
-	 * Initializes and displays the home screen GUI components.
-	 */
-	public void initializeHomeGUI() {
-		stage = 0;
-		// Initialse mainMenuPanel
-		homePanel.setLayout(null);
-		frame.getContentPane().add(homePanel);
-		frame.setLocationRelativeTo(null);
-
-		homePanel.setBackground(new Color(253, 241, 203));
-		homePanel.setVisible(true);
+		stage = 0; //home stage
 		
-		// Initialize titleLabel
-		homePanel.add(titleLabel);
-		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 50));
-		titleLabel.setBounds(240, 100, 500, 100);
-
-		homePanel.add(newContainerText);
-		newContainerText.setText("Type new container...");
-		newContainerText.setVisible(true);
-		newContainerText.setBounds(240, 200, 250, 40);
-
-		homePanel.add(createContainer);
-		createContainer.setBackground(new Color (76, 183, 242));
-		createContainer.setBounds(500, 200, 80, 40);
-
-		homePanel.add(viewContainers);
-		viewContainers.setBackground(new Color (76, 183, 242));
-		viewContainers.setBounds(240, 250, 250, 40);
-
-
-
-		//
-		//		// Initialize titleLabel
-		//		titleLabel = new JLabel("PERFECT PANTRY");
-		//		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
-		//		titlePanel.add(titleLabel);
-		//
-		//		// initialize mainMenuButtonsPanel
-		//		homeButtonsPanel = new JPanel();
-		//		homeButtonsPanel.setBackground(new Color(192, 237, 203));
-		//		homeButtonsPanel.setBounds(0, 680, 800, 90);
-		//		homePanel.add(homeButtonsPanel);
-		//
-		//		// Components of mainMenuButtonsPanel
-		//		// initialize addNewContainerButton
-		//		addNewContainerButton = new JButton("Add New Container");
-		//		addNewContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		//		addNewContainerButton.addActionListener(this);
-		//		homeButtonsPanel.add(addNewContainerButton);
-		//
-		//		// Initialize editContainerNameButton
-		//		editContainerNameButton = new JButton("Edit Container Name");
-		//		editContainerNameButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		//		editContainerNameButton.addActionListener(this);
-		//		homeButtonsPanel.add(editContainerNameButton);
-		//
-		//		// initialize containerButtonsPanel
-		//		containerButtonsPanel = new JPanel();
-		//		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight() - 120);
-		//		containerButtonsPanel.setBackground(new Color(245, 213, 152));
-		//		containerButtonsPanel.setLayout(new FlowLayout());
-		//		addContainerButtons(containerButtonsPanel);
-
-		//		homePanel.add(containerButtonsPanel);
-
+		changeStageOfHome();
 	}
+
 	
 
 	/**
-	 * Changes the stage of the home screen between the main view and the edit view.
+	 * Changes the stage of the home screen between the main view and the Container list view.
 	 */
-	private void changeStageOfHome() {
+	public void changeStageOfHome() {
 		if (stage == 0) { // Home screen
 			if (editPanel != null) {
 				editPanel.setVisible(false);
@@ -226,9 +160,32 @@ public class HomeView implements ActionListener {
 			if( viewOfContainerPanel != null) {
 				viewOfContainerPanel.setVisible(false);
 			}
+			// Initialse mainMenuPanel
+			homePanel.setLayout(null);
+			frame.getContentPane().add(homePanel);
+			frame.setLocationRelativeTo(null);
+
+			homePanel.setBackground(new Color(253, 241, 203));
 			homePanel.setVisible(true);
-//			newContainerText.addActionListener(this);
-//			viewContainers.addActionListener(this);
+			
+			// Initialize titleLabel
+			homePanel.add(titleLabel);
+			titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 50));
+			titleLabel.setBounds(240, 100, 500, 100);
+
+			homePanel.add(newContainerText);
+			newContainerText.setText("Type new container...");
+			newContainerText.setVisible(true);
+			newContainerText.setBounds(240, 200, 250, 40);
+
+			homePanel.add(createContainer);
+			createContainer.setBackground(new Color (76, 183, 242));
+			createContainer.setBounds(500, 200, 80, 40);
+
+			homePanel.add(viewContainers);
+			viewContainers.setBackground(new Color (76, 183, 242));
+			viewContainers.setBounds(240, 250, 250, 40);
+			homePanel.setVisible(true);
 
 
 		} else if (stage == 1) { // Edit name of container screen
@@ -353,7 +310,6 @@ public class HomeView implements ActionListener {
 			else if (source == viewContainers) {
 				stage = 2;
 				changeStageOfHome();
-
 			}
 
 			//			} else if (source == editContainerNameButton) {
