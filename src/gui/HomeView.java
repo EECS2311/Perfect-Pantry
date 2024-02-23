@@ -215,18 +215,18 @@ public class HomeView implements ActionListener {
 	/**
 	 * Changes the stage of the home screen between the main view and the edit view.
 	 */
-	
+
 	private JPanel viewOfContainerPanel;
 	private JPanel backPanel;
 	private JButton viewOfContainer2HomeButton; 
-//	private JPanel containerButtonsPanel; //Already created
+	//	private JPanel containerButtonsPanel; //Already created
 	private void changeStageOfHome() {
 		if (stage == 0) { // Home screen
 			if (editPanel != null) {
 				editPanel.setVisible(false);
 			}
 			if( viewOfContainerPanel != null) {
-			viewOfContainerPanel.setVisible(false);
+				viewOfContainerPanel.setVisible(false);
 			}
 			homePanel.setVisible(true);
 
@@ -264,38 +264,38 @@ public class HomeView implements ActionListener {
 			editPanel.add(editContainerButtonsPanel);
 			editPanel.setVisible(true);
 		}
-		
+
 		else if (stage == 2) { // See list of containers as buttons
 			homePanel.setVisible(false);
-			
+
 			viewOfContainerPanel = new JPanel();
 			frame.add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
 			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
-			
+
 			backPanel = new JPanel();
 			backPanel.setBackground(new Color(253, 241, 203));
 			viewOfContainerPanel.add(backPanel);
 			backPanel.setLayout(new FlowLayout());
 			backPanel.setBounds(0, 0, 800, 50);
-			
+
 			viewOfContainer2HomeButton = new JButton("Back");
 			backPanel.add(viewOfContainer2HomeButton);
 			viewOfContainer2HomeButton.addActionListener(this);
-			
+
 			containerButtonsPanel = new JPanel();
 			viewOfContainerPanel.add(containerButtonsPanel);
 			containerButtonsPanel.setBounds(0, 50, 800, 450);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
 			addContainerButtons(containerButtonsPanel);
-			
-			
+
+
 			viewOfContainerPanel.setVisible(true);
-			
-			
-			
-			
-			
+
+
+
+
+
 		}
 	}
 
@@ -328,6 +328,7 @@ public class HomeView implements ActionListener {
 		p.removeAll();
 		containerMap.forEach((button, container) -> {
 			p.add(button);
+			button.addActionListener(this);
 		});
 		p.revalidate(); // refresh panel
 	}
@@ -360,7 +361,7 @@ public class HomeView implements ActionListener {
 			else if (source == viewContainers) {
 				stage = 2;
 				changeStageOfHome();
-				
+
 			}
 
 			//			} else if (source == editContainerNameButton) {
@@ -383,11 +384,18 @@ public class HomeView implements ActionListener {
 				}
 			}
 		}
-		
+
 		else if (stage == 2) {
 			if (source == viewOfContainer2HomeButton) {
 				stage = 0;
 				changeStageOfHome();
+			}
+			else {
+				Container c = containerMap.get(source); // This will return null if the button is not found
+				if (c != null) {
+					c.getGUI();
+				}
+
 			}
 		}
 	}
