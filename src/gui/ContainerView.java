@@ -63,7 +63,7 @@ public class ContainerView implements ActionListener {
 			frame.getContentPane().add(containerView); // Add this container view
 		} else {
 			frame.getContentPane().removeAll(); // Clear the frame's content pane
-			home.initializeHomeGUI(); // Reinitialize home GUI components
+			home.changeStageOfHome(); // Reinitialize home GUI components
 			// No need to set the frame itself to invisible, just refresh its content
 		}
 		frame.revalidate();
