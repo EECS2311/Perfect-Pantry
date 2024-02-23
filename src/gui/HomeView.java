@@ -142,8 +142,14 @@ public class HomeView implements ActionListener {
 		frame.getContentPane().add(homePanel);
 		frame.setLocationRelativeTo(null);
 		
-		homePanel.setBackground(new Color(245, 223, 162));
+		homePanel.setBackground(new Color(253, 241, 203));
+		// Initialize titleLabel
+		titleLabel = new JLabel("Perfect Pantry");
+		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 50));
+		titleLabel.setBounds(240, 100, 500, 100);
+		homePanel.add(titleLabel);
 
+		
 //		// Initialize TitlePanel
 //		titlePanel = new JPanel();
 //		titlePanel.setSize(800, 90);
