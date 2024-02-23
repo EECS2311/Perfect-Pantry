@@ -215,13 +215,16 @@ public class HomeView implements ActionListener {
 	/**
 	 * Changes the stage of the home screen between the main view and the edit view.
 	 */
+	
+	private JPanel viewOfContainerPanel;
+	private JPanel backPanel;
+	private JButton viewOfContainer2HomeButton; 
 	private void changeStageOfHome() {
 		if (stage == 0) { // Home screen
 			if (editPanel != null) {
 				editPanel.setVisible(false);
 			}
 			homePanel.setVisible(true);
-			addContainerButtons(containerButtonsPanel);
 
 		} else if (stage == 1) { // Edit name of container screen
 			homePanel.setVisible(false);
@@ -256,6 +259,27 @@ public class HomeView implements ActionListener {
 			editPanel.add(editContainerButtonsPanel);
 			editPanel.setVisible(true);
 		}
+		
+		else if (stage == 2) { // See list of containers as buttons
+			homePanel.setVisible(false);
+			
+			viewOfContainerPanel = new JPanel();
+			frame.add(viewOfContainerPanel);
+			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
+			
+			backPanel = new JPanel();
+			viewOfContainerPanel.add(backPanel);
+			backPanel.setLayout(new FlowLayout());
+			backPanel.setBounds(0, 0, 800, 50);
+			
+			viewOfContainer2HomeButton = new JButton("Back");
+			backPanel.add(viewOfContainer2HomeButton);
+			viewOfContainer2HomeButton.addActionListener(this);
+
+			
+			
+			
+		}
 	}
 
 	/**
@@ -270,11 +294,9 @@ public class HomeView implements ActionListener {
 				Container c = new Container(nameOfContainer, this);
 				JButton b = new JButton(c.getName());
 				b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-
-				b.addActionListener(this);
 				containerMap.put(b, c);
 				data.addContainer(nameOfContainer, c);
-				addContainerButtons(containerButtonsPanel);
+
 			}
 		}
 	}
@@ -318,8 +340,12 @@ public class HomeView implements ActionListener {
 			if(source == createContainer) {
 				addNewContainer();
 			}
-			//			if (source == addNewContainerButton) {
-			//				addNewContainer();
+			else if (source == viewContainers) {
+				stage = 2;
+				changeStageOfHome();
+				
+			}
+
 			//			} else if (source == editContainerNameButton) {
 			//				stage = 1;
 			//				changeStageOfHome();
