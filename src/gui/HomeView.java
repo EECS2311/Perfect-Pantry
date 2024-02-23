@@ -198,20 +198,20 @@ public class HomeView implements ActionListener {
 			frame.add(editPanel);
 
 			editNameOfContainerPanel.setBounds(0, 0, 800, 90);
-			editNameOfContainerPanel.setBackground(new Color(179, 245, 223));
+			editNameOfContainerPanel.setBackground(new Color(203, 253, 232));
 			editPanel.add(editNameOfContainerPanel);
 
 			editNameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
 			editNameOfContainerPanel.add(editNameLabel);
 
-			editGUIButtonsPanel.setBackground(new Color(179, 245, 223));
+			editGUIButtonsPanel.setBackground(new Color(203, 253, 232));
 			editGUIButtonsPanel.setBounds(0, 420, 800, 50);
 			editPanel.add(editGUIButtonsPanel);
 
 			editGUIButtonsPanel.add(editBackToHome);
 
 			editContainerButtonsPanel.setBounds(0, 90, 800, 350);
-			editContainerButtonsPanel.setBackground(new Color(149, 245, 203));
+			editContainerButtonsPanel.setBackground(new Color(203, 253, 232));
 			editContainerButtonsPanel.setLayout(new FlowLayout());
 			addContainerButtons(editContainerButtonsPanel);
 
