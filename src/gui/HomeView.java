@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import database.DB;
 import domain.logic.Container;
@@ -135,6 +136,8 @@ public class HomeView implements ActionListener {
 	/**
 	 * Initializes and displays the home screen GUI components.
 	 */
+	
+	private JTextField newContainerText;
 	public void initializeHomeGUI() {
 		// Initialse mainMenuPanel
 		homePanel = new JPanel(); // will hold all the components of mainMenuGUI
@@ -145,10 +148,24 @@ public class HomeView implements ActionListener {
 		homePanel.setBackground(new Color(253, 241, 203));
 		// Initialize titleLabel
 		titleLabel = new JLabel("Perfect Pantry");
+		homePanel.add(titleLabel);
 		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 50));
 		titleLabel.setBounds(240, 100, 500, 100);
-		homePanel.add(titleLabel);
-
+		
+		
+		newContainerText = new JTextField(40);
+		homePanel.add(newContainerText);
+		newContainerText.setText("Type new container...");
+		newContainerText.setVisible(true);
+		newContainerText.setBounds(240, 200, 250, 40);
+//		homePanel.add(newContainerText);
+		
+		
+//		AddNewConatinerTextField = new JTextField();
+//		AddNewConatinerTextField.setText("Type new container...");
+//		AddNewConatinerTextField.setBounds(119, 100, 206, 47);
+//		panel.add(AddNewConatinerTextField);
+//		AddNewConatinerTextField.setColumns(10);
 		
 //		// Initialize TitlePanel
 //		titlePanel = new JPanel();
