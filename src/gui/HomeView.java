@@ -36,7 +36,7 @@ public class HomeView implements ActionListener {
 	 * home panel of the application, will hold all components pertaining to home
 	 * screen
 	 */
-	private static JPanel homePanel;
+	private JPanel homePanel;
 
 	/**
 	 * Title part of home screen
@@ -117,7 +117,6 @@ public class HomeView implements ActionListener {
 	 * Launches the application and initializes the main GUI components.
 	 */
 	public HomeView() {
-		stage = 0;
 
 		// Initialize frame
 		frame = new JFrame("Perfect Pantry");
@@ -141,6 +140,7 @@ public class HomeView implements ActionListener {
 	private JButton createContainer;
 	private JButton viewContainers;
 	public void initializeHomeGUI() {
+		stage = 0;
 		// Initialse mainMenuPanel
 		homePanel = new JPanel(); // will hold all the components of mainMenuGUI
 		homePanel.setLayout(null);
@@ -148,6 +148,7 @@ public class HomeView implements ActionListener {
 		frame.setLocationRelativeTo(null);
 
 		homePanel.setBackground(new Color(253, 241, 203));
+		homePanel.setVisible(true);
 		// Initialize titleLabel
 		titleLabel = new JLabel("Perfect Pantry");
 		homePanel.add(titleLabel);
@@ -209,7 +210,7 @@ public class HomeView implements ActionListener {
 		//		addContainerButtons(containerButtonsPanel);
 
 		//		homePanel.add(containerButtonsPanel);
-		homePanel.setVisible(true);
+		
 	}
 
 	/**
@@ -229,6 +230,10 @@ public class HomeView implements ActionListener {
 				viewOfContainerPanel.setVisible(false);
 			}
 			homePanel.setVisible(true);
+			newContainerText.addActionListener(this);
+			createContainer.addActionListener(this);
+			viewContainers.addActionListener(this);
+			
 
 		} else if (stage == 1) { // Edit name of container screen
 			homePanel.setVisible(false);
@@ -291,9 +296,6 @@ public class HomeView implements ActionListener {
 
 
 			viewOfContainerPanel.setVisible(true);
-
-
-
 
 
 		}
@@ -367,12 +369,7 @@ public class HomeView implements ActionListener {
 			//			} else if (source == editContainerNameButton) {
 			//				stage = 1;
 			//				changeStageOfHome();
-			//			} else {
-			//				Container c = containerMap.get(source); // This will return null if the button is not found
-			//				if (c != null) {
-			//					c.getGUI();
-			//				}
-			//			}
+
 		} else if (stage == 1) {
 			if (source == editBackToHome) {
 				stage = 0;
