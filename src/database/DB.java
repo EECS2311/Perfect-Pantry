@@ -20,9 +20,7 @@ public class DB {
 	Connection conn;
 
 	/**
-	 * Initializes a new database connection, and populates the database with
-	 * default values
-	 * 
+	 * Initializes a new database connection.
 	 * 
 	 * @return Returns the connection object to be used by other methods.
 	 * 
@@ -37,6 +35,20 @@ public class DB {
 
 		}
 		return null;
+	}
+
+	public void initDB(Connection conn) {
+
+		try {
+
+			conn.close();
+		} catch (SQLException e) {
+
+			System.out.println("Issue inserting item");
+			e.printStackTrace();
+
+		}
+
 	}
 
 	private HashMap<String, Container> containers = new HashMap<String, Container>();
