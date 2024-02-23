@@ -217,7 +217,7 @@ public class HomeView implements ActionListener {
 			editPanel.setLayout(null);
 			frame.add(editPanel);
 
-			editNameOfContainerPanel.setBounds(0, 0, 800, 90);
+			editNameOfContainerPanel.setBounds(0, 0, 800, 80);
 			editNameOfContainerPanel.setBackground(new Color(203, 253, 232));
 			editPanel.add(editNameOfContainerPanel);
 
@@ -225,12 +225,12 @@ public class HomeView implements ActionListener {
 			editNameOfContainerPanel.add(editNameLabel);
 
 			editGUIButtonsPanel.setBackground(new Color(203, 253, 232));
-			editGUIButtonsPanel.setBounds(0, 420, 800, 50);
+			editGUIButtonsPanel.setBounds(0, frame.getHeight()-90, 800, 90);
 			editPanel.add(editGUIButtonsPanel);
 
 			editGUIButtonsPanel.add(editBackToHome);
 
-			editContainerButtonsPanel.setBounds(0, 90, 800, 350);
+			editContainerButtonsPanel.setBounds(0, 80, 800, 500);
 			editContainerButtonsPanel.setBackground(new Color(203, 253, 232));
 			editContainerButtonsPanel.setLayout(new FlowLayout());
 			addContainerButtons(editContainerButtonsPanel);
@@ -255,7 +255,7 @@ public class HomeView implements ActionListener {
 			backPanel.add(editContainerNameButton);
 
 			viewOfContainerPanel.add(containerButtonsPanel);
-			containerButtonsPanel.setBounds(0, 50, 800, 450);
+			containerButtonsPanel.setBounds(0, 50, 800, 500);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
 			addContainerButtons(containerButtonsPanel);
 
