@@ -219,15 +219,20 @@ public class HomeView implements ActionListener {
 	private JPanel viewOfContainerPanel;
 	private JPanel backPanel;
 	private JButton viewOfContainer2HomeButton; 
+//	private JPanel containerButtonsPanel; //Already created
 	private void changeStageOfHome() {
 		if (stage == 0) { // Home screen
 			if (editPanel != null) {
 				editPanel.setVisible(false);
 			}
+			if( viewOfContainerPanel != null) {
+			viewOfContainerPanel.setVisible(false);
+			}
 			homePanel.setVisible(true);
 
 		} else if (stage == 1) { // Edit name of container screen
 			homePanel.setVisible(false);
+			viewOfContainerPanel.setVisible(false);
 			editPanel = new JPanel();
 			editPanel.setLayout(null);
 			frame.getContentPane().add(editPanel);
@@ -265,9 +270,11 @@ public class HomeView implements ActionListener {
 			
 			viewOfContainerPanel = new JPanel();
 			frame.add(viewOfContainerPanel);
+			viewOfContainerPanel.setLayout(null);
 			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
 			
 			backPanel = new JPanel();
+			backPanel.setBackground(new Color(253, 241, 203));
 			viewOfContainerPanel.add(backPanel);
 			backPanel.setLayout(new FlowLayout());
 			backPanel.setBounds(0, 0, 800, 50);
@@ -275,7 +282,17 @@ public class HomeView implements ActionListener {
 			viewOfContainer2HomeButton = new JButton("Back");
 			backPanel.add(viewOfContainer2HomeButton);
 			viewOfContainer2HomeButton.addActionListener(this);
-
+			
+			containerButtonsPanel = new JPanel();
+			viewOfContainerPanel.add(containerButtonsPanel);
+			containerButtonsPanel.setBounds(0, 50, 800, 450);
+			containerButtonsPanel.setBackground(new Color(253, 241, 200));
+			addContainerButtons(containerButtonsPanel);
+			
+			
+			viewOfContainerPanel.setVisible(true);
+			
+			
 			
 			
 			
@@ -364,6 +381,13 @@ public class HomeView implements ActionListener {
 				if (c != null) {
 					renameContainerButton((JButton) source);
 				}
+			}
+		}
+		
+		else if (stage == 2) {
+			if (source == viewOfContainer2HomeButton) {
+				stage = 0;
+				changeStageOfHome();
 			}
 		}
 	}
