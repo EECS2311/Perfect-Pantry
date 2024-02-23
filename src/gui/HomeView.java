@@ -139,6 +139,7 @@ public class HomeView implements ActionListener {
 	
 	private JTextField newContainerText;
 	private JButton createContainer;
+	private JButton viewContainers;
 	public void initializeHomeGUI() {
 		// Initialse mainMenuPanel
 		homePanel = new JPanel(); // will hold all the components of mainMenuGUI
@@ -162,23 +163,16 @@ public class HomeView implements ActionListener {
 		
 		createContainer = new JButton("Create");
 		homePanel.add(createContainer);
+		createContainer.setBackground(new Color (76, 183, 242));
 		createContainer.setBounds(500, 200, 80, 40);
 		
+		viewContainers = new JButton("View Containers");
+		homePanel.add(viewContainers);
+		viewContainers.setBackground(new Color (76, 183, 242));
+		viewContainers.setBounds(240, 250, 250, 40);
+
 
 		
-		
-//		AddNewConatinerTextField = new JTextField();
-//		AddNewConatinerTextField.setText("Type new container...");
-//		AddNewConatinerTextField.setBounds(119, 100, 206, 47);
-//		panel.add(AddNewConatinerTextField);
-//		AddNewConatinerTextField.setColumns(10);
-		
-//		// Initialize TitlePanel
-//		titlePanel = new JPanel();
-//		titlePanel.setSize(800, 90);
-//		titlePanel.setLocation(0, 0);
-//		titlePanel.setBackground(new Color(255, 223, 162));
-//		homePanel.add(titlePanel);
 //
 //		// Initialize titleLabel
 //		titleLabel = new JLabel("PERFECT PANTRY");
