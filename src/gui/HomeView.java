@@ -112,6 +112,9 @@ public class HomeView implements ActionListener {
 	private JTextField newContainerText = new JTextField(40);;
 	private JButton createContainer = new JButton("Create");;
 	private JButton viewContainers = new JButton("View Containers");
+	private JPanel viewOfContainerPanel = new JPanel();
+	private JPanel backPanel = new JPanel();
+	private JButton viewOfContainer2HomeButton = new JButton("Back");
 ;
 
 	public static void main(String[] args) {
@@ -132,7 +135,13 @@ public class HomeView implements ActionListener {
 
 		// Initilize containerMap
 		containerMap = new ConcurrentHashMap<>();
-
+		
+		//Initialise all actionlisteners here
+		newContainerText.addActionListener(this);
+		createContainer.addActionListener(this);
+		viewContainers.addActionListener(this);
+		viewOfContainer2HomeButton.addActionListener(this);
+		
 		initializeHomeGUI();
 	}
 
@@ -158,17 +167,14 @@ public class HomeView implements ActionListener {
 		newContainerText.setText("Type new container...");
 		newContainerText.setVisible(true);
 		newContainerText.setBounds(240, 200, 250, 40);
-		newContainerText.addActionListener(this);
 
 		homePanel.add(createContainer);
 		createContainer.setBackground(new Color (76, 183, 242));
 		createContainer.setBounds(500, 200, 80, 40);
-		createContainer.addActionListener(this);
 
 		homePanel.add(viewContainers);
 		viewContainers.setBackground(new Color (76, 183, 242));
 		viewContainers.setBounds(240, 250, 250, 40);
-		viewContainers.addActionListener(this);
 
 
 
@@ -207,16 +213,11 @@ public class HomeView implements ActionListener {
 		//		homePanel.add(containerButtonsPanel);
 
 	}
+	
 
 	/**
 	 * Changes the stage of the home screen between the main view and the edit view.
 	 */
-
-	private JPanel viewOfContainerPanel = new JPanel();
-	private JPanel backPanel = new JPanel();
-	private JButton viewOfContainer2HomeButton = new JButton("Back");
-; 
-	//	private JPanel containerButtonsPanel; //Already created
 	private void changeStageOfHome() {
 		if (stage == 0) { // Home screen
 			if (editPanel != null) {
@@ -226,9 +227,8 @@ public class HomeView implements ActionListener {
 				viewOfContainerPanel.setVisible(false);
 			}
 			homePanel.setVisible(true);
-			newContainerText.addActionListener(this);
-			createContainer.addActionListener(this);
-			viewContainers.addActionListener(this);
+//			newContainerText.addActionListener(this);
+//			viewContainers.addActionListener(this);
 
 
 		} else if (stage == 1) { // Edit name of container screen
@@ -279,7 +279,6 @@ public class HomeView implements ActionListener {
 			backPanel.setBounds(0, 0, 800, 50);
 
 			backPanel.add(viewOfContainer2HomeButton);
-			viewOfContainer2HomeButton.addActionListener(this);
 
 			viewOfContainerPanel.add(containerButtonsPanel);
 			containerButtonsPanel.setBounds(0, 50, 800, 450);
