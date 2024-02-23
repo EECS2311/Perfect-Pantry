@@ -109,11 +109,34 @@ public class HomeView implements ActionListener {
 	 */
 	private JPanel editContainerButtonsPanel = new JPanel();
 	
+	/**
+	 * Add text for name of container
+	 */
 	private JTextField newContainerText = new JTextField(40);;
+	
+	/**
+	 * Button to go to container list view
+	 */
 	private JButton viewContainers = new JButton("View Containers");
+	
+	/**
+	 * Holds components for the container list view
+	 */
 	private JPanel viewOfContainerPanel = new JPanel();
+	
+	/**
+	 * Holds button on container list view
+	 */
 	private JPanel backPanel = new JPanel();
+	
+	/**
+	 * Button to go from container view to home
+	 */
 	private JButton viewOfContainer2HomeButton = new JButton("Back");
+	
+	/**
+	 * Button to change name of container
+	 */
 	private JButton editContainerNameButton = new JButton("Edit Name of Container");
 ;
 
