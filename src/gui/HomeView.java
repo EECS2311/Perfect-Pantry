@@ -28,7 +28,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Frame window of the application
 	 */
-	static JFrame frame;
+	static JFrame frame = new JFrame("Perfect Pantry");
 
 	public static DB data = new DB();
 
@@ -36,22 +36,22 @@ public class HomeView implements ActionListener {
 	 * home panel of the application, will hold all components pertaining to home
 	 * screen
 	 */
-	private JPanel homePanel;
+	private JPanel homePanel = new JPanel();
 
 	/**
 	 * Title part of home screen
 	 */
-	private JPanel titlePanel;
+	private JPanel titlePanel = new JPanel();
 
 	/**
 	 * Title name
 	 */
-	private JLabel titleLabel;
+	private JLabel titleLabel = new JLabel("Perfect Pantry");;
 
 	/**
 	 * Hold all buttons pertaining to the home screen
 	 */
-	private JPanel homeButtonsPanel;
+	private JPanel homeButtonsPanel = new JPanel();
 
 	/**
 	 * Button that will add new container, apart of homeButtonsPanel
@@ -62,7 +62,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Hold buttons pertaining to its containers
 	 */
-	private JPanel containerButtonsPanel;
+	private JPanel containerButtonsPanel = new JPanel();
 
 	/**
 	 * Map of button and its corresponding Container object
@@ -77,17 +77,17 @@ public class HomeView implements ActionListener {
 	/**
 	 * main components of edit view
 	 */
-	private JPanel editPanel;
+	private JPanel editPanel = new JPanel();
 
 	/**
 	 * Hold components of editView
 	 */
-	private JPanel editNameOfContainerPanel;
+	private JPanel editNameOfContainerPanel = new JPanel();
 
 	/**
 	 * Title panel of edit view
 	 */
-	private JPanel editNameOfContainerTitlePanel;
+	private JPanel editNameOfContainerTitlePanel = new JPanel();
 
 	/**
 	 * Text of edit view
@@ -97,7 +97,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Holds buttons of edit view
 	 */
-	private JPanel editGUIButtonsPanel;
+	private JPanel editGUIButtonsPanel = new JPanel();
 
 	/**
 	 * Button to go back from edit screen to home screen
@@ -108,6 +108,11 @@ public class HomeView implements ActionListener {
 	 * Panel to hold container buttons
 	 */
 	private JPanel editContainerButtonsPanel = new JPanel();
+	
+	private JTextField newContainerText = new JTextField(40);;
+	private JButton createContainer = new JButton("Create");;
+	private JButton viewContainers = new JButton("View Containers");
+;
 
 	public static void main(String[] args) {
 		HomeView m = new HomeView();
@@ -119,7 +124,6 @@ public class HomeView implements ActionListener {
 	public HomeView() {
 
 		// Initialize frame
-		frame = new JFrame("Perfect Pantry");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
 		frame.setResizable(false); // stop resize
@@ -135,41 +139,32 @@ public class HomeView implements ActionListener {
 	/**
 	 * Initializes and displays the home screen GUI components.
 	 */
-
-	private JTextField newContainerText;
-	private JButton createContainer;
-	private JButton viewContainers;
 	public void initializeHomeGUI() {
 		stage = 0;
 		// Initialse mainMenuPanel
-		homePanel = new JPanel(); // will hold all the components of mainMenuGUI
 		homePanel.setLayout(null);
 		frame.getContentPane().add(homePanel);
 		frame.setLocationRelativeTo(null);
 
 		homePanel.setBackground(new Color(253, 241, 203));
 		homePanel.setVisible(true);
+		
 		// Initialize titleLabel
-		titleLabel = new JLabel("Perfect Pantry");
 		homePanel.add(titleLabel);
 		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 50));
 		titleLabel.setBounds(240, 100, 500, 100);
 
-
-		newContainerText = new JTextField(40);
 		homePanel.add(newContainerText);
 		newContainerText.setText("Type new container...");
 		newContainerText.setVisible(true);
 		newContainerText.setBounds(240, 200, 250, 40);
 		newContainerText.addActionListener(this);
 
-		createContainer = new JButton("Create");
 		homePanel.add(createContainer);
 		createContainer.setBackground(new Color (76, 183, 242));
 		createContainer.setBounds(500, 200, 80, 40);
 		createContainer.addActionListener(this);
 
-		viewContainers = new JButton("View Containers");
 		homePanel.add(viewContainers);
 		viewContainers.setBackground(new Color (76, 183, 242));
 		viewContainers.setBounds(240, 250, 250, 40);
@@ -210,16 +205,17 @@ public class HomeView implements ActionListener {
 		//		addContainerButtons(containerButtonsPanel);
 
 		//		homePanel.add(containerButtonsPanel);
-		
+
 	}
 
 	/**
 	 * Changes the stage of the home screen between the main view and the edit view.
 	 */
 
-	private JPanel viewOfContainerPanel;
-	private JPanel backPanel;
-	private JButton viewOfContainer2HomeButton; 
+	private JPanel viewOfContainerPanel = new JPanel();
+	private JPanel backPanel = new JPanel();
+	private JButton viewOfContainer2HomeButton = new JButton("Back");
+; 
 	//	private JPanel containerButtonsPanel; //Already created
 	private void changeStageOfHome() {
 		if (stage == 0) { // Home screen
@@ -233,7 +229,7 @@ public class HomeView implements ActionListener {
 			newContainerText.addActionListener(this);
 			createContainer.addActionListener(this);
 			viewContainers.addActionListener(this);
-			
+
 
 		} else if (stage == 1) { // Edit name of container screen
 			homePanel.setVisible(false);
@@ -273,22 +269,18 @@ public class HomeView implements ActionListener {
 		else if (stage == 2) { // See list of containers as buttons
 			homePanel.setVisible(false);
 
-			viewOfContainerPanel = new JPanel();
 			frame.add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
 			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
 
-			backPanel = new JPanel();
 			backPanel.setBackground(new Color(253, 241, 203));
 			viewOfContainerPanel.add(backPanel);
 			backPanel.setLayout(new FlowLayout());
 			backPanel.setBounds(0, 0, 800, 50);
 
-			viewOfContainer2HomeButton = new JButton("Back");
 			backPanel.add(viewOfContainer2HomeButton);
 			viewOfContainer2HomeButton.addActionListener(this);
 
-			containerButtonsPanel = new JPanel();
 			viewOfContainerPanel.add(containerButtonsPanel);
 			containerButtonsPanel.setBounds(0, 50, 800, 450);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
@@ -306,9 +298,8 @@ public class HomeView implements ActionListener {
 	 */
 	private void addNewContainer() {
 		String nameOfContainer = newContainerText.getText();
-		if (nameOfContainer != null && !nameOfContainer.trim().isEmpty()) { // if not cancelled nor empty
-			int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?" );
-			if (opt == JOptionPane.YES_OPTION) {
+		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?" );
+			if (nameOfContainer != null && !nameOfContainer.trim().isEmpty() && opt == JOptionPane.YES_OPTION) { // if not cancelled nor empty
 				newContainerText.setText("Type new container...");
 				Container c = new Container(nameOfContainer, this);
 				JButton b = new JButton(c.getName());
@@ -317,7 +308,7 @@ public class HomeView implements ActionListener {
 				data.addContainer(nameOfContainer, c);
 
 			}
-		}
+		
 	}
 
 	/**
