@@ -138,6 +138,7 @@ public class HomeView implements ActionListener {
 	 */
 	
 	private JTextField newContainerText;
+	private JButton createContainer;
 	public void initializeHomeGUI() {
 		// Initialse mainMenuPanel
 		homePanel = new JPanel(); // will hold all the components of mainMenuGUI
@@ -158,7 +159,12 @@ public class HomeView implements ActionListener {
 		newContainerText.setText("Type new container...");
 		newContainerText.setVisible(true);
 		newContainerText.setBounds(240, 200, 250, 40);
-//		homePanel.add(newContainerText);
+		
+		createContainer = new JButton("Create");
+		homePanel.add(createContainer);
+		createContainer.setBounds(500, 200, 80, 40);
+		
+
 		
 		
 //		AddNewConatinerTextField = new JTextField();
