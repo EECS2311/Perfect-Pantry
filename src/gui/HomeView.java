@@ -123,7 +123,7 @@ public class HomeView implements ActionListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
 		frame.setResizable(false); // stop resize
-		frame.setMinimumSize(new Dimension(800, 800));
+		frame.setMinimumSize(new Dimension(800, 500));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
 
 		// Initilize containerMap
@@ -141,46 +141,48 @@ public class HomeView implements ActionListener {
 		homePanel.setLayout(null);
 		frame.getContentPane().add(homePanel);
 		frame.setLocationRelativeTo(null);
+		
+		homePanel.setBackground(new Color(245, 223, 162));
 
-		// Initialize TitlePanel
-		titlePanel = new JPanel();
-		titlePanel.setSize(800, 90);
-		titlePanel.setLocation(0, 0);
-		titlePanel.setBackground(new Color(255, 223, 162));
-		homePanel.add(titlePanel);
+//		// Initialize TitlePanel
+//		titlePanel = new JPanel();
+//		titlePanel.setSize(800, 90);
+//		titlePanel.setLocation(0, 0);
+//		titlePanel.setBackground(new Color(255, 223, 162));
+//		homePanel.add(titlePanel);
+//
+//		// Initialize titleLabel
+//		titleLabel = new JLabel("PERFECT PANTRY");
+//		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
+//		titlePanel.add(titleLabel);
+//
+//		// initialize mainMenuButtonsPanel
+//		homeButtonsPanel = new JPanel();
+//		homeButtonsPanel.setBackground(new Color(192, 237, 203));
+//		homeButtonsPanel.setBounds(0, 680, 800, 90);
+//		homePanel.add(homeButtonsPanel);
+//
+//		// Components of mainMenuButtonsPanel
+//		// initialize addNewContainerButton
+//		addNewContainerButton = new JButton("Add New Container");
+//		addNewContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
+//		addNewContainerButton.addActionListener(this);
+//		homeButtonsPanel.add(addNewContainerButton);
+//
+//		// Initialize editContainerNameButton
+//		editContainerNameButton = new JButton("Edit Container Name");
+//		editContainerNameButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
+//		editContainerNameButton.addActionListener(this);
+//		homeButtonsPanel.add(editContainerNameButton);
+//
+//		// initialize containerButtonsPanel
+//		containerButtonsPanel = new JPanel();
+//		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight() - 120);
+//		containerButtonsPanel.setBackground(new Color(245, 213, 152));
+//		containerButtonsPanel.setLayout(new FlowLayout());
+//		addContainerButtons(containerButtonsPanel);
 
-		// Initialize titleLabel
-		titleLabel = new JLabel("PERFECT PANTRY");
-		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
-		titlePanel.add(titleLabel);
-
-		// initialize mainMenuButtonsPanel
-		homeButtonsPanel = new JPanel();
-		homeButtonsPanel.setBackground(new Color(192, 237, 203));
-		homeButtonsPanel.setBounds(0, 680, 800, 90);
-		homePanel.add(homeButtonsPanel);
-
-		// Components of mainMenuButtonsPanel
-		// initialize addNewContainerButton
-		addNewContainerButton = new JButton("Add New Container");
-		addNewContainerButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		addNewContainerButton.addActionListener(this);
-		homeButtonsPanel.add(addNewContainerButton);
-
-		// Initialize editContainerNameButton
-		editContainerNameButton = new JButton("Edit Container Name");
-		editContainerNameButton.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		editContainerNameButton.addActionListener(this);
-		homeButtonsPanel.add(editContainerNameButton);
-
-		// initialize containerButtonsPanel
-		containerButtonsPanel = new JPanel();
-		containerButtonsPanel.setBounds(0, 90, getFrame().getWidth(), getFrame().getHeight() - 120);
-		containerButtonsPanel.setBackground(new Color(245, 213, 152));
-		containerButtonsPanel.setLayout(new FlowLayout());
-		addContainerButtons(containerButtonsPanel);
-
-		homePanel.add(containerButtonsPanel);
+//		homePanel.add(containerButtonsPanel);
 		homePanel.setVisible(true);
 	}
 
