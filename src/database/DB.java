@@ -1,5 +1,8 @@
 package database;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,10 +10,46 @@ import domain.logic.Container;
 import domain.logic.Item;
 
 /**
- * The {@code DB} class represents a simple database for storing and managing containers and their associated items.
- * This class provides methods to add and retrieve containers and items, remove items, and print all items within containers.
+ * The {@code DB} class represents a simple database for storing and managing
+ * containers and their associated items. This class provides methods to add and
+ * retrieve containers and items, remove items, and print all items within
+ * containers.
  */
 public class DB {
+
+	Connection conn;
+
+	/**
+	 * Initializes a new database connection.
+	 * 
+	 * @return Returns the connection object to be used by other methods.
+	 * 
+	 */
+	public Connection init() {
+		try {
+			conn = DriverManager.getConnection(info.url, info.dbUser, info.dbPass);
+			return conn;
+		} catch (SQLException e) {
+			System.out.println("Connection Failure");
+			e.printStackTrace();
+
+		}
+		return null;
+	}
+
+	public void initDB(Connection conn) {
+
+		try {
+
+			conn.close();
+		} catch (SQLException e) {
+
+			System.out.println("Issue inserting item");
+			e.printStackTrace();
+
+		}
+
+	}
 
 	private HashMap<String, Container> containers = new HashMap<String, Container>();
 
@@ -30,7 +69,7 @@ public class DB {
 	 * Adds a new container to the database.
 	 *
 	 * @param containerName The name of the container to add.
-	 * @param c The {@link Container} object to be added.
+	 * @param c             The {@link Container} object to be added.
 	 */
 	public void addContainer(String containerName, Container c) {
 		containers.put(containerName, c);
@@ -40,9 +79,9 @@ public class DB {
 	/**
 	 * Adds an item to a specific container.
 	 *
-	 * @param c The container to which the item will be added.
+	 * @param c    The container to which the item will be added.
 	 * @param name The name of the item.
-	 * @param ite The {@link Item} object to be added.
+	 * @param ite  The {@link Item} object to be added.
 	 */
 	public void addItem(Container c, String name, Item ite) {
 
@@ -66,7 +105,7 @@ public class DB {
 	/**
 	 * Removes an item from a specified container.
 	 *
-	 * @param c The container from which the item will be removed.
+	 * @param c    The container from which the item will be removed.
 	 * @param name The name of the item to be removed.
 	 */
 	public void removeItem(Container c, String name, Item ite) {
@@ -80,7 +119,7 @@ public class DB {
 	 * Retrieves an {@link Item} by its container and name.
 	 *
 	 * @param container The container in which the item is stored.
-	 * @param itemName The name of the item to retrieve.
+	 * @param itemName  The name of the item to retrieve.
 	 * @return The {@link Item} object if found, {@code null} otherwise.
 	 */
 	public Item getItem(Container container, String itemName) {
