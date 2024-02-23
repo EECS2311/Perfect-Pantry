@@ -49,16 +49,10 @@ public class HomeView implements ActionListener {
 	private JLabel titleLabel = new JLabel("Perfect Pantry");;
 
 	/**
-	 * Hold all buttons pertaining to the home screen
-	 */
-	private JPanel homeButtonsPanel = new JPanel();
-
-	/**
 	 * Button that will add new container, apart of homeButtonsPanel
 	 */
-	private JButton addNewContainerButton;
-	private JButton editContainerNameButton;
-
+	private JButton createContainer = new JButton("Create");;
+	
 	/**
 	 * Hold buttons pertaining to its containers
 	 */
@@ -70,9 +64,13 @@ public class HomeView implements ActionListener {
 	private ConcurrentHashMap<JButton, Container> containerMap;
 
 	/**
-	 * Stages of the home screen 0 = home 1 = edit screen
+	 * Stages of the home screen; 0 = home 1 = edit screen 2= view conntainers
 	 */
 	private int stage;
+	
+	
+	
+	
 
 	/**
 	 * main components of edit view
@@ -110,11 +108,11 @@ public class HomeView implements ActionListener {
 	private JPanel editContainerButtonsPanel = new JPanel();
 	
 	private JTextField newContainerText = new JTextField(40);;
-	private JButton createContainer = new JButton("Create");;
 	private JButton viewContainers = new JButton("View Containers");
 	private JPanel viewOfContainerPanel = new JPanel();
 	private JPanel backPanel = new JPanel();
 	private JButton viewOfContainer2HomeButton = new JButton("Back");
+	private JButton editContainerNameButton = new JButton("Edit Name of Container");
 ;
 
 	public static void main(String[] args) {
@@ -141,6 +139,7 @@ public class HomeView implements ActionListener {
 		createContainer.addActionListener(this);
 		viewContainers.addActionListener(this);
 		viewOfContainer2HomeButton.addActionListener(this);
+		editContainerNameButton.addActionListener(this);
 		
 		stage = 0; //home stage
 		
@@ -236,11 +235,13 @@ public class HomeView implements ActionListener {
 			backPanel.setBounds(0, 0, 800, 50);
 
 			backPanel.add(viewOfContainer2HomeButton);
+			backPanel.add(editContainerNameButton);
 
 			viewOfContainerPanel.add(containerButtonsPanel);
 			containerButtonsPanel.setBounds(0, 50, 800, 450);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
 			addContainerButtons(containerButtonsPanel);
+			
 
 
 			viewOfContainerPanel.setVisible(true);
@@ -331,6 +332,10 @@ public class HomeView implements ActionListener {
 		else if (stage == 2) {
 			if (source == viewOfContainer2HomeButton) {
 				stage = 0;
+				changeStageOfHome();
+			}
+			else if (source == editContainerNameButton) {
+				stage = 1;
 				changeStageOfHome();
 			}
 			else {
