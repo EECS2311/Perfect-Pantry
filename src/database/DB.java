@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import domain.logic.Container;
@@ -166,20 +168,24 @@ public class DB {
 
 	}
 
-	public void retrieveContainers(String nameOfContainer) {
+	public List<String> retrieveContainers() {
 
 		Connection conn = init();
 		try {
 			Statement s = conn.createStatement();
 			ResultSet result = s.executeQuery("Select * from container");
+			List<String> l = new ArrayList<String>();
 
 			while (result.next()) {
-				System.out.println(result.getString("container_name"));
+				l.add(result.getString("container_name"));
 			}
+			return l;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		return null;
 
 	}
 

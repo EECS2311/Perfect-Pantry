@@ -267,10 +267,7 @@ public class HomeView implements ActionListener {
 
 		String nameOfContainer = newContainerText.getText();
 		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?");
-
 		if (opt == JOptionPane.YES_OPTION) {
-
-			System.out.println("YES");
 			ContainerUtility
 					.verifyAddContainer(
 							nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
@@ -289,6 +286,14 @@ public class HomeView implements ActionListener {
 	 */
 	private void addContainerButtons(JPanel p) {
 		p.removeAll();
+
+		// When loading the app for the first time. Items may be in the database but not
+		// in the app.
+		if (containerMap.isEmpty()) {
+
+			// Load the containerMap with the database items
+			ContainerUtility.initContainers(containerMap, data, this);
+		}
 
 		containerMap.forEach((button, container) -> {
 			p.add(button);
