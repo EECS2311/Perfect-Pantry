@@ -255,7 +255,7 @@ public class HomeView implements ActionListener {
 		else if (stage == 2) { // See list of containers as buttons
 			homePanel.setVisible(false);
 			deletePanel.setVisible(false);
-			viewOfContainerPanel.setVisible(false);
+			editPanel.setVisible(false);
 
 			frame.add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
@@ -360,6 +360,16 @@ public class HomeView implements ActionListener {
 			changeStageOfHome();
 		}
 	}
+	
+	public void deleteContainerButton(JButton b) {
+		Container c = containerMap.get(b);
+		int opt = JOptionPane.showConfirmDialog(frame, "Delete Container \"" + c.getName() + "\"?" );
+		if (opt == JOptionPane.YES_OPTION) { // if not cancelled nor empty
+			containerMap.remove(b);
+			stage = 0;
+			changeStageOfHome();
+		}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -416,7 +426,7 @@ public class HomeView implements ActionListener {
 			} else {
 				Container c = containerMap.get(source); // This will return null if the button is not found
 				if (c != null) {
-					renameContainerButton((JButton) source);
+					deleteContainerButton((JButton) source);
 				}
 			}
 
