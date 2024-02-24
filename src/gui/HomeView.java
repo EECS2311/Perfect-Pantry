@@ -281,7 +281,7 @@ public class HomeView implements ActionListener {
 	 */
 	private void createContainer(String name) {
 
-			Container c = new Container(nameOfContainer, this);
+			Container c = new Container(name, this);
 			JButton b = new JButton(c.getName());
 			b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 			containerMap.put(b, c);
