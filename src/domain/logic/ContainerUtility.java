@@ -13,6 +13,9 @@ import gui.HomeView;
 public class ContainerUtility {
 
 	/**
+	 * Validates the input data for a new container. Valid inputs are added to the
+	 * home's container map. In case of validation errors, it utilizes a Consumer to
+	 * handle the error message.
 	 * 
 	 * @param name
 	 * @param data
@@ -50,6 +53,8 @@ public class ContainerUtility {
 	}
 
 	/**
+	 * Retrieves all current containers within the database and adds them to the
+	 * container map.
 	 * 
 	 * @param containerMap
 	 * @param data
