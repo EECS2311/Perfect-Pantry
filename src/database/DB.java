@@ -2,7 +2,9 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,8 @@ import domain.logic.Item;
 public class DB {
 
 	Connection conn;
+	Statement stmt = null;
+	ResultSet rslt = null;
 
 	/**
 	 * Initializes a new database connection.
@@ -35,6 +39,10 @@ public class DB {
 
 		}
 		return null;
+	}
+	
+	public DB() {
+		init();
 	}
 
 	public void initDB(Connection conn) {
@@ -73,6 +81,13 @@ public class DB {
 	 */
 	public void addContainer(String containerName, Container c) {
 		containers.put(containerName, c);
+		try {
+			stmt = conn.createStatement();
+			stmt.execute(String.format("INSERT INTO container(container_name) VALUES('%s');", containerName));
+		} catch (SQLException e) {
+			System.out.println("Insertion failed");
+			e.printStackTrace();
+		}
 
 	}
 
