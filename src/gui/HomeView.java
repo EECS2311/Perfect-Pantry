@@ -175,6 +175,7 @@ public class HomeView implements ActionListener {
 		editContainerNameButton.addActionListener(this);
 		editBackToHome.addActionListener(this);
 		deleteContainerButton.addActionListener(this);
+		deleteBackToContainerView.addActionListener(this);
 
 		stage = 0; //home stage
 
@@ -289,14 +290,14 @@ public class HomeView implements ActionListener {
 
 			deleteContainerTitlePanel.setBounds(0, 0, 800, 80);
 			deleteContainerTitlePanel.setBackground(new Color(203, 253, 232));
-			editPanel.add(deleteContainerTitlePanel);
+			deletePanel.add(deleteContainerTitlePanel);
 
 			deleteLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
-			editNameOfContainerPanel.add(deleteLabel);
+			deleteContainerTitlePanel.add(deleteLabel);
 
 			deleteGUIButtonsPanel.setBackground(new Color(203, 253, 232));
 			deleteGUIButtonsPanel.setBounds(0, frame.getHeight()-90, 800, 90);
-			editPanel.add(deleteGUIButtonsPanel);
+			deletePanel.add(deleteGUIButtonsPanel);
 
 			deleteGUIButtonsPanel.add(deleteBackToContainerView);
 
@@ -406,6 +407,19 @@ public class HomeView implements ActionListener {
 				}
 
 			}
+		}
+
+		else if (stage == 3) {
+			if (source == deleteBackToContainerView) {
+				stage = 2;
+				changeStageOfHome();
+			} else {
+				Container c = containerMap.get(source); // This will return null if the button is not found
+				if (c != null) {
+					renameContainerButton((JButton) source);
+				}
+			}
+
 		}
 	}
 
