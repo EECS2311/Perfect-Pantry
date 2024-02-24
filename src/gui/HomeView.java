@@ -393,6 +393,7 @@ public class HomeView implements ActionListener {
 		int opt = JOptionPane.showConfirmDialog(frame, "Delete Container \"" + c.getName() + "\"?" );
 		if (opt == JOptionPane.YES_OPTION) { // if not cancelled
 			containerMap.remove(b);
+			data.deleteContainer(c.getName(), c);
 			stage = 0;
 			changeStageOfHome();
 		}
