@@ -134,9 +134,20 @@ public class HomeView implements ActionListener {
 	 * Button to change name of container
 	 */
 	private JButton editContainerNameButton = new JButton("Edit Name of Container");
-	
+
 	private JButton deleteContainerButton = new JButton("Delete a Container");
 
+	private JPanel deletePanel = new JPanel();
+
+	private JPanel deleteContainerTitlePanel = new JPanel();
+
+	private JLabel deleteLabel = new JLabel("Click the Container button you wish to delete");
+
+	private JPanel deleteGUIButtonsPanel = new JPanel();
+
+	private JButton deleteBackToContainerView = new JButton("Back");
+
+	private JPanel deleteContainerButtonsPanel = new JPanel();
 	public static void main(String[] args) {
 		HomeView m = new HomeView();
 	}
@@ -177,12 +188,10 @@ public class HomeView implements ActionListener {
 	 */
 	public void changeStageOfHome() {
 		if (stage == 0) { // Home screen
-			if (editPanel != null) {
-				editPanel.setVisible(false);
-			}
-			if( viewOfContainerPanel != null) {
-				viewOfContainerPanel.setVisible(false);
-			}
+			editPanel.setVisible(false);
+			viewOfContainerPanel.setVisible(false);
+			deletePanel.setVisible(false);
+
 			// Initialse mainMenuPanel
 			homePanel.setLayout(null);
 			frame.getContentPane().add(homePanel);
@@ -215,6 +224,7 @@ public class HomeView implements ActionListener {
 		} else if (stage == 1) { // Edit name of container screen
 			homePanel.setVisible(false);
 			viewOfContainerPanel.setVisible(false);
+			deletePanel.setVisible(false);
 
 			editPanel.setLayout(null);
 			frame.add(editPanel);
@@ -243,6 +253,8 @@ public class HomeView implements ActionListener {
 
 		else if (stage == 2) { // See list of containers as buttons
 			homePanel.setVisible(false);
+			deletePanel.setVisible(false);
+			viewOfContainerPanel.setVisible(false);
 
 			frame.add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
@@ -266,9 +278,35 @@ public class HomeView implements ActionListener {
 
 
 		}
-		
+
 		else if (stage == 3) {
-			
+			homePanel.setVisible(false);
+			viewOfContainerPanel.setVisible(false);
+			editPanel.setVisible(false);
+
+			deletePanel.setLayout(null);
+			frame.add(deletePanel);
+
+			deleteContainerTitlePanel.setBounds(0, 0, 800, 80);
+			deleteContainerTitlePanel.setBackground(new Color(203, 253, 232));
+			editPanel.add(deleteContainerTitlePanel);
+
+			deleteLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
+			editNameOfContainerPanel.add(deleteLabel);
+
+			deleteGUIButtonsPanel.setBackground(new Color(203, 253, 232));
+			deleteGUIButtonsPanel.setBounds(0, frame.getHeight()-90, 800, 90);
+			editPanel.add(deleteGUIButtonsPanel);
+
+			deleteGUIButtonsPanel.add(deleteBackToContainerView);
+
+			deleteContainerButtonsPanel.setBounds(0, 80, 800, 500);
+			deleteContainerButtonsPanel.setBackground(new Color(203, 253, 232));
+			deleteContainerButtonsPanel.setLayout(new FlowLayout());
+			addContainerButtons(deleteContainerButtonsPanel);
+
+			deletePanel.add(deleteContainerButtonsPanel);
+			deletePanel.setVisible(true);
 		}
 	}
 
