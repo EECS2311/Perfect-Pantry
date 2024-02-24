@@ -2,7 +2,9 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -152,6 +154,52 @@ public class DB {
 	public void putContainer(String nameOfContainer) {
 
 		Connection conn = init();
+		try {
+			Statement s = conn.createStatement();
+			s.execute("INSERT into container (container_name) VALUES('" + nameOfContainer + "')");
+
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public void retrieveContainers(String nameOfContainer) {
+
+		Connection conn = init();
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s.executeQuery("Select * from container");
+
+			while (result.next()) {
+				System.out.println(result.getString("container_name"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public boolean findContainer(String name) {
+		Connection conn = init();
+
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s
+					.executeQuery("select container_name from container WHERE container_name = '" + name + "'");
+
+			Boolean b = result.next();
+			conn.close();
+			return b;
+
+		} catch (SQLException e) {
+			System.out.println("Error printing");
+			e.printStackTrace();
+		}
+		return false;
 
 	}
 
