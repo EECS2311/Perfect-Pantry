@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 import database.DB;
 import domain.logic.Container;
+import domain.logic.ContainerUtility;
 
 /**
  * The main GUI frame for the application, serving as the entry point for user
@@ -86,8 +87,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Text of edit view
 	 */
-	private JLabel editNameLabel = new JLabel("Click the Container Button you wish to rename");
-	;
+	private JLabel editNameLabel = new JLabel("Click the Container Button you wish to rename");;
 
 	/**
 	 * Holds buttons of edit view
@@ -99,6 +99,7 @@ public class HomeView implements ActionListener {
 	 */
 	private JButton editBackToContainerView = new JButton("Back");
 	;
+
 
 	/**
 	 * Panel to hold container buttons
@@ -134,6 +135,7 @@ public class HomeView implements ActionListener {
 	 * Button to change name of container
 	 */
 	private JButton editContainerNameButton = new JButton("Edit Name of Container");
+
 
 	/**
 	 * Button to go to delete Container view
@@ -173,6 +175,7 @@ public class HomeView implements ActionListener {
 	
 	public static void main(String[] args) {
 		HomeView m = new HomeView();
+
 	}
 
 	/**
@@ -189,7 +192,7 @@ public class HomeView implements ActionListener {
 		// Initilize containerMap
 		containerMap = new ConcurrentHashMap<>();
 
-		//Initialise all actionlisteners here
+		// Initialise all actionlisteners here
 		newContainerText.addActionListener(this);
 		createContainer.addActionListener(this);
 		viewContainers.addActionListener(this);
@@ -199,14 +202,13 @@ public class HomeView implements ActionListener {
 		deleteContainerButton.addActionListener(this);
 		deleteBackToContainerView.addActionListener(this);
 
-		stage = 0; //home stage
-
+		stage = 0; // home stage
+		ContainerUtility.initContainers(containerMap, data, this);
 		changeStageOfHome();
 	}
 
-
-
 	/**
+
 	 * Changes the stage of the home screen between the main view, the Container list view, edit container view and delete container view
 	 */
 	public void changeStageOfHome() {
@@ -214,7 +216,7 @@ public class HomeView implements ActionListener {
 			editPanel.setVisible(false);
 			viewOfContainerPanel.setVisible(false);
 			deletePanel.setVisible(false);
-
+      
 			// Initialse mainMenuPanel
 			homePanel.setLayout(null);
 			frame.getContentPane().add(homePanel);
@@ -235,14 +237,14 @@ public class HomeView implements ActionListener {
 			newContainerText.setBounds(240, 250, 250, 40);
 
 			homePanel.add(createContainer);
-			createContainer.setBackground(new Color (76, 183, 242));
+
+			createContainer.setBackground(new Color(76, 183, 242));
 			createContainer.setBounds(500, 250, 80, 40);
 
 			homePanel.add(viewContainers);
-			viewContainers.setBackground(new Color (76, 183, 242));
+			viewContainers.setBackground(new Color(76, 183, 242));
 			viewContainers.setBounds(240, 300, 250, 40);
 			homePanel.setVisible(true);
-
 
 		} else if (stage == 1) { // Edit name of container screen
 			homePanel.setVisible(false);
@@ -260,7 +262,7 @@ public class HomeView implements ActionListener {
 			editNameOfContainerPanel.add(editNameLabel);
 
 			editGUIButtonsPanel.setBackground(new Color(203, 253, 232));
-			editGUIButtonsPanel.setBounds(0, frame.getHeight()-90, 800, 90);
+			editGUIButtonsPanel.setBounds(0, frame.getHeight() - 90, 800, 90);
 			editPanel.add(editGUIButtonsPanel);
 
 			editGUIButtonsPanel.add(editBackToContainerView);
@@ -330,6 +332,8 @@ public class HomeView implements ActionListener {
 
 			deletePanel.add(deleteContainerButtonsPanel);
 			deletePanel.setVisible(true);
+
+
 		}
 	}
 
@@ -337,19 +341,20 @@ public class HomeView implements ActionListener {
 	 * Adds a new container and its corresponding button to the GUI.
 	 */
 	private void addNewContainer() {
+
 		String nameOfContainer = newContainerText.getText();
-		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?" );
-		if (nameOfContainer != null && !nameOfContainer.trim().isEmpty() && opt == JOptionPane.YES_OPTION) { // if not cancelled nor empty
-			Container c = new Container(nameOfContainer, this);
-			JButton b = new JButton(c.getName());
-			b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-			containerMap.put(b, c);
-			newContainerText.setText("Pantry" + (containerMap.size() + 1));
-			data.addContainer(nameOfContainer, c);
-
+		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?");
+		if (opt == JOptionPane.YES_OPTION) {
+			ContainerUtility
+					.verifyAddContainer(
+							nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
+									.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+							() -> {
+								newContainerText.setText("Pantry" + (containerMap.size() + 1));
+							});
 		}
-
 	}
+
 
 	/**
 	 * Dynamically adds container buttons to the specified panel based on the
@@ -404,14 +409,12 @@ public class HomeView implements ActionListener {
 		Object source = e.getSource();
 
 		if (stage == 0) { // home screen
-			if(source == createContainer) {
+			if (source == createContainer) {
 				addNewContainer();
-			}
-			else if (source == viewContainers) {
+			} else if (source == viewContainers) {
 				stage = 2;
 				changeStageOfHome();
 			}
-
 
 		} else if (stage == 1) { //edit name screen
 			if (source == editBackToContainerView) {
@@ -425,12 +428,11 @@ public class HomeView implements ActionListener {
 			}
 		}
 
-		else if (stage == 2) { //view containers screen
+		else if (stage == 2) { // view containers screen
 			if (source == viewOfContainer2HomeButton) {
 				stage = 0;
 				changeStageOfHome();
-			}
-			else if (source == editContainerNameButton) {
+			} else if (source == editContainerNameButton) {
 				stage = 1;
 				changeStageOfHome();
 			}
