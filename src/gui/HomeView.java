@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 import database.DB;
 import domain.logic.Container;
+import domain.logic.ContainerUtility;
 
 /**
  * The main GUI frame for the application, serving as the entry point for user
@@ -135,6 +136,7 @@ public class HomeView implements ActionListener {
 
 	public static void main(String[] args) {
 		HomeView m = new HomeView();
+
 	}
 
 	/**
@@ -161,7 +163,7 @@ public class HomeView implements ActionListener {
 		editBackToHome.addActionListener(this);
 
 		stage = 0; // home stage
-
+		ContainerUtility.initContainers(containerMap, data, this);
 		changeStageOfHome();
 	}
 
@@ -198,11 +200,11 @@ public class HomeView implements ActionListener {
 
 			homePanel.add(createContainer);
 
-			createContainer.setBackground(new Color (76, 183, 242));
+			createContainer.setBackground(new Color(76, 183, 242));
 			createContainer.setBounds(500, 250, 80, 40);
 
 			homePanel.add(viewContainers);
-			viewContainers.setBackground(new Color (76, 183, 242));
+			viewContainers.setBackground(new Color(76, 183, 242));
 			viewContainers.setBounds(240, 300, 250, 40);
 			homePanel.setVisible(true);
 
@@ -221,7 +223,7 @@ public class HomeView implements ActionListener {
 			editNameOfContainerPanel.add(editNameLabel);
 
 			editGUIButtonsPanel.setBackground(new Color(203, 253, 232));
-			editGUIButtonsPanel.setBounds(0, frame.getHeight()-90, 800, 90);
+			editGUIButtonsPanel.setBounds(0, frame.getHeight() - 90, 800, 90);
 			editPanel.add(editGUIButtonsPanel);
 
 			editGUIButtonsPanel.add(editBackToHome);
@@ -265,29 +267,18 @@ public class HomeView implements ActionListener {
 	private void addNewContainer() {
 
 		String nameOfContainer = newContainerText.getText();
-		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?" );
-    // if not cancelled nor empty
-		if (nameOfContainer != null && !nameOfContainer.trim().isEmpty() && opt == JOptionPane.YES_OPTION) { 
-			// Create container.
-			createContainer(nameOfContainer);
-			// Push new container to the database
-			data.putContainer(nameOfContainer);
+		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?");
+		if (opt == JOptionPane.YES_OPTION) {
+			ContainerUtility
+					.verifyAddContainer(
+							nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
+									.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+							() -> {
+								newContainerText.setText("Pantry" + (containerMap.size() + 1));
+							});
 		}
 	}
 
-	/**
-	 * 
-	 * @param name
-	 */
-	private void createContainer(String name) {
-
-			Container c = new Container(name, this);
-			JButton b = new JButton(c.getName());
-			b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-			containerMap.put(b, c);
-			newContainerText.setText("Pantry" + (containerMap.size() + 1));
-
-	}
 
 	/**
 	 * Dynamically adds container buttons to the specified panel based on the
@@ -297,7 +288,6 @@ public class HomeView implements ActionListener {
 	 */
 	private void addContainerButtons(JPanel p) {
 		p.removeAll();
-
 		containerMap.forEach((button, container) -> {
 			p.add(button);
 			button.addActionListener(this);

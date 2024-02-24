@@ -2,8 +2,12 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import domain.logic.Container;
@@ -18,6 +22,9 @@ import domain.logic.Item;
 public class DB {
 
 	Connection conn;
+	private HashMap<String, Container> containers = new HashMap<String, Container>();
+
+	private HashMap<Container, HashMap<String, Item>> items = new HashMap<Container, HashMap<String, Item>>();
 
 	/**
 	 * Initializes a new database connection.
@@ -51,9 +58,60 @@ public class DB {
 
 	}
 
-	private HashMap<String, Container> containers = new HashMap<String, Container>();
+	public void putContainer(String nameOfContainer) {
 
-	private HashMap<Container, HashMap<String, Item>> items = new HashMap<Container, HashMap<String, Item>>();
+		Connection conn = init();
+		try {
+			Statement s = conn.createStatement();
+			s.execute("INSERT into container (container_name) VALUES('" + nameOfContainer + "')");
+
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public List<String> retrieveContainers() {
+
+		Connection conn = init();
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s.executeQuery("Select * from container");
+			List<String> l = new ArrayList<String>();
+
+			while (result.next()) {
+				l.add(result.getString("container_name"));
+			}
+			return l;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+
+	}
+
+	public boolean findContainer(String name) {
+		Connection conn = init();
+
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s
+					.executeQuery("select container_name from container WHERE container_name = '" + name + "'");
+
+			Boolean b = result.next();
+			conn.close();
+			return b;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
 
 	/**
 	 * Retrieves a {@link Container} by its name.
@@ -147,12 +205,6 @@ public class DB {
 				System.out.println("\tItem Name: " + itemName + " -> Item: " + item);
 			}
 		}
-	}
-
-	public void putContainer(String nameOfContainer) {
-
-		Connection conn = init();
-
 	}
 
 }
