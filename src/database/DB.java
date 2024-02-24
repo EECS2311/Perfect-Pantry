@@ -90,6 +90,23 @@ public class DB {
 		}
 
 	}
+	
+	/**
+	 * Removes an existing container from the database.
+	 * 
+	 * @param containerName The name of the container to remove
+	 * @param c				The {@link Container} object to be removed.
+	 */
+	public void removeContainer(String containerName, Container c) {
+		containers.remove(containerName, c);
+		try {
+			stmt = conn.createStatement();
+			stmt.execute(String.format("DELETE FROM container WHERE container_name='%s';", containerName));
+		} catch (SQLException e) {
+			System.out.println("Deletion failed");
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Adds an item to a specific container.
