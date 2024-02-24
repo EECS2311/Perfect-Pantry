@@ -134,7 +134,8 @@ public class HomeView implements ActionListener {
 	 * Button to change name of container
 	 */
 	private JButton editContainerNameButton = new JButton("Edit Name of Container");
-	;
+	
+	private JButton deleteContainerButton = new JButton("Delete a Container");
 
 	public static void main(String[] args) {
 		HomeView m = new HomeView();
@@ -162,6 +163,7 @@ public class HomeView implements ActionListener {
 		viewOfContainer2HomeButton.addActionListener(this);
 		editContainerNameButton.addActionListener(this);
 		editBackToHome.addActionListener(this);
+		deleteContainerButton.addActionListener(this);
 
 		stage = 0; //home stage
 
@@ -253,17 +255,20 @@ public class HomeView implements ActionListener {
 
 			backPanel.add(viewOfContainer2HomeButton);
 			backPanel.add(editContainerNameButton);
+			backPanel.add(deleteContainerButton);
 
 			viewOfContainerPanel.add(containerButtonsPanel);
 			containerButtonsPanel.setBounds(0, 50, 800, 500);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
 			addContainerButtons(containerButtonsPanel);
 
-
-
 			viewOfContainerPanel.setVisible(true);
 
 
+		}
+		
+		else if (stage == 3) {
+			
 		}
 	}
 
@@ -350,6 +355,10 @@ public class HomeView implements ActionListener {
 			}
 			else if (source == editContainerNameButton) {
 				stage = 1;
+				changeStageOfHome();
+			}
+			else if (source == deleteContainerButton) {
+				stage = 3;
 				changeStageOfHome();
 			}
 			else {
