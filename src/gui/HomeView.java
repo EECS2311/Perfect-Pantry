@@ -146,7 +146,7 @@ public class HomeView implements ActionListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
 		frame.setResizable(false); // stop resize
-		frame.setMinimumSize(new Dimension(800, 500));
+		frame.setMinimumSize(new Dimension(800, 600));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
 
 		// Initilize containerMap
@@ -188,20 +188,22 @@ public class HomeView implements ActionListener {
 			// Initialize titleLabel
 			homePanel.add(titleLabel);
 			titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 50));
-			titleLabel.setBounds(240, 100, 500, 100);
+			titleLabel.setBounds(240, 150, 500, 100);
 
 			homePanel.add(newContainerText);
-			newContainerText.setText("Type new container...");
+			newContainerText.setText("Pantry" + (containerMap.size() + 1));
+			newContainerText.setForeground(Color.GRAY);
 			newContainerText.setVisible(true);
-			newContainerText.setBounds(240, 200, 250, 40);
+			newContainerText.setBounds(240, 250, 250, 40);
 
 			homePanel.add(createContainer);
-			createContainer.setBackground(new Color(76, 183, 242));
-			createContainer.setBounds(500, 200, 80, 40);
+
+			createContainer.setBackground(new Color (76, 183, 242));
+			createContainer.setBounds(500, 250, 80, 40);
 
 			homePanel.add(viewContainers);
-			viewContainers.setBackground(new Color(76, 183, 242));
-			viewContainers.setBounds(240, 250, 250, 40);
+			viewContainers.setBackground(new Color (76, 183, 242));
+			viewContainers.setBounds(240, 300, 250, 40);
 			homePanel.setVisible(true);
 
 		} else if (stage == 1) { // Edit name of container screen
@@ -211,7 +213,7 @@ public class HomeView implements ActionListener {
 			editPanel.setLayout(null);
 			frame.add(editPanel);
 
-			editNameOfContainerPanel.setBounds(0, 0, 800, 90);
+			editNameOfContainerPanel.setBounds(0, 0, 800, 80);
 			editNameOfContainerPanel.setBackground(new Color(203, 253, 232));
 			editPanel.add(editNameOfContainerPanel);
 
@@ -219,12 +221,12 @@ public class HomeView implements ActionListener {
 			editNameOfContainerPanel.add(editNameLabel);
 
 			editGUIButtonsPanel.setBackground(new Color(203, 253, 232));
-			editGUIButtonsPanel.setBounds(0, 420, 800, 50);
+			editGUIButtonsPanel.setBounds(0, frame.getHeight()-90, 800, 90);
 			editPanel.add(editGUIButtonsPanel);
 
 			editGUIButtonsPanel.add(editBackToHome);
 
-			editContainerButtonsPanel.setBounds(0, 90, 800, 350);
+			editContainerButtonsPanel.setBounds(0, 80, 800, 500);
 			editContainerButtonsPanel.setBackground(new Color(203, 253, 232));
 			editContainerButtonsPanel.setLayout(new FlowLayout());
 			addContainerButtons(editContainerButtonsPanel);
@@ -249,7 +251,7 @@ public class HomeView implements ActionListener {
 			backPanel.add(editContainerNameButton);
 
 			viewOfContainerPanel.add(containerButtonsPanel);
-			containerButtonsPanel.setBounds(0, 50, 800, 450);
+			containerButtonsPanel.setBounds(0, 50, 800, 500);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
 			addContainerButtons(containerButtonsPanel);
 			viewOfContainerPanel.setVisible(true);
@@ -263,17 +265,14 @@ public class HomeView implements ActionListener {
 	private void addNewContainer() {
 
 		String nameOfContainer = newContainerText.getText();
-		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?");
-
-		// if not cancelled nor empty
-		if (nameOfContainer != null && !nameOfContainer.trim().isEmpty() && opt == JOptionPane.YES_OPTION) {
-
+		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?" );
+    // if not cancelled nor empty
+		if (nameOfContainer != null && !nameOfContainer.trim().isEmpty() && opt == JOptionPane.YES_OPTION) { 
 			// Create container.
 			createContainer(nameOfContainer);
 			// Push new container to the database
 			data.putContainer(nameOfContainer);
 		}
-
 	}
 
 	/**
@@ -282,10 +281,11 @@ public class HomeView implements ActionListener {
 	 */
 	private void createContainer(String name) {
 
-		Container c = new Container(name, this);
-		JButton b = new JButton(c.getName());
-		b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		containerMap.put(b, c);
+			Container c = new Container(nameOfContainer, this);
+			JButton b = new JButton(c.getName());
+			b.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
+			containerMap.put(b, c);
+			newContainerText.setText("Pantry" + (containerMap.size() + 1));
 
 	}
 
