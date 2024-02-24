@@ -36,6 +36,17 @@ public class DB {
 		containers.put(containerName, c);
 
 	}
+	
+	/**
+	 * Deletes container in database
+	 *
+	 * @param containerName The name of the container to add.
+	 * @param c The {@link Container} object to be added.
+	 */
+	public void deleteContainer(String containerName, Container c) {
+		containers.remove(containerName, c);
+
+	}
 
 	/**
 	 * Adds an item to a specific container.
