@@ -135,19 +135,42 @@ public class HomeView implements ActionListener {
 	 */
 	private JButton editContainerNameButton = new JButton("Edit Name of Container");
 
+	/**
+	 * Button to go to delete Container view
+	 */
 	private JButton deleteContainerButton = new JButton("Delete a Container");
 
+	/**
+	 * Panel to hold delete view components
+	 */
 	private JPanel deletePanel = new JPanel();
 
+	/**
+	 * Panel to hold delete view title
+	 */
 	private JPanel deleteContainerTitlePanel = new JPanel();
 
+	/**
+	 * Label to tell to click on button to delete
+	 */
 	private JLabel deleteLabel = new JLabel("Click the Container button you wish to delete");
 
+	/**
+	 * Panel to hold delete view container buttons
+	 */
 	private JPanel deleteGUIButtonsPanel = new JPanel();
 
+	/**
+	 * Button to go back from delete view to containers view
+	 */
 	private JButton deleteBackToContainerView = new JButton("Back");
 
+	/**
+	 * Panel to hold delete view buttons
+	 */
 	private JPanel deleteContainerButtonsPanel = new JPanel();
+	
+	
 	public static void main(String[] args) {
 		HomeView m = new HomeView();
 	}
@@ -156,7 +179,6 @@ public class HomeView implements ActionListener {
 	 * Launches the application and initializes the main GUI components.
 	 */
 	public HomeView() {
-
 		// Initialize frame
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
@@ -185,7 +207,7 @@ public class HomeView implements ActionListener {
 
 
 	/**
-	 * Changes the stage of the home screen between the main view and the Container list view.
+	 * Changes the stage of the home screen between the main view, the Container list view, edit container view and delete container view
 	 */
 	public void changeStageOfHome() {
 		if (stage == 0) { // Home screen
@@ -280,7 +302,7 @@ public class HomeView implements ActionListener {
 
 		}
 
-		else if (stage == 3) {
+		else if (stage == 3) { //delete Container view
 			homePanel.setVisible(false);
 			viewOfContainerPanel.setVisible(false);
 			editPanel.setVisible(false);
@@ -289,20 +311,20 @@ public class HomeView implements ActionListener {
 			frame.add(deletePanel);
 
 			deleteContainerTitlePanel.setBounds(0, 0, 800, 80);
-			deleteContainerTitlePanel.setBackground(new Color(203, 253, 232));
+			deleteContainerTitlePanel.setBackground(new Color(253, 206, 203));
 			deletePanel.add(deleteContainerTitlePanel);
 
 			deleteLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
 			deleteContainerTitlePanel.add(deleteLabel);
 
-			deleteGUIButtonsPanel.setBackground(new Color(203, 253, 232));
+			deleteGUIButtonsPanel.setBackground(new Color(253, 206, 203));
 			deleteGUIButtonsPanel.setBounds(0, frame.getHeight()-90, 800, 90);
 			deletePanel.add(deleteGUIButtonsPanel);
 
 			deleteGUIButtonsPanel.add(deleteBackToContainerView);
 
 			deleteContainerButtonsPanel.setBounds(0, 80, 800, 500);
-			deleteContainerButtonsPanel.setBackground(new Color(203, 253, 232));
+			deleteContainerButtonsPanel.setBackground(new Color(253, 206, 203));
 			deleteContainerButtonsPanel.setLayout(new FlowLayout());
 			addContainerButtons(deleteContainerButtonsPanel);
 
@@ -361,10 +383,15 @@ public class HomeView implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Deletes a container from the data and its map
+	 * @param b the button corresponding to the container to be deleted
+	 */
+	
 	public void deleteContainerButton(JButton b) {
 		Container c = containerMap.get(b);
 		int opt = JOptionPane.showConfirmDialog(frame, "Delete Container \"" + c.getName() + "\"?" );
-		if (opt == JOptionPane.YES_OPTION) { // if not cancelled nor empty
+		if (opt == JOptionPane.YES_OPTION) { // if not cancelled
 			containerMap.remove(b);
 			stage = 0;
 			changeStageOfHome();
