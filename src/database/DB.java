@@ -40,12 +40,12 @@ public class DB {
 	/**
 	 * Deletes container in database
 	 *
-	 * @param containerName The name of the container to add.
-	 * @param c The {@link Container} object to be added.
+	 * @param containerName The name of the container to deleted.
+	 * @param c The {@link Container} object to be deleted.
 	 */
 	public void deleteContainer(String containerName, Container c) {
 		containers.remove(containerName, c);
-
+		
 	}
 
 	/**
