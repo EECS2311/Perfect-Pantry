@@ -97,7 +97,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Button to go back from edit screen to home screen
 	 */
-	private JButton editBackToHome = new JButton("Back to Home");
+	private JButton editBackToContainerView = new JButton("Back");
 	;
 
 	/**
@@ -173,7 +173,7 @@ public class HomeView implements ActionListener {
 		viewContainers.addActionListener(this);
 		viewOfContainer2HomeButton.addActionListener(this);
 		editContainerNameButton.addActionListener(this);
-		editBackToHome.addActionListener(this);
+		editBackToContainerView.addActionListener(this);
 		deleteContainerButton.addActionListener(this);
 		deleteBackToContainerView.addActionListener(this);
 
@@ -241,7 +241,7 @@ public class HomeView implements ActionListener {
 			editGUIButtonsPanel.setBounds(0, frame.getHeight()-90, 800, 90);
 			editPanel.add(editGUIButtonsPanel);
 
-			editGUIButtonsPanel.add(editBackToHome);
+			editGUIButtonsPanel.add(editBackToContainerView);
 
 			editContainerButtonsPanel.setBounds(0, 80, 800, 500);
 			editContainerButtonsPanel.setBackground(new Color(203, 253, 232));
@@ -376,8 +376,8 @@ public class HomeView implements ActionListener {
 
 
 		} else if (stage == 1) { //edit name screen
-			if (source == editBackToHome) {
-				stage = 0;
+			if (source == editBackToContainerView) {
+				stage = 2;
 				changeStageOfHome();
 			} else {
 				Container c = containerMap.get(source); // This will return null if the button is not found
