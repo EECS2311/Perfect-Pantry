@@ -279,6 +279,7 @@ public class HomeView implements ActionListener {
 		}
 	}
 
+
 	/**
 	 * Dynamically adds container buttons to the specified panel based on the
 	 * current containerMap state.
