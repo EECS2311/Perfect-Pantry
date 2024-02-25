@@ -21,8 +21,8 @@ public class ContainerUtility {
 	 * @param data
 	 * @param homeView
 	 * @param map
-	 * @param errorHandler
-	 * @param successCallback
+	 * @param errorHandler    A Consumer that handles error messages.
+	 * @param successCallback A Runnable that is executed upon successful addition.
 	 */
 
 	public static void verifyAddContainer(String name, DB data, HomeView homeView,
@@ -45,6 +45,67 @@ public class ContainerUtility {
 
 			map.put(b, c);
 			data.putContainer(name);
+			successCallback.run();
+		} catch (Exception e) {
+
+		}
+
+	}
+
+	/**
+	 * Ensures deletion of containers. In case of validation errors, it utilizes a
+	 * consumer to handle the error message.
+	 * 
+	 * @param name            The name of the container to be deleted.
+	 * @param data            The database object
+	 * @param b               The JButton object
+	 * @param map             The map of the container and the JButton
+	 * @param errorHandler    A Consumer that handles error messages.
+	 * @param successCallback A Runnable that is executed upon successful addition.
+	 */
+	public static void verifyDeleteContainer(String name, DB data, JButton b, ConcurrentHashMap<JButton, Container> map,
+			Consumer<String> errorHandler, Runnable successCallback) {
+
+		try {
+
+			map.remove(b);
+			data.removeContainer(name);
+			successCallback.run();
+		} catch (Exception e) {
+
+		}
+
+	}
+
+	/**
+	 * 
+	 * Validates the input data for a new container. Valid inputs are added to the
+	 * home's container map. In case of validation errors, it utilizes a Consumer to
+	 * handle the error message.
+	 * 
+	 * @param prevName        Previous container name
+	 * @param newName         New Container name
+	 * @param data            The database object
+	 * @param b               The JButton object
+	 * @param map             The map holding containers and buttons
+	 * @param errorHandler    A Consumer that handles error messages.
+	 * @param successCallback A Runnable that is executed upon successful addition.
+	 */
+	public static void verifyEditContainer(String prevName, String newName, DB data, JButton b,
+			ConcurrentHashMap<JButton, Container> map, Consumer<String> errorHandler, Runnable successCallback) {
+
+		try {
+
+			if (newName == null) {
+				return;
+			}
+			newName = newName.trim();
+			if (newName.isEmpty()) {
+				errorHandler.accept("Container Name cannot be empty!");
+				return;
+			}
+
+			data.editContainer(prevName, newName);
 			successCallback.run();
 		} catch (Exception e) {
 
