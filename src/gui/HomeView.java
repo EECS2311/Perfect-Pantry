@@ -97,9 +97,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Button to go back from edit screen to home screen
 	 */
-	private JButton editBackToContainerView = new JButton("Back");
-	;
-
+	private JButton editBackToContainerView = new JButton("Back");;
 
 	/**
 	 * Panel to hold container buttons
@@ -136,7 +134,6 @@ public class HomeView implements ActionListener {
 	 */
 	private JButton editContainerNameButton = new JButton("Edit Name of Container");
 
-
 	/**
 	 * Button to go to delete Container view
 	 */
@@ -171,8 +168,7 @@ public class HomeView implements ActionListener {
 	 * Panel to hold delete view buttons
 	 */
 	private JPanel deleteContainerButtonsPanel = new JPanel();
-	
-	
+
 	public static void main(String[] args) {
 		HomeView m = new HomeView();
 
@@ -208,15 +204,16 @@ public class HomeView implements ActionListener {
 	}
 
 	/**
-
-	 * Changes the stage of the home screen between the main view, the Container list view, edit container view and delete container view
+	 * 
+	 * Changes the stage of the home screen between the main view, the Container
+	 * list view, edit container view and delete container view
 	 */
 	public void changeStageOfHome() {
 		if (stage == 0) { // Home screen
 			editPanel.setVisible(false);
 			viewOfContainerPanel.setVisible(false);
 			deletePanel.setVisible(false);
-      
+
 			// Initialse mainMenuPanel
 			homePanel.setLayout(null);
 			frame.getContentPane().add(homePanel);
@@ -301,10 +298,9 @@ public class HomeView implements ActionListener {
 
 			viewOfContainerPanel.setVisible(true);
 
-
 		}
 
-		else if (stage == 3) { //delete Container view
+		else if (stage == 3) { // delete Container view
 			homePanel.setVisible(false);
 			viewOfContainerPanel.setVisible(false);
 			editPanel.setVisible(false);
@@ -320,7 +316,7 @@ public class HomeView implements ActionListener {
 			deleteContainerTitlePanel.add(deleteLabel);
 
 			deleteGUIButtonsPanel.setBackground(new Color(253, 206, 203));
-			deleteGUIButtonsPanel.setBounds(0, frame.getHeight()-90, 800, 90);
+			deleteGUIButtonsPanel.setBounds(0, frame.getHeight() - 90, 800, 90);
 			deletePanel.add(deleteGUIButtonsPanel);
 
 			deleteGUIButtonsPanel.add(deleteBackToContainerView);
@@ -333,7 +329,6 @@ public class HomeView implements ActionListener {
 			deletePanel.add(deleteContainerButtonsPanel);
 			deletePanel.setVisible(true);
 
-
 		}
 	}
 
@@ -343,6 +338,7 @@ public class HomeView implements ActionListener {
 	private void addNewContainer() {
 
 		String nameOfContainer = newContainerText.getText();
+
 		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?");
 		if (opt == JOptionPane.YES_OPTION) {
 			ContainerUtility
@@ -354,7 +350,6 @@ public class HomeView implements ActionListener {
 							});
 		}
 	}
-
 
 	/**
 	 * Dynamically adds container buttons to the specified panel based on the
@@ -378,29 +373,39 @@ public class HomeView implements ActionListener {
 	 */
 	private void renameContainerButton(JButton b) {
 		Container c = containerMap.get(b);
-		String nameOfContainer = JOptionPane
-				.showInputDialog("What would you like to rename container " + c.getName() + " to?");
-		if (nameOfContainer != null && !nameOfContainer.trim().isEmpty()) {
-			c.setName(nameOfContainer);
-			b.setText(c.getName()); // Update the button text directly instead of replacing the button in the map
-			stage = 0;
-			changeStageOfHome();
-		}
+
+		String nameOfContainer = JOptionPane.showInputDialog(frame,
+				"What would you like to rename container " + c.getName() + " to?");
+
+		ContainerUtility.verifyEditContainer(c.getName(), nameOfContainer, data, b, containerMap,
+				(errorMsg) -> JOptionPane.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+				() -> {
+					c.setName(nameOfContainer);
+					// Update the button text directly instead of replacing the button in the map
+					b.setText(c.getName());
+					stage = 0;
+					changeStageOfHome();
+				});
 	}
-	
+
 	/**
 	 * Deletes a container from the data and its map
+	 * 
 	 * @param b the button corresponding to the container to be deleted
 	 */
-	
+
 	public void deleteContainerButton(JButton b) {
 		Container c = containerMap.get(b);
-		int opt = JOptionPane.showConfirmDialog(frame, "Delete Container \"" + c.getName() + "\"?" );
+		int opt = JOptionPane.showConfirmDialog(frame, "Delete Container \"" + c.getName() + "\"?");
 		if (opt == JOptionPane.YES_OPTION) { // if not cancelled
-			containerMap.remove(b);
-			data.deleteContainer(c.getName(), c);
-			stage = 0;
-			changeStageOfHome();
+			ContainerUtility.verifyDeleteContainer(c.getName(), data, b, containerMap, (errorMsg) -> JOptionPane
+					.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
+						stage = 0;
+						changeStageOfHome();
+					});
+
+			c = null;
+
 		}
 	}
 
@@ -416,7 +421,7 @@ public class HomeView implements ActionListener {
 				changeStageOfHome();
 			}
 
-		} else if (stage == 1) { //edit name screen
+		} else if (stage == 1) { // edit name screen
 			if (source == editBackToContainerView) {
 				stage = 2;
 				changeStageOfHome();
@@ -435,12 +440,10 @@ public class HomeView implements ActionListener {
 			} else if (source == editContainerNameButton) {
 				stage = 1;
 				changeStageOfHome();
-			}
-			else if (source == deleteContainerButton) {
+			} else if (source == deleteContainerButton) {
 				stage = 3;
 				changeStageOfHome();
-			}
-			else {
+			} else {
 				Container c = containerMap.get(source); // This will return null if the button is not found
 				if (c != null) {
 					c.getGUI();

@@ -44,20 +44,11 @@ public class DB {
 		return null;
 	}
 
-	public void initDB(Connection conn) {
-
-		try {
-
-			conn.close();
-		} catch (SQLException e) {
-
-			System.out.println("Issue inserting item");
-			e.printStackTrace();
-
-		}
-
-	}
-
+	/**
+	 * Inserts a new container into the database
+	 * 
+	 * @param nameOfContainer
+	 */
 	public void putContainer(String nameOfContainer) {
 
 		Connection conn = init();
@@ -73,6 +64,12 @@ public class DB {
 
 	}
 
+	/**
+	 * Returns a list of the containers currently stored in the database
+	 * 
+	 * @return A list of container names. The caller method will create the
+	 *         containers
+	 */
 	public List<String> retrieveContainers() {
 
 		Connection conn = init();
@@ -94,6 +91,12 @@ public class DB {
 
 	}
 
+	/**
+	 * Verifies if the container is in the database
+	 * 
+	 * @param name The name of the database to be found.
+	 * @return True or false depending on if the container is in the database.
+	 */
 	public boolean findContainer(String name) {
 		Connection conn = init();
 
@@ -110,6 +113,47 @@ public class DB {
 			e.printStackTrace();
 		}
 		return false;
+
+	}
+
+	/**
+	 * Removes container from the database
+	 * 
+	 * @param name The name of the database to be removed.
+	 */
+	public void removeContainer(String name) {
+		Connection conn = init();
+
+		try {
+			Statement s = conn.createStatement();
+			s.execute("DELETE from container WHERE container_name = '" + name + "'");
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Updates the name of a specific container
+	 * 
+	 * @param prevName The previous name of the container
+	 * @param newName  The new name of the container
+	 */
+	public void editContainer(String prevName, String newName) {
+
+		Connection conn = init();
+
+		try {
+			Statement s = conn.createStatement();
+			s.execute("UPDATE container SET container_name = '" + newName + "' WHERE container_name = '" + prevName
+					+ "'");
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -133,16 +177,16 @@ public class DB {
 		containers.put(containerName, c);
 
 	}
-	
+
 	/**
 	 * Deletes container in database
 	 *
 	 * @param containerName The name of the container to deleted.
-	 * @param c The {@link Container} object to be deleted.
+	 * @param c             The {@link Container} object to be deleted.
 	 */
 	public void deleteContainer(String containerName, Container c) {
 		containers.remove(containerName, c);
-		
+
 	}
 
 	/**
