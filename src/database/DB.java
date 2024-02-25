@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import domain.logic.Container;
+import domain.logic.FoodFreshness;
+import domain.logic.FoodGroup;
 import domain.logic.Item;
 
 /**
@@ -197,21 +200,32 @@ public class DB {
 	 * @param ite  The {@link Item} object to be added.
 	 */
 	public void addItem(Container c, String name, Item ite) {
-
-		// Check if container has associated items.
-		HashMap<String, Item> n = items.get(c);
-		// If there are no items associated with the container
-		if (n != null) {
-			n.put(name, ite);
-
-			// If there is no associated hashmap for a given container. It must be a new
-			// container.
-		} else {
-			HashMap<String, Item> m = new HashMap<String, Item>();
-			m.put(name, ite);
-			items.put(c, m);
-
+		
+		Connection conn = init();
+		
+		try {
+			Statement s = conn.createStatement();
+			s.execute(String.format("INSERT INTO item VALUES('%s', '%s', "
+					+ "'%d', '%s', '%s', '%s')", name, c.getName(), ite.getQuantity(), 
+					ite.getExpiryDate(), ite.getFoodGroupTags(),ite.getFoodFreshnessTag()));
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		// Check if container has associated items.
+//		HashMap<String, Item> n = items.get(c);
+//		// If there are no items associated with the container
+//		if (n != null) {
+//			n.put(name, ite);
+//
+//			// If there is no associated hashmap for a given container. It must be a new
+//			// container.
+//		} else {
+//			HashMap<String, Item> m = new HashMap<String, Item>();
+//			m.put(name, ite);
+//			items.put(c, m);
+//
+//		}
 
 	}
 
@@ -223,8 +237,18 @@ public class DB {
 	 */
 	public void removeItem(Container c, String name, Item ite) {
 
+		Connection conn = init();
+		
+		try {
+			Statement s = conn.createStatement();
+			s.execute(String.format("DELETE FROM item WHERE name='%s'", name));
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		// Any method that calls removeItem() will ensure that the item exists.
-		items.get(c).remove(name);
+//		items.get(c).remove(name);
 
 	}
 
@@ -236,11 +260,24 @@ public class DB {
 	 * @return The {@link Item} object if found, {@code null} otherwise.
 	 */
 	public Item getItem(Container container, String itemName) {
-		if (items.containsKey(container) && items.get(container).containsKey(itemName)) {
-			return items.get(container).get(itemName);
+		Connection conn = init();
+		
+		try {
+			Statement s = conn.createStatement();
+			ResultSet rs = s.executeQuery(String.format("SELECT * FROM item WHERE name='%s'", itemName));
+			conn.close();
+			
+			if (rs.next()) {
+				
+				return Item.getInstance(rs.getString("name"), rs.getInt("quantity"), rs.getDate("expiry"));
+			}
+			// Return null if the Container or Item is not found.
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		// Return null if the Container or Item is not found.
+		
 		return null;
+
 	}
 
 	/**
