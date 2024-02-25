@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import domain.logic.Container;
@@ -20,8 +22,9 @@ import domain.logic.Item;
 public class DB {
 
 	Connection conn;
-	Statement stmt = null;
-	ResultSet rslt = null;
+	private HashMap<String, Container> containers = new HashMap<String, Container>();
+
+	private HashMap<Container, HashMap<String, Item>> items = new HashMap<Container, HashMap<String, Item>>();
 
 	/**
 	 * Initializes a new database connection.
@@ -40,28 +43,119 @@ public class DB {
 		}
 		return null;
 	}
-	
-	public DB() {
-		init();
-	}
 
-	public void initDB(Connection conn) {
+	/**
+	 * Inserts a new container into the database
+	 * 
+	 * @param nameOfContainer
+	 */
+	public void putContainer(String nameOfContainer) {
 
+		Connection conn = init();
 		try {
+			Statement s = conn.createStatement();
+			s.execute("INSERT into container (container_name) VALUES('" + nameOfContainer + "')");
 
 			conn.close();
 		} catch (SQLException e) {
-
-			System.out.println("Issue inserting item");
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-
 		}
 
 	}
 
-	private HashMap<String, Container> containers = new HashMap<String, Container>();
+	/**
+	 * Returns a list of the containers currently stored in the database
+	 * 
+	 * @return A list of container names. The caller method will create the
+	 *         containers
+	 */
+	public List<String> retrieveContainers() {
 
-	private HashMap<Container, HashMap<String, Item>> items = new HashMap<Container, HashMap<String, Item>>();
+		Connection conn = init();
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s.executeQuery("Select * from container");
+			List<String> l = new ArrayList<String>();
+
+			while (result.next()) {
+				l.add(result.getString("container_name"));
+			}
+			return l;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+
+	}
+
+	/**
+	 * Verifies if the container is in the database
+	 * 
+	 * @param name The name of the database to be found.
+	 * @return True or false depending on if the container is in the database.
+	 */
+	public boolean findContainer(String name) {
+		Connection conn = init();
+
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s
+					.executeQuery("select container_name from container WHERE container_name = '" + name + "'");
+
+			Boolean b = result.next();
+			conn.close();
+			return b;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
+	/**
+	 * Removes container from the database
+	 * 
+	 * @param name The name of the database to be removed.
+	 */
+	public void removeContainer(String name) {
+		Connection conn = init();
+
+		try {
+			Statement s = conn.createStatement();
+			s.execute("DELETE from container WHERE container_name = '" + name + "'");
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Updates the name of a specific container
+	 * 
+	 * @param prevName The previous name of the container
+	 * @param newName  The new name of the container
+	 */
+	public void editContainer(String prevName, String newName) {
+
+		Connection conn = init();
+
+		try {
+			Statement s = conn.createStatement();
+			s.execute("UPDATE container SET container_name = '" + newName + "' WHERE container_name = '" + prevName
+					+ "'");
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * Retrieves a {@link Container} by its name.
@@ -81,31 +175,18 @@ public class DB {
 	 */
 	public void addContainer(String containerName, Container c) {
 		containers.put(containerName, c);
-		try {
-			stmt = conn.createStatement();
-			stmt.execute(String.format("INSERT INTO container(container_name) VALUES('%s');", containerName));
-		} catch (SQLException e) {
-			System.out.println("Insertion failed");
-			e.printStackTrace();
-		}
 
 	}
-	
+
 	/**
-	 * Removes an existing container from the database.
-	 * 
-	 * @param containerName The name of the container to remove
-	 * @param c				The {@link Container} object to be removed.
+	 * Deletes container in database
+	 *
+	 * @param containerName The name of the container to deleted.
+	 * @param c             The {@link Container} object to be deleted.
 	 */
-	public void removeContainer(String containerName, Container c) {
+	public void deleteContainer(String containerName, Container c) {
 		containers.remove(containerName, c);
-		try {
-			stmt = conn.createStatement();
-			stmt.execute(String.format("DELETE FROM container WHERE container_name='%s';", containerName));
-		} catch (SQLException e) {
-			System.out.println("Deletion failed");
-			e.printStackTrace();
-		}
+
 	}
 
 	/**
