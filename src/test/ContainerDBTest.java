@@ -20,7 +20,7 @@ import database.DB;
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
 
-class ContainerTest {
+class ContainerDBTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {

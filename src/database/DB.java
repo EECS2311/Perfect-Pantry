@@ -242,7 +242,7 @@ public class DB {
 		Connection conn = init();
 
 		try {
-			System.out.println(itemName);
+
 			Statement s = conn.createStatement();
 			ResultSet rs = s.executeQuery(
 					String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
