@@ -55,7 +55,6 @@ public class ContainerView implements ActionListener {
 		containerView.add(itemsListPanel, BorderLayout.CENTER); // Add the items list panel to the center
 		containerView.add(addItemPanel, BorderLayout.SOUTH); // Add the add item panel to the bottom
 
-		
 	}
 
 	/**
@@ -74,8 +73,7 @@ public class ContainerView implements ActionListener {
 		}
 		frame.revalidate();
 		frame.repaint();
-		// Instead of toggling JFrame visibility, ensure the content pane is correctly
-		// updated
+		// Instead of toggling JFrame visibility, ensure the content pane is correctly updated
 	}
 
 	/**

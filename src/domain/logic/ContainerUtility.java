@@ -10,6 +10,10 @@ import javax.swing.JButton;
 import database.DB;
 import gui.HomeView;
 
+/**
+ * Utility class for operations related to containers in the inventory DB system.
+ * This includes adding, deleting, editing, and initializing containers.
+ */
 public class ContainerUtility {
 
 	/**
@@ -24,7 +28,6 @@ public class ContainerUtility {
 	 * @param errorHandler    A Consumer that handles error messages.
 	 * @param successCallback A Runnable that is executed upon successful addition.
 	 */
-
 	public static void verifyAddContainer(String name, DB data, HomeView homeView,
 			ConcurrentHashMap<JButton, Container> map, Consumer<String> errorHandler, Runnable successCallback) {
 
@@ -114,11 +117,12 @@ public class ContainerUtility {
 	}
 
 	/**
-	 * Retrieves all current containers within the database and adds them to the
-	 * container map.
-	 * 
-	 * @param containerMap
-	 * @param data
+	 * Initializes the container buttons and associates them with their respective container objects upon
+	 * application startup. It retrieves all container names from the database and adds them to the container map.
+	 *
+	 * @param map      A ConcurrentHashMap that maps buttons to containers.
+	 * @param data     The database object used to retrieve container information.
+	 * @param homeView The HomeView which contains the container map.
 	 */
 	public static void initContainers(ConcurrentHashMap<JButton, Container> map, DB data, HomeView homeView) {
 		List<String> a = data.retrieveContainers();
