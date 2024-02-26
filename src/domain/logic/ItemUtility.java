@@ -4,12 +4,15 @@ import gui.HomeView;
 import gui.ItemsListView;
 import java.util.function.Consumer;
 
+import javax.swing.table.DefaultTableModel;
+
 import database.DB;
 import domain.logic.Container;
 import domain.logic.FoodGroup;
 import domain.logic.FoodFreshness;
 import domain.logic.Item;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -118,6 +121,15 @@ public class ItemUtility {
                 return false; // Invalid column for update
         }
         return true; // Successfully updated
+    }
+    
+    public static void initItems(DB data, DefaultTableModel tableModel) {
+    	List<Item> items = data.retrieveItems();
+    	
+    	for (Item ite : items) {
+    		tableModel.addRow(
+    				new Object[] { ite.getName(), ite.getQuantity(), ite.getExpiryDate().toString(), null, null });
+    	}
     }
 
 }

@@ -205,9 +205,10 @@ public class DB {
 		
 		try {
 			Statement s = conn.createStatement();
-			s.execute(String.format("INSERT INTO item VALUES('%s', '%s', "
-					+ "'%d', '%s', '%s', '%s')", name, c.getName(), ite.getQuantity(), 
-					ite.getExpiryDate(), ite.getFoodGroupTags(),ite.getFoodFreshnessTag()));
+			s.execute("INSERT INTO item(name, container, quantity, expiry) VALUES('" + name + "', "
+					+ "'" + c.getName() +"', "
+					+ "" + ite.getQuantity() + ", '"
+							+ "" + ite.getExpiryDate() +"')");
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -259,12 +260,12 @@ public class DB {
 	 * @param itemName  The name of the item to retrieve.
 	 * @return The {@link Item} object if found, {@code null} otherwise.
 	 */
-	public Item getItem(Container container, String itemName) {
+	public Item getItem(Container c, String itemName) {
 		Connection conn = init();
 		
 		try {
 			Statement s = conn.createStatement();
-			ResultSet rs = s.executeQuery(String.format("SELECT * FROM item WHERE name='%s'", itemName));
+			ResultSet rs = s.executeQuery(String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
 			conn.close();
 			
 			if (rs.next()) {
@@ -278,6 +279,27 @@ public class DB {
 		
 		return null;
 
+	}
+	
+	public List<Item> retrieveItems() {
+		Connection conn = init();
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s.executeQuery("SELECT * FROM item");
+			List<Item> l = new ArrayList<Item>();
+
+			while (result.next()) {
+
+				l.add(this.getItem(new Container(result.getString("container")), result.getString("name")));
+			}
+			return l;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+		
 	}
 
 	/**
