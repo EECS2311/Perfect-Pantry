@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import domain.logic.Container;
+import domain.logic.FoodFreshness;
+import domain.logic.FoodGroup;
 import domain.logic.Item;
 
 /**
@@ -156,6 +159,23 @@ public class DB {
 		}
 
 	}
+	
+	/**
+	 * Removes all the items from a container in the database
+	 * @param c the container whose items will be removed from
+	 */
+	public void emptyContainer(Container c) {
+		
+		Connection conn = init();
+		
+		try {
+			Statement s = conn.createStatement();
+			s.execute(String.format("DELETE FROM item WHERE container='%s'", c.getName()));
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Retrieves a {@link Container} by its name.
@@ -174,7 +194,7 @@ public class DB {
 	 * @param c             The {@link Container} object to be added.
 	 */
 	public void addContainer(String containerName, Container c) {
-		containers.put(containerName, c);
+		this.putContainer(containerName);
 
 	}
 
@@ -197,20 +217,22 @@ public class DB {
 	 * @param ite  The {@link Item} object to be added.
 	 */
 	public void addItem(Container c, String name, Item ite) {
-
-		// Check if container has associated items.
-		HashMap<String, Item> n = items.get(c);
-		// If there are no items associated with the container
-		if (n != null) {
-			n.put(name, ite);
-
-			// If there is no associated hashmap for a given container. It must be a new
-			// container.
-		} else {
-			HashMap<String, Item> m = new HashMap<String, Item>();
-			m.put(name, ite);
-			items.put(c, m);
-
+		
+		Connection conn = init();
+				
+		if (this.getItem(c, name) != null) {
+			return;
+		}
+		
+		try {
+			Statement s = conn.createStatement();
+			s.execute("INSERT INTO item(name, container, quantity, expiry) VALUES('" + name + "', "
+					+ "'" + c.getName() +"', "
+					+ "" + ite.getQuantity() + ", '"
+							+ "" + ite.getExpiryDate() +"')");
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -223,9 +245,18 @@ public class DB {
 	 */
 	public void removeItem(Container c, String name, Item ite) {
 
+		Connection conn = init();
+		
+		try {
+			Statement s = conn.createStatement();
+			s.execute(String.format("DELETE FROM item WHERE name='%s'", name));
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		// Any method that calls removeItem() will ensure that the item exists.
-		items.get(c).remove(name);
-
+		
 	}
 
 	/**
@@ -235,31 +266,50 @@ public class DB {
 	 * @param itemName  The name of the item to retrieve.
 	 * @return The {@link Item} object if found, {@code null} otherwise.
 	 */
-	public Item getItem(Container container, String itemName) {
-		if (items.containsKey(container) && items.get(container).containsKey(itemName)) {
-			return items.get(container).get(itemName);
-		}
-		// Return null if the Container or Item is not found.
-		return null;
-	}
-
-	/**
-	 * Prints all items within each container to the standard output.
-	 */
-	public void printItems() {
-		for (Map.Entry<Container, HashMap<String, Item>> containerEntry : items.entrySet()) {
-			Container container = containerEntry.getKey();
-			HashMap<String, Item> itemsInContainer = containerEntry.getValue();
-
-			System.out.println("Container: " + container);
-
-			for (Map.Entry<String, Item> itemEntry : itemsInContainer.entrySet()) {
-				String itemName = itemEntry.getKey();
-				Item item = itemEntry.getValue();
-
-				System.out.println("\tItem Name: " + itemName + " -> Item: " + item);
+	public Item getItem(Container c, String itemName) {
+		Connection conn = init();
+		
+		try {
+			System.out.println(itemName);
+			Statement s = conn.createStatement();
+			ResultSet rs = s.executeQuery(String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
+			
+			if (rs.next()) {
+				System.out.println(itemName);
+				conn.close();
+				return Item.getInstance(rs.getString("name"), rs.getInt("quantity"), rs.getDate("expiry"));
 			}
+			// Return null if the Container or Item is not found.
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		
+		return null;
+
+	}
+	
+	/**
+	 * Returns a list of Items belonging to a Container in the database
+	 * @param c a Container object to retrieve items from
+	 * @return a list of Items belonging to a Container in the database
+	 */
+	public List<Item> retrieveItems(Container c) {
+		Connection conn = init();
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s.executeQuery(String.format("SELECT * FROM item WHERE container='%s'", c.getName()));
+			List<Item> l = new ArrayList<Item>();
+
+			while (result.next()) {
+				l.add(this.getItem(new Container(result.getString("container")), result.getString("name")));
+			}
+			return l;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+		
 	}
 
 }

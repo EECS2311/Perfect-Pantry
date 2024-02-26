@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import database.DB;
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
+import domain.logic.ItemUtility;
 
 /**
  * The main GUI frame for the application, serving as the entry point for user

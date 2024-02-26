@@ -20,7 +20,7 @@ class DeleteItemViewTest {
 	void testRemove() {
 		DB data = new DB();
 		Container c = new Container("Cheese");
-		Item item = Item.getInstance("Feta", 25);
+		Item item = Item.getInstance("Feta", 25, "25-APR-1999");
 		data.addContainer("Cheese", c);
 		data.addItem(c, "Feta", item);
 

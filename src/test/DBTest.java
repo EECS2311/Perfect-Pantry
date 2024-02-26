@@ -11,6 +11,7 @@ class DBTest {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
+		
 	}
 
 	@Test
