@@ -62,6 +62,11 @@ public class AddItemView extends JPanel {
     }
 
 
+    /**
+     * Specifies the preferred size of the component, which in this case is adjusted to accommodate the layout.
+     *
+     * @return A Dimension object containing the preferred size.
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(super.getPreferredSize().width, 100); // You can adjust the height as needed.

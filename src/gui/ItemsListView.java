@@ -108,7 +108,6 @@ public class ItemsListView extends JPanel {
 		tableModel.addRow(
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
 		data.addItem(container, item.getName(), item); // Keep track of the added item
-		// home.data.printItems();
 		ItemUtility.initItems(data, this.container, tableModel);
 
 	}
@@ -141,7 +140,6 @@ public class ItemsListView extends JPanel {
 		boolean updateSuccess = ItemUtility.updateItem(data, container, row, itemName, newValue, column);
 
 		if (updateSuccess) {
-			// home.data.printItems();
 			JOptionPane.showMessageDialog(this, "Item updated successfully.", "Update", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(this, "Error updating item. Please check the values.", "Error", JOptionPane.ERROR_MESSAGE);

@@ -234,7 +234,7 @@ public class DB {
 	/**
 	 * Retrieves an {@link Item} by its container and name.
 	 *
-	 * @param container The container in which the item is stored.
+	 * @param c The container in which the item is stored.
 	 * @param itemName  The name of the item to retrieve.
 	 * @return The {@link Item} object if found, {@code null} otherwise.
 	 */

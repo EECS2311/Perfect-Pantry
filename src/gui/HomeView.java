@@ -186,7 +186,7 @@ public class HomeView implements ActionListener {
 		frame.setMinimumSize(new Dimension(800, 600));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
 
-		// Initilize containerMap
+		// Initialize containerMap
 		containerMap = new ConcurrentHashMap<>();
 
 		// Initialise all actionlisteners here
@@ -394,7 +394,6 @@ public class HomeView implements ActionListener {
 	 * 
 	 * @param b the button corresponding to the container to be deleted
 	 */
-
 	public void deleteContainerButton(JButton b) {
 		Container c = containerMap.get(b);
 		int opt = JOptionPane.showConfirmDialog(frame, "Delete Container \"" + c.getName() + "\"?");
@@ -410,6 +409,12 @@ public class HomeView implements ActionListener {
 		}
 	}
 
+	/**
+	 * Handles action events triggered by various GUI components.
+	 * This method is the central hub for processing user interactions within the home view.
+	 *
+	 * @param e The ActionEvent object containing details about the event.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
