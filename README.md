@@ -13,11 +13,12 @@ Edison Tran
 
 
 # Running the Project
-- This project was devloped using Java 17.
+**This project was devloped using Java 17.**
+
 1. Pull this project repository.
 2. Create an info.java file within the database package.
 Initialize the class as such.
-```
+```java
 package database;
 public class info {
 
