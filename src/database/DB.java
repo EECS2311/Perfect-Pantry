@@ -159,6 +159,23 @@ public class DB {
 		}
 
 	}
+	
+	/**
+	 * Removes all the items from a container in the database
+	 * @param c the container whose items will be removed from
+	 */
+	public void emptyContainer(Container c) {
+		
+		Connection conn = init();
+		
+		try {
+			Statement s = conn.createStatement();
+			s.execute(String.format("DELETE FROM item WHERE container='%s'", c.getName()));
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Retrieves a {@link Container} by its name.
@@ -177,7 +194,7 @@ public class DB {
 	 * @param c             The {@link Container} object to be added.
 	 */
 	public void addContainer(String containerName, Container c) {
-		containers.put(containerName, c);
+		this.putContainer(containerName);
 
 	}
 
@@ -253,12 +270,13 @@ public class DB {
 		Connection conn = init();
 		
 		try {
+			System.out.println(itemName);
 			Statement s = conn.createStatement();
 			ResultSet rs = s.executeQuery(String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
-			conn.close();
 			
 			if (rs.next()) {
-				
+				System.out.println(itemName);
+				conn.close();
 				return Item.getInstance(rs.getString("name"), rs.getInt("quantity"), rs.getDate("expiry"));
 			}
 			// Return null if the Container or Item is not found.
