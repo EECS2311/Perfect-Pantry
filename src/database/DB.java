@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import domain.logic.Container;
@@ -21,9 +20,6 @@ import domain.logic.Item;
 public class DB {
 
 	Connection conn;
-	private HashMap<String, Container> containers = new HashMap<String, Container>();
-
-	private HashMap<Container, HashMap<String, Item>> items = new HashMap<Container, HashMap<String, Item>>();
 
 	/**
 	 * Initializes a new database connection.
@@ -177,16 +173,6 @@ public class DB {
 	}
 
 	/**
-	 * Retrieves a {@link Container} by its name.
-	 *
-	 * @param containerName The name of the container to retrieve.
-	 * @return The {@link Container} object if found, {@code null} otherwise.
-	 */
-	public Container getContainer(String containerName) {
-		return containers.get(containerName);
-	}
-
-	/**
 	 * Adds a new container to the database.
 	 *
 	 * @param containerName The name of the container to add.
@@ -194,17 +180,6 @@ public class DB {
 	 */
 	public void addContainer(String containerName, Container c) {
 		this.putContainer(containerName);
-
-	}
-
-	/**
-	 * Deletes container in database
-	 *
-	 * @param containerName The name of the container to deleted.
-	 * @param c             The {@link Container} object to be deleted.
-	 */
-	public void deleteContainer(String containerName, Container c) {
-		containers.remove(containerName, c);
 
 	}
 
