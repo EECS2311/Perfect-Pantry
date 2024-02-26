@@ -123,6 +123,12 @@ public class ItemUtility {
         return true; // Successfully updated
     }
     
+    /**
+     * Retrieves and initializes the rows in ItemsListViews from the database for a specified container.
+     * @param data access to the database
+     * @param c Container object to initialize the items for
+     * @param tableModel the table object to initialize the rows for
+     */
     public static void initItems(DB data, Container c, DefaultTableModel tableModel) {
 
     	List<Item> items = data.retrieveItems(c);
