@@ -202,6 +202,10 @@ public class DB {
 	public void addItem(Container c, String name, Item ite) {
 		
 		Connection conn = init();
+				
+		if (this.getItem(c, name) != null) {
+			return;
+		}
 		
 		try {
 			Statement s = conn.createStatement();
@@ -281,15 +285,14 @@ public class DB {
 
 	}
 	
-	public List<Item> retrieveItems() {
+	public List<Item> retrieveItems(Container c) {
 		Connection conn = init();
 		try {
 			Statement s = conn.createStatement();
-			ResultSet result = s.executeQuery("SELECT * FROM item");
+			ResultSet result = s.executeQuery(String.format("SELECT * FROM item WHERE container='%s'", c.getName()));
 			List<Item> l = new ArrayList<Item>();
 
 			while (result.next()) {
-
 				l.add(this.getItem(new Container(result.getString("container")), result.getString("name")));
 			}
 			return l;

@@ -67,6 +67,7 @@ public class ItemsListView extends JPanel {
 
 		table = new JTable(tableModel);
 		// items = new ArrayList<>();
+
 		// Define table columns
 		tableModel.addColumn("Name");
 		tableModel.addColumn("Quantity");
@@ -94,8 +95,8 @@ public class ItemsListView extends JPanel {
 		table.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(foodFreshnessComboBox));
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
-		ItemUtility.initItems(data, tableModel);
-
+		
+		ItemUtility.initItems(data, container, tableModel);
 	}
 
 
@@ -108,6 +109,7 @@ public class ItemsListView extends JPanel {
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
 		data.addItem(container, item.getName(), item); // Keep track of the added item
 		// home.data.printItems();
+		ItemUtility.initItems(data, this.container, tableModel);
 
 	}
 

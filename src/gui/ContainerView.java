@@ -9,7 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import database.DB;
 import domain.logic.Container;
+import domain.logic.ItemUtility;
 
 /**
  * Represents the GUI view for a container. It allows users to interact with a container and its items through a graphical interface, including viewing items, adding new items, and deleting existing items.
@@ -23,6 +25,8 @@ public class ContainerView implements ActionListener {
 	private ItemsListView itemsListPanel;
 	private AddItemView addItemPanel;
 	private Container container;
+	
+	DB data = home.data;
 
 	/**
 	 * Constructs a new ContainerView associated with a specific container and home.
@@ -46,10 +50,12 @@ public class ContainerView implements ActionListener {
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Create a panel for buttons with FlowLayout
 		buttonPanel.add(back); // Add back button to the button panel
 		buttonPanel.add(delete); // Add delete button to the button panel
-
+		
 		containerView.add(buttonPanel, BorderLayout.NORTH); // Add the button panel to the top of the main panel
 		containerView.add(itemsListPanel, BorderLayout.CENTER); // Add the items list panel to the center
 		containerView.add(addItemPanel, BorderLayout.SOUTH); // Add the add item panel to the bottom
+
+		
 	}
 
 	/**
