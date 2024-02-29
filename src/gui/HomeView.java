@@ -73,9 +73,6 @@ public class HomeView implements ActionListener {
 
 	}
 
-	public static HomeView getHomeView() {
-		return home;
-	}
 
 	/**
 	 * Launches the application and initializes the main GUI components.
@@ -95,57 +92,50 @@ public class HomeView implements ActionListener {
 		viewContainers.addActionListener(this);
 
 
-		changeStageOfHome();
+		setHomeViewVisibility(true);
 	}
 
 	public void setHomeViewVisibility(boolean b) {
+		if (b == true) {
+
+			editPanel.setVisible(false);
+			viewOfContainerPanel.setVisible(false);
+			deletePanel.setVisible(false);
+
+			// Initialse mainMenuPanel
+			homePanel.setLayout(null);
+			frame.getContentPane().add(homePanel);
+			frame.setLocationRelativeTo(null);
+
+			homePanel.setBackground(new Color(253, 241, 203));
+			homePanel.setVisible(true);
+
+			// Initialize titleLabel
+			homePanel.add(titleLabel);
+			titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 50));
+			titleLabel.setBounds(240, 150, 500, 100);
+
+			homePanel.add(newContainerText);
+			newContainerText.setText("Pantry" + (containerMap.size() + 1));
+			newContainerText.setForeground(Color.GRAY);
+			newContainerText.setVisible(true);
+			newContainerText.setBounds(240, 250, 250, 40);
+
+			homePanel.add(createContainer);
+
+			createContainer.setBackground(new Color(76, 183, 242));
+			createContainer.setBounds(500, 250, 80, 40);
+
+			homePanel.add(viewContainers);
+			viewContainers.setBackground(new Color(76, 183, 242));
+			viewContainers.setBounds(240, 300, 250, 40);
+			homePanel.setVisible(true);
+		}
 		if (b == false) {
 			homePanel.setVisible(false);
 		}
 	}
 
-	/**
-	 * 
-	 * Changes the stage of the home screen between the main view, the Container
-	 * list view, edit container view and delete container view
-	 */
-	public void changeStageOfHome() {
-
-		editPanel.setVisible(false);
-		viewOfContainerPanel.setVisible(false);
-		deletePanel.setVisible(false);
-
-		// Initialse mainMenuPanel
-		homePanel.setLayout(null);
-		frame.getContentPane().add(homePanel);
-		frame.setLocationRelativeTo(null);
-
-		homePanel.setBackground(new Color(253, 241, 203));
-		homePanel.setVisible(true);
-
-		// Initialize titleLabel
-		homePanel.add(titleLabel);
-		titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 50));
-		titleLabel.setBounds(240, 150, 500, 100);
-
-		homePanel.add(newContainerText);
-		newContainerText.setText("Pantry" + (containerMap.size() + 1));
-		newContainerText.setForeground(Color.GRAY);
-		newContainerText.setVisible(true);
-		newContainerText.setBounds(240, 250, 250, 40);
-
-		homePanel.add(createContainer);
-
-		createContainer.setBackground(new Color(76, 183, 242));
-		createContainer.setBounds(500, 250, 80, 40);
-
-		homePanel.add(viewContainers);
-		viewContainers.setBackground(new Color(76, 183, 242));
-		viewContainers.setBounds(240, 300, 250, 40);
-		homePanel.setVisible(true);
-
-
-	}
 
 	/**
 	 * Adds a new container and its corresponding button to the GUI.
@@ -197,5 +187,9 @@ public class HomeView implements ActionListener {
 	 */
 	public static JFrame getFrame() {
 		return frame;
+	}
+	
+	public static HomeView getHomeView() {
+		return home;
 	}
 }
