@@ -203,6 +203,12 @@ public class HomeView implements ActionListener {
 		ContainerUtility.initContainers(containerMap, data, this);
 		changeStageOfHome();
 	}
+	
+	public void setHomeViewVisibility(boolean b) {
+		if (b == false) {
+			homePanel.setVisible(false);
+		}
+	}
 
 	/**
 	 * 
