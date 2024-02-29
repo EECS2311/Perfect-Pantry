@@ -1,5 +1,179 @@
 package gui;
 
-public class SeeContainersView {
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import database.DB;
+import domain.logic.Container;
+import domain.logic.ContainerUtility;
+import domain.logic.ItemUtility;
+
+/**
+ * The GUI which shows the list of Containers the user made,
+ *  and is able to go to deleteContainerView, editContainerView, HomeView and ItemsView
+ */
+public class SeeContainersView implements ActionListener{
+
+	/**
+	 * Hold buttons pertaining to its containers
+	 */
+	private JPanel containerButtonsPanel = new JPanel();
+
+	/**
+	 * Map of button and its corresponding Container object
+	 */
+	private ConcurrentHashMap<JButton, Container> containerMap;
+
+	/**
+	 * Button to go to container list view
+	 */
+	private JButton viewContainers = new JButton("View Containers");
+
+	/**
+	 * Holds components for the container list view
+	 */
+	private JPanel viewOfContainerPanel = new JPanel();
+
+	/**
+	 * Holds button on container list view
+	 */
+	private JPanel backPanel = new JPanel();
+
+	/**
+	 * Button to go from container view to home
+	 */
+	private JButton viewOfContainer2HomeButton = new JButton("Back");
+
+	/**
+	 * Button to change name of container
+	 */
+	private JButton editContainerNameButton = new JButton("Edit Name of Container");
+
+	/**
+	 * Button to go to delete Container view
+	 */
+	private JButton deleteContainerButton = new JButton("Delete a Container");
+
+
+
+	/**
+	 * Launches the application and initializes the main GUI components.
+	 */
+	public SeeContainersView() {
+		// Initialize containerMap
+		containerMap = new ConcurrentHashMap<>();
+
+
+		viewContainers.addActionListener(this);
+		viewOfContainer2HomeButton.addActionListener(this);
+		editContainerNameButton.addActionListener(this);
+		deleteContainerButton.addActionListener(this);
+
+
+		//			ContainerUtility.initContainers(containerMap, data, this);
+		//			changeStageOfHome();
+	}
+
+	/**
+	 * 
+	 * Changes the stage of the home screen between the main view, the Container
+	 * list view, edit container view and delete container view
+	 */
+	public void changeStageOfHome() {
+
+		if (stage == 2) { // See list of containers as buttons
+			homePanel.setVisible(false);
+			deletePanel.setVisible(false);
+			editPanel.setVisible(false);
+
+			frame.add(viewOfContainerPanel);
+			viewOfContainerPanel.setLayout(null);
+			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
+
+			backPanel.setBackground(new Color(253, 241, 203));
+			viewOfContainerPanel.add(backPanel);
+			backPanel.setLayout(new FlowLayout());
+			backPanel.setBounds(0, 0, 800, 50);
+
+			backPanel.add(viewOfContainer2HomeButton);
+			backPanel.add(editContainerNameButton);
+			backPanel.add(deleteContainerButton);
+
+			viewOfContainerPanel.add(containerButtonsPanel);
+			containerButtonsPanel.setBounds(0, 50, 800, 500);
+			containerButtonsPanel.setBackground(new Color(253, 241, 200));
+			addContainerButtons(containerButtonsPanel);
+
+			viewOfContainerPanel.setVisible(true);
+
+		}
+	}
+
+
+
+	/**
+	 * Dynamically adds container buttons to the specified panel based on the
+	 * current containerMap state.
+	 * 
+	 * @param p The panel to which container buttons will be added.
+	 */
+	public void addContainerButtons(JPanel p) {
+		p.removeAll();
+		containerMap.forEach((button, container) -> {
+			p.add(button);
+			button.addActionListener(this);
+		});
+		p.revalidate(); // refresh panel
+	}
+
+
+
+
+	/**
+	 * Handles action events triggered by various GUI components.
+	 * This method is the central hub for processing user interactions within the home view.
+	 *
+	 * @param e The ActionEvent object containing details about the event.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object source = e.getSource();
+
+
+
+
+		if (source == viewOfContainer2HomeButton) {
+			stage = 0;
+			changeStageOfHome();
+		} else if (source == editContainerNameButton) {
+			stage = 1;
+			changeStageOfHome();
+		} else if (source == deleteContainerButton) {
+			stage = 3;
+			changeStageOfHome();
+		} else {
+			Container c = containerMap.get(source); // This will return null if the button is not found
+			if (c != null) {
+				c.getGUI();
+			}
+
+		}
+
+
+	}
+
+
 
 }
