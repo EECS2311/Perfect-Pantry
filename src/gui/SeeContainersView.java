@@ -34,7 +34,6 @@ public class SeeContainersView implements ActionListener{
 	/**
 	 * Button to go to container list view
 	 */
-	private JButton viewContainers = new JButton("View Containers");
 
 	/**
 	 * Holds components for the container list view
@@ -71,7 +70,6 @@ public class SeeContainersView implements ActionListener{
 	public SeeContainersView() {
 		containersView = this;
 
-		viewContainers.addActionListener(this);
 		viewOfContainer2HomeButton.addActionListener(this);
 		editContainerNameButton.addActionListener(this);
 		deleteContainerButton.addActionListener(this);
