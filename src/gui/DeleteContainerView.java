@@ -72,12 +72,12 @@ public class DeleteContainerView implements ActionListener {
 
 	public void setDeleteContainerView(boolean b) {
 		if(b == true) {
-			homePanel.setVisible(false);
-			viewOfContainerPanel.setVisible(false);
-			editPanel.setVisible(false);
+			HomeView.getHomeView().setHomeViewVisibility(false);
+			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
+//			editPanel.setVisible(false);
 
 			deletePanel.setLayout(null);
-			frame.add(deletePanel);
+			HomeView.getFrame().add(deletePanel);
 
 			deleteContainerTitlePanel.setBounds(0, 0, 800, 80);
 			deleteContainerTitlePanel.setBackground(new Color(253, 206, 203));
@@ -103,7 +103,7 @@ public class DeleteContainerView implements ActionListener {
 		}
 		
 		if (b == false) {
-			homePanel.setVisible(false);
+			deletePanel.setVisible(false);
 		}
 	}
 
