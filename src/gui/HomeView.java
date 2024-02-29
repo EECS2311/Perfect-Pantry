@@ -73,10 +73,9 @@ public class HomeView implements ActionListener {
 
 	private static HomeView home;
 	
-	private static SeeContainersView m;
 
 	public static void main(String[] args) {
-		m = new SeeContainersView();
+		SeeContainersView m = new SeeContainersView();
 		home = new HomeView();
 
 	}
