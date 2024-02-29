@@ -23,12 +23,6 @@ import domain.logic.ItemUtility;
 public class DeleteContainerView implements ActionListener {
 
 	/**
-	 * Map of button and its corresponding Container object
-	 */
-	private ConcurrentHashMap<JButton, Container> containerMap;
-
-
-	/**
 	 * Panel to hold delete view components
 	 */
 	private JPanel deletePanel = new JPanel();
@@ -119,7 +113,7 @@ public class DeleteContainerView implements ActionListener {
 	 */
 	private void addContainerButtons(JPanel p) {
 		p.removeAll();
-		containerMap.forEach((button, container) -> {
+		HomeView.getContainerMap().forEach((button, container) -> {
 			p.add(button);
 			button.addActionListener(this);
 		});
@@ -132,10 +126,10 @@ public class DeleteContainerView implements ActionListener {
 	 * @param b the button corresponding to the container to be deleted
 	 */
 	public void deleteContainerButton(JButton b) {
-		Container c = containerMap.get(b);
+		Container c = HomeView.getContainerMap().get(b);
 		int opt = JOptionPane.showConfirmDialog(HomeView.getFrame(), "Delete Container \"" + c.getName() + "\"?");
 		if (opt == JOptionPane.YES_OPTION) { // if not cancelled
-			ContainerUtility.verifyDeleteContainer(c.getName(), HomeView.data, b, containerMap, (errorMsg) -> JOptionPane
+			ContainerUtility.verifyDeleteContainer(c.getName(), HomeView.data, b, HomeView.getContainerMap(), (errorMsg) -> JOptionPane
 					.showMessageDialog(HomeView.getFrame(), errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
 						HomeView.getHomeView().setHomeViewVisibility(true);
 					});
@@ -158,7 +152,7 @@ public class DeleteContainerView implements ActionListener {
 		if (source == deleteBackToContainerView) {
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(true);
 		} else {
-			Container c = containerMap.get(source); // This will return null if the button is not found
+			Container c = HomeView.getContainerMap().get(source); // This will return null if the button is not found
 			if (c != null) {
 				deleteContainerButton((JButton) source);
 			}
