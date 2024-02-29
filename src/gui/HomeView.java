@@ -170,9 +170,15 @@ public class HomeView implements ActionListener {
 	 */
 	private JPanel deleteContainerButtonsPanel = new JPanel();
 
+	private static HomeView home;
+	
 	public static void main(String[] args) {
-		HomeView m = new HomeView();
+		home = new HomeView();
 
+	}
+	
+	public static HomeView getHomeView() {
+		return home;
 	}
 
 	/**
