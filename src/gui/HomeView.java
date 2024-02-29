@@ -46,11 +46,6 @@ public class HomeView implements ActionListener {
 	private JPanel homePanel = new JPanel();
 
 	/**
-	 * Title part of home screen
-	 */
-	private JPanel titlePanel = new JPanel();
-
-	/**
 	 * Title name
 	 */
 	private JLabel titleLabel = new JLabel("Perfect Pantry");;
@@ -76,6 +71,7 @@ public class HomeView implements ActionListener {
 
 	public static void main(String[] args) {
 		SeeContainersView m = new SeeContainersView();
+		DeleteContainerView d = new DeleteContainerView();
 		home = new HomeView();
 
 	}
