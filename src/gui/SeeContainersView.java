@@ -75,7 +75,6 @@ public class SeeContainersView implements ActionListener{
 		// Initialize containerMap
 		containerMap = new ConcurrentHashMap<>();
 
-
 		viewContainers.addActionListener(this);
 		viewOfContainer2HomeButton.addActionListener(this);
 		editContainerNameButton.addActionListener(this);
@@ -91,14 +90,13 @@ public class SeeContainersView implements ActionListener{
 	 * Changes the stage of the home screen between the main view, the Container
 	 * list view, edit container view and delete container view
 	 */
-	public void changeStageOfHome() {
-
-		if (stage == 2) { // See list of containers as buttons
-			homePanel.setVisible(false);
+	public void setSeeContainersViewVisibility(boolean b) {
+		if (b == true) { 
+			HomeView.getHomeView().setHomeViewVisibility(false);
 			deletePanel.setVisible(false);
 			editPanel.setVisible(false);
 
-			frame.add(viewOfContainerPanel);
+			HomeView.getFrame().add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
 			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
 
