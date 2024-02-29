@@ -32,11 +32,6 @@ public class SeeContainersView implements ActionListener{
 	private JPanel containerButtonsPanel = new JPanel();
 
 	/**
-	 * Map of button and its corresponding Container object
-	 */
-	private ConcurrentHashMap<JButton, Container> containerMap;
-
-	/**
 	 * Button to go to container list view
 	 */
 	private JButton viewContainers = new JButton("View Containers");
@@ -65,6 +60,8 @@ public class SeeContainersView implements ActionListener{
 	 * Button to go to delete Container view
 	 */
 	private JButton deleteContainerButton = new JButton("Delete a Container");
+	
+	private static SeeContainersView containersView;
 
 
 
@@ -72,17 +69,12 @@ public class SeeContainersView implements ActionListener{
 	 * Launches the application and initializes the main GUI components.
 	 */
 	public SeeContainersView() {
-		// Initialize containerMap
-		containerMap = new ConcurrentHashMap<>();
+		containersView = this;
 
 		viewContainers.addActionListener(this);
 		viewOfContainer2HomeButton.addActionListener(this);
 		editContainerNameButton.addActionListener(this);
 		deleteContainerButton.addActionListener(this);
-
-
-		//			ContainerUtility.initContainers(containerMap, data, this);
-		//			changeStageOfHome();
 	}
 
 	/**
@@ -93,8 +85,8 @@ public class SeeContainersView implements ActionListener{
 	public void setSeeContainersViewVisibility(boolean b) {
 		if (b == true) { 
 			HomeView.getHomeView().setHomeViewVisibility(false);
-			deletePanel.setVisible(false);
-			editPanel.setVisible(false);
+//			deletePanel.setVisible(false);
+//			editPanel.setVisible(false);
 
 			HomeView.getFrame().add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
@@ -117,6 +109,10 @@ public class SeeContainersView implements ActionListener{
 			viewOfContainerPanel.setVisible(true);
 
 		}
+		if (b == false) {
+			viewOfContainerPanel.setVisible(false);
+
+		}
 	}
 
 
@@ -129,7 +125,7 @@ public class SeeContainersView implements ActionListener{
 	 */
 	public void addContainerButtons(JPanel p) {
 		p.removeAll();
-		containerMap.forEach((button, container) -> {
+		HomeView.getContainerMap().forEach((button, container) -> {
 			p.add(button);
 			button.addActionListener(this);
 		});
@@ -149,20 +145,17 @@ public class SeeContainersView implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 
-
-
-
 		if (source == viewOfContainer2HomeButton) {
-			stage = 0;
-			changeStageOfHome();
+			HomeView.getHomeView().setHomeViewVisibility(true);
+
 		} else if (source == editContainerNameButton) {
-			stage = 1;
-			changeStageOfHome();
+			//			stage = 1;
+			//			changeStageOfHome();
 		} else if (source == deleteContainerButton) {
-			stage = 3;
-			changeStageOfHome();
+			//			stage = 3;
+			//			changeStageOfHome();
 		} else {
-			Container c = containerMap.get(source); // This will return null if the button is not found
+			Container c = HomeView.getContainerMap().get(source); // This will return null if the button is not found
 			if (c != null) {
 				c.getGUI();
 			}
@@ -170,6 +163,10 @@ public class SeeContainersView implements ActionListener{
 		}
 
 
+	}
+	
+	public static SeeContainersView getContainersView() {
+		return containersView;
 	}
 
 
