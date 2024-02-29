@@ -87,7 +87,7 @@ public class DeleteContainerView implements ActionListener {
 			deleteContainerTitlePanel.add(deleteLabel);
 
 			deleteGUIButtonsPanel.setBackground(new Color(253, 206, 203));
-			deleteGUIButtonsPanel.setBounds(0, frame.getHeight() - 90, 800, 90);
+			deleteGUIButtonsPanel.setBounds(0, HomeView.getFrame().getHeight() - 90, 800, 90);
 			deletePanel.add(deleteGUIButtonsPanel);
 
 			deleteGUIButtonsPanel.add(deleteBackToContainerView);
@@ -167,7 +167,7 @@ public class DeleteContainerView implements ActionListener {
 	}
 	
 	public static DeleteContainerView getDeleteContainerView() {
-		return home;
+		return deleteView;
 	}
 
 
