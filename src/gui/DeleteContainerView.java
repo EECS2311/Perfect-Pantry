@@ -70,7 +70,7 @@ public class DeleteContainerView implements ActionListener {
 
 	}
 
-	public void setDeleteContainerView(boolean b) {
+	public void setDeleteContainerViewVisibility(boolean b) {
 		if(b == true) {
 			HomeView.getHomeView().setHomeViewVisibility(false);
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
@@ -133,12 +133,11 @@ public class DeleteContainerView implements ActionListener {
 	 */
 	public void deleteContainerButton(JButton b) {
 		Container c = containerMap.get(b);
-		int opt = JOptionPane.showConfirmDialog(frame, "Delete Container \"" + c.getName() + "\"?");
+		int opt = JOptionPane.showConfirmDialog(HomeView.getFrame(), "Delete Container \"" + c.getName() + "\"?");
 		if (opt == JOptionPane.YES_OPTION) { // if not cancelled
-			ContainerUtility.verifyDeleteContainer(c.getName(), data, b, containerMap, (errorMsg) -> JOptionPane
-					.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-						stage = 0;
-						changeStageOfHome();
+			ContainerUtility.verifyDeleteContainer(c.getName(), HomeView.data, b, containerMap, (errorMsg) -> JOptionPane
+					.showMessageDialog(HomeView.getFrame(), errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
+						HomeView.getHomeView().setHomeViewVisibility(true);
 					});
 
 			c = null;
@@ -156,12 +155,8 @@ public class DeleteContainerView implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 
-
-
-
 		if (source == deleteBackToContainerView) {
-			stage = 2;
-			changeStageOfHome();
+			SeeContainersView.getContainersView().setSeeContainersViewVisibility(true);
 		} else {
 			Container c = containerMap.get(source); // This will return null if the button is not found
 			if (c != null) {
