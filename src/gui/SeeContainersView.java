@@ -150,8 +150,7 @@ public class SeeContainersView implements ActionListener{
 			//			stage = 1;
 			//			changeStageOfHome();
 		} else if (source == deleteContainerButton) {
-			//			stage = 3;
-			//			changeStageOfHome();
+			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(true);
 		} else {
 			Container c = HomeView.getContainerMap().get(source); // This will return null if the button is not found
 			if (c != null) {
