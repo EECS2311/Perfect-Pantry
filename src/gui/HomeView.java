@@ -72,8 +72,11 @@ public class HomeView implements ActionListener {
 
 
 	private static HomeView home;
+	
+	private static SeeContainersView m;
 
 	public static void main(String[] args) {
+		m = new SeeContainersView();
 		home = new HomeView();
 
 	}
@@ -90,11 +93,13 @@ public class HomeView implements ActionListener {
 		frame.setMinimumSize(new Dimension(800, 600));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
 
-
 		// Initialise all actionlisteners here
 		newContainerText.addActionListener(this);
 		createContainer.addActionListener(this);
 		viewContainers.addActionListener(this);
+		
+		// Initialize containerMap
+		containerMap = new ConcurrentHashMap<>();
 
 		ContainerUtility.initContainers(containerMap, data, this);
 
@@ -104,9 +109,9 @@ public class HomeView implements ActionListener {
 	public void setHomeViewVisibility(boolean b) {
 		if (b == true) {
 
-			editPanel.setVisible(false);
-			viewOfContainerPanel.setVisible(false);
-			deletePanel.setVisible(false);
+//			editPanel.setVisible(false);
+			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
+//			deletePanel.setVisible(false);
 
 			// Initialse mainMenuPanel
 			homePanel.setLayout(null);
@@ -175,15 +180,14 @@ public class HomeView implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 
-		if (stage == 0) { // home screen
 			if (source == createContainer) {
 				addNewContainer();
 			} else if (source == viewContainers) {
-				stage = 2;
-				changeStageOfHome();
+				SeeContainersView.getContainersView().setSeeContainersViewVisibility(true);
+
 			}
 
-		}
+		
 	}
 
 	/**
