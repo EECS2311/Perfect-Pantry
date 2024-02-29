@@ -83,8 +83,8 @@ public class SeeContainersView implements ActionListener{
 	public void setSeeContainersViewVisibility(boolean b) {
 		if (b == true) { 
 			HomeView.getHomeView().setHomeViewVisibility(false);
-//			deletePanel.setVisible(false);
-//			editPanel.setVisible(false);
+			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
+			//			editPanel.setVisible(false);
 
 			HomeView.getFrame().add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
