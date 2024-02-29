@@ -33,6 +33,11 @@ public class HomeView implements ActionListener {
 	static JFrame frame = new JFrame("Perfect Pantry");
 
 	public static DB data = new DB();
+	
+	/**
+	 * Map of button and its corresponding Container object
+	 */
+	private static ConcurrentHashMap<JButton, Container> containerMap;
 
 	/**
 	 * home panel of the application, will hold all components pertaining to home
@@ -91,6 +96,7 @@ public class HomeView implements ActionListener {
 		createContainer.addActionListener(this);
 		viewContainers.addActionListener(this);
 
+		ContainerUtility.initContainers(containerMap, data, this);
 
 		setHomeViewVisibility(true);
 	}
@@ -191,5 +197,9 @@ public class HomeView implements ActionListener {
 	
 	public static HomeView getHomeView() {
 		return home;
+	}
+	
+	public static ConcurrentHashMap<JButton, Container> getContainerMap(){
+		return containerMap;
 	}
 }
