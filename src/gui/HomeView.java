@@ -103,8 +103,7 @@ public class HomeView implements ActionListener {
 
 	public void setHomeViewVisibility(boolean b) {
 		if (b == true) {
-
-//			editPanel.setVisible(false);
+			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
 			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
 			// Initialse mainMenuPanel
