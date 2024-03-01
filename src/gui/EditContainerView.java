@@ -71,8 +71,38 @@ public class EditContainerView implements ActionListener{
 	}
 
 	public void setEditContainerViewVisibility(boolean b) {
+		if (b == true) {
+			HomeView.getHomeView().setHomeViewVisibility(false);
+			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
+			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
+
+			editPanel.setLayout(null);
+			HomeView.getFrame().add(editPanel);
+
+			editNameOfContainerPanel.setBounds(0, 0, 800, 80);
+			editNameOfContainerPanel.setBackground(new Color(203, 253, 232));
+			editPanel.add(editNameOfContainerPanel);
+
+			editNameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
+			editNameOfContainerPanel.add(editNameLabel);
+
+			editGUIButtonsPanel.setBackground(new Color(203, 253, 232));
+			editGUIButtonsPanel.setBounds(0, HomeView.getFrame().getHeight() - 90, 800, 90);
+			editPanel.add(editGUIButtonsPanel);
+
+			editGUIButtonsPanel.add(editBackToContainerView);
+
+			editContainerButtonsPanel.setBounds(0, 80, 800, 500);
+			editContainerButtonsPanel.setBackground(new Color(203, 253, 232));
+			editContainerButtonsPanel.setLayout(new FlowLayout());
+			addContainerButtons(editContainerButtonsPanel);
+
+			editPanel.add(editContainerButtonsPanel);
+			editPanel.setVisible(true);
+
+		}
 		if (b == false) {
-			homePanel.setVisible(false);
+			editPanel.setVisible(false);
 		}
 	}
 
@@ -178,7 +208,7 @@ public class EditContainerView implements ActionListener{
 
 
 	}
-	
+
 	public static EditContainerView getEditContainerView() {
 		return editContainers;
 	}
