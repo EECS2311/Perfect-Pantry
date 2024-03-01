@@ -108,7 +108,9 @@ public class SeeContainersView implements ActionListener{
 
 		}
 		if (b == false) {
-			
+			viewOfContainer2HomeButton.removeActionListener(this);
+			editContainerNameButton.removeActionListener(this);
+			deleteContainerButton.removeActionListener(this);
 			viewOfContainerPanel.setVisible(false);
 
 		}
