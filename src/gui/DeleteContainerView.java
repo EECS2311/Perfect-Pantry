@@ -60,7 +60,6 @@ public class DeleteContainerView implements ActionListener {
 	 */
 	public DeleteContainerView() {
 		deleteView = this;
-		deleteBackToContainerView.addActionListener(this);
 
 	}
 
@@ -70,6 +69,8 @@ public class DeleteContainerView implements ActionListener {
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
 			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
 
+			deleteBackToContainerView.addActionListener(this);
+			
 			deletePanel.setLayout(null);
 			HomeView.getFrame().add(deletePanel);
 
