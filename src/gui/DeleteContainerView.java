@@ -68,7 +68,7 @@ public class DeleteContainerView implements ActionListener {
 		if(b == true) {
 			HomeView.getHomeView().setHomeViewVisibility(false);
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
-//			editPanel.setVisible(false);
+			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
 
 			deletePanel.setLayout(null);
 			HomeView.getFrame().add(deletePanel);
