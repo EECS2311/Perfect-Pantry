@@ -14,7 +14,7 @@ import java.util.Locale;
  */
 public class Item implements Comparable<Item>{
     private String name;
-    private Set<GenericTag<FoodGroup>> foodGroupTags = new HashSet<>();
+    private GenericTag<FoodGroup> foodGroupTag;
     private GenericTag<FoodFreshness> foodFreshnessTag;
     private int quantity;
 
@@ -187,43 +187,37 @@ public class Item implements Comparable<Item>{
     }
 
     /**
-     * Gets a deep copy of the set of food group tags.
+     * Gets the food freshness tag.
      *
-     * @return A copy of the set of food group tags.
+     * @return The food freshness tag if it exists, or null otherwise.
      */
-    public Set<GenericTag<FoodGroup>> getFoodGroupTags() {
-        Set<GenericTag<FoodGroup>> temp = new HashSet<>();
-        for(GenericTag<FoodGroup> tag: this.foodGroupTags){
-            temp.add(new GenericTag<>(tag.getTag()));
+    public GenericTag<FoodGroup> getFoodGroupTag() {
+        // Directly return null if foodFreshnessTag is null, avoiding NullPointerException
+        if (this.foodGroupTag == null) {
+            return null;
         }
-        return temp;
+        // Otherwise, return a new GenericTag with the existing tag value
+        return new GenericTag<>(this.foodGroupTag.getTag());
     }
 
     /**
-     * Sets the food group tags from a set of GenericTag<FoodGroup>.
+     * Sets the food freshness tag from a GenericTag<FoodFreshness>.
      *
-     * @param foodGroupTags The new set of food group tags.
+     * @param tag The new food freshness tag.
      */
-    public void setFoodGroupTags(Set<GenericTag<FoodGroup>> foodGroupTags) {
-        this.foodGroupTags.clear();
-        for(GenericTag<FoodGroup> tag: foodGroupTags){
-            this.foodGroupTags.addAll(foodGroupTags);
-        }
+    public void setFoodGroupTag(GenericTag<FoodGroup> tag) {
+        this.foodGroupTag = new GenericTag<>(tag);
     }
 
     /**
-     * Sets the food group tags directly from a set of FoodGroup enums.
+     * Sets the food freshness tag directly from a FoodFreshness enum.
      *
-     * @param foodGroupTags The set of FoodGroup enums.
+     * @param tag The FoodFreshness enum value.
      */
-    public void setFoodGroupTagsEnum(Set<FoodGroup> foodGroupTags) {
-        this.foodGroupTags.clear();
-        if(foodGroupTags != null){
-            for(FoodGroup tag: foodGroupTags){
-                this.foodGroupTags.add(new GenericTag<>(tag));
-            }
-        }
+    public void setFoodFreshnessTag(FoodFreshness tag) {
+        this.foodFreshnessTag = new GenericTag<>(tag);
     }
+
 
     /**
      * Gets the food freshness tag.

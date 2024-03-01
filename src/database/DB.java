@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.logic.Container;
+import domain.logic.FoodFreshness;
+import domain.logic.FoodGroup;
 import domain.logic.Item;
 
 /**
@@ -249,6 +251,9 @@ public class DB {
 
 			if (rs.next()) {
 				System.out.println(itemName);
+				FoodGroup fg = FoodGroup.valueOf(rs.getString("fg"));
+				FoodFreshness fresh = FoodFreshness.valueOf(rs.getString("fresh"));
+
 				conn.close();
 				return Item.getInstance(rs.getString("name"), rs.getInt("quantity"), rs.getDate("expiry"));
 			}

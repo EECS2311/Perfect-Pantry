@@ -7,27 +7,27 @@ public enum FoodGroup implements Tag {
     /**
      * Represents grains food group.
      */
-    GRAIN("grain"),
+    GRAIN("Grain"),
 
     /**
      * Represents protein food group.
      */
-    PROTEIN("protein"),
+    PROTEIN("Protein"),
 
     /**
      * Represents vegetable food group.
      */
-    VEGETABLE("vegetable"),
+    VEGETABLE("Vegetable"),
 
     /**
      * Represents fruit food group.
      */
-    FRUIT("fruit"),
+    FRUIT("Fruit"),
 
     /**
      * Represents dairy food group.
      */
-    DAIRY("dairy");
+    DAIRY("Dairy");
 
     private final String displayName;
 
