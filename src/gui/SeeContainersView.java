@@ -80,8 +80,8 @@ public class SeeContainersView implements ActionListener{
 		if (b == true) { 
 			HomeView.getHomeView().setHomeViewVisibility(false);
 			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
-			//			editPanel.setVisible(false);
-
+			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
+			
 			viewOfContainer2HomeButton.addActionListener(this);
 			editContainerNameButton.addActionListener(this);
 			deleteContainerButton.addActionListener(this);
