@@ -64,17 +64,10 @@ public class EditContainerView implements ActionListener{
 	 * Launches the application and initializes the main GUI components.
 	 */
 	public EditContainerView() {
-		// Initialize containerMap
-		containerMap = new ConcurrentHashMap<>();
-
+		editContainers = this;
 		// Initialise all actionlisteners here
-
 		editBackToContainerView.addActionListener(this);
 
-
-
-		ContainerUtility.initContainers(containerMap, HomeView.data, HomeView.getHomeView());
-		changeStageOfHome();
 	}
 
 	public void setEditContainerViewVisibility(boolean b) {
