@@ -88,15 +88,9 @@ public class HomeView implements ActionListener {
 		frame.setResizable(false); // stop resize
 		frame.setMinimumSize(new Dimension(800, 600));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
-
-		// Initialise all actionlisteners here
-		newContainerText.addActionListener(this);
-		createContainer.addActionListener(this);
-		viewContainers.addActionListener(this);
 		
 		// Initialize containerMap
 		containerMap = new ConcurrentHashMap<>();
-
 		ContainerUtility.initContainers(containerMap, data, this);
 
 		setHomeViewVisibility(true);
@@ -107,6 +101,12 @@ public class HomeView implements ActionListener {
 			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
 			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
+			
+			// Initialise all actionlisteners 
+			newContainerText.addActionListener(this);
+			createContainer.addActionListener(this);
+			viewContainers.addActionListener(this);
+			
 			// Initialse mainMenuPanel
 			homePanel.setLayout(null);
 			frame.getContentPane().add(homePanel);
@@ -137,6 +137,10 @@ public class HomeView implements ActionListener {
 			homePanel.setVisible(true);
 		}
 		if (b == false) {
+			//RemoveActionListeners
+			newContainerText.removeActionListener(this);
+			createContainer.removeActionListener(this);
+			viewContainers.removeActionListener(this);
 			homePanel.setVisible(false);
 		}
 	}
