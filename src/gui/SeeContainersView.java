@@ -69,10 +69,6 @@ public class SeeContainersView implements ActionListener{
 	 */
 	public SeeContainersView() {
 		containersView = this;
-
-		viewOfContainer2HomeButton.addActionListener(this);
-		editContainerNameButton.addActionListener(this);
-		deleteContainerButton.addActionListener(this);
 	}
 
 	/**
@@ -86,6 +82,10 @@ public class SeeContainersView implements ActionListener{
 			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
 			//			editPanel.setVisible(false);
 
+			viewOfContainer2HomeButton.addActionListener(this);
+			editContainerNameButton.addActionListener(this);
+			deleteContainerButton.addActionListener(this);
+			
 			HomeView.getFrame().add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
 			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
@@ -108,6 +108,7 @@ public class SeeContainersView implements ActionListener{
 
 		}
 		if (b == false) {
+			
 			viewOfContainerPanel.setVisible(false);
 
 		}
