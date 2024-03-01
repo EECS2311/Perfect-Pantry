@@ -147,8 +147,7 @@ public class SeeContainersView implements ActionListener{
 			HomeView.getHomeView().setHomeViewVisibility(true);
 
 		} else if (source == editContainerNameButton) {
-			//			stage = 1;
-			//			changeStageOfHome();
+			EditContainerView.getEditContainerView().setEditContainerViewVisibility(true);
 		} else if (source == deleteContainerButton) {
 			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(true);
 		} else {
