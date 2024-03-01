@@ -97,7 +97,7 @@ public class DeleteContainerView implements ActionListener {
 			deleteContainerButtonsPanel.setBounds(0, 80, 800, 500);
 			deleteContainerButtonsPanel.setBackground(new Color(253, 206, 203));
 			deleteContainerButtonsPanel.setLayout(new FlowLayout());
-			addContainerButtons(deleteContainerButtonsPanel);
+			SeeContainersView.getContainersView().addContainerButtons(deleteContainerButtonsPanel);
 
 			deletePanel.add(deleteContainerButtonsPanel);
 			deletePanel.setVisible(true);
@@ -114,24 +114,6 @@ public class DeleteContainerView implements ActionListener {
 		}
 	}
 
-
-
-
-
-	/**
-	 * Dynamically adds container buttons to the specified panel based on the
-	 * current containerMap state.
-	 * 
-	 * @param p The panel to which container buttons will be added.
-	 */
-	private void addContainerButtons(JPanel p) {
-		p.removeAll();
-		HomeView.getContainerMap().forEach((button, container) -> {
-			p.add(button);
-			button.addActionListener(this);
-		});
-		p.revalidate(); // refresh panel
-	}
 
 	/**
 	 * Deletes a container from the data and its map
