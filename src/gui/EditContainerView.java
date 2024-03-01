@@ -107,46 +107,6 @@ public class EditContainerView implements ActionListener{
 	}
 
 	/**
-	 * 
-	 * Changes the stage of the home screen between the main view, the Container
-	 * list view, edit container view and delete container view
-	 */
-	public void changeStageOfHome() {
-
-		homePanel.setVisible(false);
-		viewOfContainerPanel.setVisible(false);
-		deletePanel.setVisible(false);
-
-		editPanel.setLayout(null);
-		frame.add(editPanel);
-
-		editNameOfContainerPanel.setBounds(0, 0, 800, 80);
-		editNameOfContainerPanel.setBackground(new Color(203, 253, 232));
-		editPanel.add(editNameOfContainerPanel);
-
-		editNameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
-		editNameOfContainerPanel.add(editNameLabel);
-
-		editGUIButtonsPanel.setBackground(new Color(203, 253, 232));
-		editGUIButtonsPanel.setBounds(0, frame.getHeight() - 90, 800, 90);
-		editPanel.add(editGUIButtonsPanel);
-
-		editGUIButtonsPanel.add(editBackToContainerView);
-
-		editContainerButtonsPanel.setBounds(0, 80, 800, 500);
-		editContainerButtonsPanel.setBackground(new Color(203, 253, 232));
-		editContainerButtonsPanel.setLayout(new FlowLayout());
-		addContainerButtons(editContainerButtonsPanel);
-
-		editPanel.add(editContainerButtonsPanel);
-		editPanel.setVisible(true);
-
-
-
-	}
-
-
-	/**
 	 * Dynamically adds container buttons to the specified panel based on the
 	 * current containerMap state.
 	 * 
