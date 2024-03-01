@@ -107,8 +107,7 @@ public class ItemUtility {
             case 3: // Food Group column
                 if (newValue instanceof FoodGroup) {
                     FoodGroup selectedGroup = (FoodGroup) newValue;
-                    Set<FoodGroup> foodGroupSet = EnumSet.of(selectedGroup);
-                    item.setFoodGroupTagsEnum(foodGroupSet);
+                    item.setFoodGroupTag(selectedGroup);
                 }
                 break;
             case 4: // Food Freshness column

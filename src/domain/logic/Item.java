@@ -37,15 +37,15 @@ public class Item implements Comparable<Item>{
      * Factory method to create an instance of Item with specified properties.
      *
      * @param name The name of the item.
-     * @param foodGroupTags A set of generic tags representing the food groups of the item.
+     * @param foodGroupTag A set of generic tags representing the food groups of the item.
      * @param foodFreshnessTag A generic tag representing the freshness of the item.
      * @param quantity The quantity of the item.
      * @param expiryDate The expiration date of the item.
      * @return An instance of Item.
      */
-    public static Item getInstance(String name, Set<GenericTag<FoodGroup>> foodGroupTags, GenericTag<FoodFreshness> foodFreshnessTag, int quantity, Date expiryDate){
+    public static Item getInstance(String name, GenericTag<FoodGroup> foodGroupTag, GenericTag<FoodFreshness> foodFreshnessTag, int quantity, Date expiryDate){
         Item item = Item.getInstance(name, quantity, expiryDate);
-        item.setFoodGroupTags(foodGroupTags);
+        item.setFoodGroupTag(foodGroupTag);
         item.setFoodFreshnessTag(foodFreshnessTag);
         return item;
     }
@@ -54,30 +54,30 @@ public class Item implements Comparable<Item>{
      * Factory method to create an instance of Item with specified properties including a string representation of the expiry date.
      *
      * @param name The name of the item.
-     * @param foodGroupTags A set of generic tags representing the food groups of the item.
+     * @param foodGroupTag A set of generic tags representing the food groups of the item.
      * @param foodFreshnessTag A generic tag representing the freshness of the item.
      * @param quantity The quantity of the item.
      * @param expiryDate A string representation of the expiration date in the format "dd-MMMM-yyyy".
      * @return An instance of Item.
      */
-    public static Item getInstance(String name, Set<GenericTag<FoodGroup>> foodGroupTags, GenericTag<FoodFreshness> foodFreshnessTag, int quantity, String expiryDate){
+    public static Item getInstance(String name, GenericTag<FoodGroup> foodGroupTag, GenericTag<FoodFreshness> foodFreshnessTag, int quantity, String expiryDate){
         Date date = parseDate(expiryDate);
-        return Item.getInstance(name, foodGroupTags, foodFreshnessTag, quantity, date);
+        return Item.getInstance(name, foodGroupTag, foodFreshnessTag, quantity, date);
     }
 
     /**
      * Factory method to create an Item instance with food groups and freshness defined by enums.
      *
      * @param name The item's name.
-     * @param foodGroups A set of FoodGroup enums.
+     * @param foodGroup A set of FoodGroup enums.
      * @param foodFreshness The FoodFreshness enum value.
      * @param quantity The quantity of the item.
      * @param expiryDate The item's expiry date.
      * @return A new Item instance.
      */
-    public static Item getInstance(String name, Set<FoodGroup> foodGroups, FoodFreshness foodFreshness, int quantity, Date expiryDate) {
+    public static Item getInstance(String name, FoodGroup foodGroup, FoodFreshness foodFreshness, int quantity, Date expiryDate) {
         Item item = Item.getInstance(name, quantity, expiryDate);
-        item.setFoodGroupTagsEnum(foodGroups);
+        item.setFoodGroupTag(foodGroup);
         item.setFoodFreshnessTag(foodFreshness);
         return item;
     }
@@ -86,15 +86,15 @@ public class Item implements Comparable<Item>{
      * Overloaded factory method to create an Item instance with food groups and freshness defined by enums and a string expiry date.
      *
      * @param name The item's name.
-     * @param foodGroups A set of FoodGroup enums.
+     * @param foodGroup A set of FoodGroup enums.
      * @param foodFreshness The FoodFreshness enum value.
      * @param quantity The quantity of the item.
      * @param expiryDate A string representing the item's expiry date in "dd-MMMM-yyyy" format.
      * @return A new Item instance.
      */
-    public static Item getInstance(String name, Set<FoodGroup> foodGroups, FoodFreshness foodFreshness, int quantity, String expiryDate) {
+    public static Item getInstance(String name, FoodGroup foodGroup, FoodFreshness foodFreshness, int quantity, String expiryDate) {
         Date date = parseDate(expiryDate);
-        return Item.getInstance(name, foodGroups, foodFreshness, quantity, date);
+        return Item.getInstance(name, foodGroup, foodFreshness, quantity, date);
     }
 
     /**
@@ -155,7 +155,7 @@ public class Item implements Comparable<Item>{
      * @return A new Item instance with the same properties as the item parameter.
      */
     public static Item getInstance(Item item){
-        return Item.getInstance(item.getName(), item.getFoodGroupTags(), item.getFoodFreshnessTag(), item.getQuantity(), item.getExpiryDate());
+        return Item.getInstance(item.getName(), item.getFoodGroupTag(), item.getFoodFreshnessTag(), item.getQuantity(), item.getExpiryDate());
     }
 
     // Helper method to parse date strings
@@ -187,12 +187,12 @@ public class Item implements Comparable<Item>{
     }
 
     /**
-     * Gets the food freshness tag.
+     * Gets the food group tag.
      *
-     * @return The food freshness tag if it exists, or null otherwise.
+     * @return The food group tag if it exists, or null otherwise.
      */
     public GenericTag<FoodGroup> getFoodGroupTag() {
-        // Directly return null if foodFreshnessTag is null, avoiding NullPointerException
+        // Directly return null if foodGroupTag is null, avoiding NullPointerException
         if (this.foodGroupTag == null) {
             return null;
         }
@@ -201,23 +201,22 @@ public class Item implements Comparable<Item>{
     }
 
     /**
-     * Sets the food freshness tag from a GenericTag<FoodFreshness>.
+     * Sets the food group tag from a GenericTag<FoodGroup>.
      *
-     * @param tag The new food freshness tag.
+     * @param tag The new food group tag.
      */
     public void setFoodGroupTag(GenericTag<FoodGroup> tag) {
         this.foodGroupTag = new GenericTag<>(tag);
     }
 
     /**
-     * Sets the food freshness tag directly from a FoodFreshness enum.
+     * Sets the food group tag directly from a FoodGroup enum.
      *
-     * @param tag The FoodFreshness enum value.
+     * @param tag The FoodGroup enum value.
      */
-    public void setFoodFreshnessTag(FoodFreshness tag) {
-        this.foodFreshnessTag = new GenericTag<>(tag);
+    public void setFoodGroupTag(FoodGroup tag) {
+        this.foodGroupTag = new GenericTag<>(tag);
     }
-
 
     /**
      * Gets the food freshness tag.
@@ -333,7 +332,7 @@ public class Item implements Comparable<Item>{
     public String toString() {
         return "Item{" +
                 "name='" + name + '\'' +
-                ", foodGroupTags=" + foodGroupTags +
+                ", foodGroupTags=" + foodGroupTag +
                 ", foodFreshnessTag=" + foodFreshnessTag +
                 ", quantity=" + quantity +
                 ", expiryDate=" + expiryDate +
