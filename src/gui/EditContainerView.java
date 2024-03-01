@@ -114,7 +114,7 @@ public class EditContainerView implements ActionListener{
 	 */
 	private void addContainerButtons(JPanel p) {
 		p.removeAll();
-		containerMap.forEach((button, container) -> {
+		HomeView.getContainerMap().forEach((button, container) -> {
 			p.add(button);
 			button.addActionListener(this);
 		});
@@ -127,19 +127,18 @@ public class EditContainerView implements ActionListener{
 	 * @param b The button corresponding to the container to be renamed.
 	 */
 	private void renameContainerButton(JButton b) {
-		Container c = containerMap.get(b);
+		Container c = HomeView.getContainerMap().get(b);
 
-		String nameOfContainer = JOptionPane.showInputDialog(frame,
+		String nameOfContainer = JOptionPane.showInputDialog(HomeView.getFrame(),
 				"What would you like to rename container " + c.getName() + " to?");
 
-		ContainerUtility.verifyEditContainer(c.getName(), nameOfContainer, data, b, containerMap,
-				(errorMsg) -> JOptionPane.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+		ContainerUtility.verifyEditContainer(c.getName(), nameOfContainer, HomeView.data, b, HomeView.getContainerMap(),
+				(errorMsg) -> JOptionPane.showMessageDialog(HomeView.getFrame(), errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
 				() -> {
 					c.setName(nameOfContainer);
 					// Update the button text directly instead of replacing the button in the map
 					b.setText(c.getName());
-					stage = 0;
-					changeStageOfHome();
+					HomeView.getHomeView().setHomeViewVisibility(true);
 				});
 	}
 
