@@ -103,8 +103,12 @@ public class EditContainerView implements ActionListener{
 			editContainerButtonsPanel.setBounds(0, 80, 800, 500);
 			editContainerButtonsPanel.setBackground(new Color(203, 253, 232));
 			editContainerButtonsPanel.setLayout(new FlowLayout());
-			SeeContainersView.getContainersView().addContainerButtons(editContainerButtonsPanel);
-
+			
+			editContainerButtonsPanel.removeAll();
+			HomeView.getContainerMap().forEach((button, container) -> {
+				editContainerButtonsPanel.add(button);
+				button.addActionListener(this);
+			});
 			editPanel.add(editContainerButtonsPanel);
 			editPanel.setVisible(true);
 

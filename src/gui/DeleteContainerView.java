@@ -97,8 +97,13 @@ public class DeleteContainerView implements ActionListener {
 			deleteContainerButtonsPanel.setBounds(0, 80, 800, 500);
 			deleteContainerButtonsPanel.setBackground(new Color(253, 206, 203));
 			deleteContainerButtonsPanel.setLayout(new FlowLayout());
-			SeeContainersView.getContainersView().addContainerButtons(deleteContainerButtonsPanel);
-
+			
+			deleteContainerButtonsPanel.removeAll();
+			HomeView.getContainerMap().forEach((button, container) -> {
+				deleteContainerButtonsPanel.add(button);
+				button.addActionListener(this);
+			});
+			
 			deletePanel.add(deleteContainerButtonsPanel);
 			deletePanel.setVisible(true);
 

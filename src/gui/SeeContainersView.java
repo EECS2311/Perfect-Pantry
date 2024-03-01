@@ -100,7 +100,12 @@ public class SeeContainersView implements ActionListener{
 			viewOfContainerPanel.add(containerButtonsPanel);
 			containerButtonsPanel.setBounds(0, 50, 800, 500);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
-			addContainerButtons(containerButtonsPanel);
+			
+			containerButtonsPanel.removeAll();
+			HomeView.getContainerMap().forEach((button, container) -> {
+				containerButtonsPanel.add(button);
+				button.addActionListener(this);
+			});
 
 			viewOfContainerPanel.setVisible(true);
 
@@ -113,23 +118,6 @@ public class SeeContainersView implements ActionListener{
 			viewOfContainerPanel.setVisible(false);
 
 		}
-	}
-
-
-
-	/**
-	 * Dynamically adds container buttons to the specified panel based on the
-	 * current containerMap state.
-	 * 
-	 * @param p The panel to which container buttons will be added.
-	 */
-	public void addContainerButtons(JPanel p) {
-		p.removeAll();
-		HomeView.getContainerMap().forEach((button, container) -> {
-			p.add(button);
-			button.addActionListener(this);
-		});
-		p.revalidate(); // refresh panel
 	}
 
 	/**
