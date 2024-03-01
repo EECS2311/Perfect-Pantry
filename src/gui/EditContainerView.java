@@ -153,12 +153,10 @@ public class EditContainerView implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 
-
 		if (source == editBackToContainerView) {
-			stage = 2;
-			changeStageOfHome();
+			SeeContainersView.getContainersView().setSeeContainersViewVisibility(true);
 		} else {
-			Container c = containerMap.get(source); // This will return null if the button is not found
+			Container c = HomeView.getContainerMap().get(source); // This will return null if the button is not found
 			if (c != null) {
 				renameContainerButton((JButton) source);
 			}
