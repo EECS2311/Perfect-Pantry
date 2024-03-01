@@ -112,6 +112,9 @@ public class SeeContainersView implements ActionListener{
 		}
 		if (b == false) {
 			//Remove Action listeners
+			HomeView.getContainerMap().forEach((button, container) -> {
+				button.removeActionListener(this);
+			});
 			viewOfContainer2HomeButton.removeActionListener(this);
 			editContainerNameButton.removeActionListener(this);
 			deleteContainerButton.removeActionListener(this);
