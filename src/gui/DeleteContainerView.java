@@ -97,6 +97,10 @@ public class DeleteContainerView implements ActionListener {
 		}
 		
 		if (b == false) {
+			deleteBackToContainerView.removeActionListener(this);
+			HomeView.getContainerMap().forEach((button, container) -> {
+				button.removeActionListener(this);
+			});
 			deletePanel.setVisible(false);
 		}
 	}
