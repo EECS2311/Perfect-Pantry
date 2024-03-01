@@ -134,7 +134,7 @@ public class ItemUtility {
     	tableModel.setRowCount(0);
     	for (Item item : items) {
     		tableModel.addRow(
-    				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
+    				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), item.getFoodGroupTag(), item.getFoodFreshnessTag() });
     	}
     }
 

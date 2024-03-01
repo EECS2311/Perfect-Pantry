@@ -8,10 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.logic.Container;
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.Item;
+import domain.logic.*;
+
+import static domain.logic.GenericTag.fromString;
 
 /**
  * The {@code DB} class represents a simple database for storing and managing
@@ -251,11 +250,11 @@ public class DB {
 
 			if (rs.next()) {
 				System.out.println(itemName);
-				FoodGroup fg = FoodGroup.valueOf(rs.getString("fg"));
-				FoodFreshness fresh = FoodFreshness.valueOf(rs.getString("fresh"));
+				GenericTag<FoodGroup> fg = GenericTag.fromString(FoodGroup.class, rs.getString("fg"));
+				GenericTag<FoodFreshness> fresh = GenericTag.fromString(FoodFreshness.class, rs.getString("fresh"));
 
 				conn.close();
-				return Item.getInstance(rs.getString("name"), rs.getInt("quantity"), rs.getDate("expiry"));
+				return Item.getInstance(rs.getString("name"), fg, fresh, rs.getInt("quantity"), rs.getDate("expiry"));
 			}
 			// Return null if the Container or Item is not found.
 		} catch (SQLException e) {
