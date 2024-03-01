@@ -103,7 +103,7 @@ public class EditContainerView implements ActionListener{
 			editContainerButtonsPanel.setBounds(0, 80, 800, 500);
 			editContainerButtonsPanel.setBackground(new Color(203, 253, 232));
 			editContainerButtonsPanel.setLayout(new FlowLayout());
-			addContainerButtons(editContainerButtonsPanel);
+			SeeContainersView.getContainersView().addContainerButtons(editContainerButtonsPanel);
 
 			editPanel.add(editContainerButtonsPanel);
 			editPanel.setVisible(true);
@@ -120,26 +120,11 @@ public class EditContainerView implements ActionListener{
 	}
 
 	/**
-	 * Dynamically adds container buttons to the specified panel based on the
-	 * current containerMap state.
-	 * 
-	 * @param p The panel to which container buttons will be added.
-	 */
-	private void addContainerButtons(JPanel p) {
-		p.removeAll();
-		HomeView.getContainerMap().forEach((button, container) -> {
-			p.add(button);
-			button.addActionListener(this);
-		});
-		p.revalidate(); // refresh panel
-	}
-
-	/**
 	 * Initiates the container renaming process for a given container button.
 	 * 
 	 * @param b The button corresponding to the container to be renamed.
 	 */
-	private void renameContainerButton(JButton b) {
+	public void renameContainerButton(JButton b) {
 		Container c = HomeView.getContainerMap().get(b);
 
 		String nameOfContainer = JOptionPane.showInputDialog(HomeView.getFrame(),
