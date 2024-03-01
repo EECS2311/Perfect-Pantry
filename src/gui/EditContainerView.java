@@ -22,14 +22,6 @@ import domain.logic.ItemUtility;
 
 public class EditContainerView implements ActionListener{
 
-
-
-	/**
-	 * Map of button and its corresponding Container object
-	 */
-	private ConcurrentHashMap<JButton, Container> containerMap;
-
-
 	/**
 	 * main components of edit view
 	 */
@@ -65,11 +57,8 @@ public class EditContainerView implements ActionListener{
 	 */
 	private JPanel editContainerButtonsPanel = new JPanel();
 
+	private static EditContainerView editContainers;
 
-
-	public static EditContainerView getEditContainerView() {
-		return home;
-	}
 
 	/**
 	 * Launches the application and initializes the main GUI components.
@@ -195,6 +184,10 @@ public class EditContainerView implements ActionListener{
 
 
 
+	}
+	
+	public static EditContainerView getEditContainerView() {
+		return editContainers;
 	}
 
 }
