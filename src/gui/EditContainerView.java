@@ -65,9 +65,6 @@ public class EditContainerView implements ActionListener{
 	 */
 	public EditContainerView() {
 		editContainers = this;
-		// Initialise all actionlisteners here
-		editBackToContainerView.addActionListener(this);
-
 	}
 
 	public void setEditContainerViewVisibility(boolean b) {
@@ -76,6 +73,9 @@ public class EditContainerView implements ActionListener{
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
 			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
 
+			// Initialise all actionlisteners here
+			editBackToContainerView.addActionListener(this);
+			
 			editPanel.setLayout(null);
 			HomeView.getFrame().add(editPanel);
 
@@ -102,6 +102,11 @@ public class EditContainerView implements ActionListener{
 
 		}
 		if (b == false) {
+			// Remove ActionListeners
+			editBackToContainerView.removeActionListener(this);
+			HomeView.getContainerMap().forEach((button, container) -> {
+				button.removeActionListener(this);
+			});
 			editPanel.setVisible(false);
 		}
 	}
