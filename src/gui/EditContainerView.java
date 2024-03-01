@@ -57,6 +57,9 @@ public class EditContainerView implements ActionListener{
 	 */
 	private JPanel editContainerButtonsPanel = new JPanel();
 
+	/**
+	 * Holds current instance of EditContainerView
+	 */
 	private static EditContainerView editContainers;
 
 
@@ -67,6 +70,11 @@ public class EditContainerView implements ActionListener{
 		editContainers = this;
 	}
 
+	/**
+	 * Sets the visibility of the EditContainerView GUI depending on the boolean passed
+	 * 
+	 * @param b the value of whether the visibility is true or not
+	 */
 	public void setEditContainerViewVisibility(boolean b) {
 		if (b == true) {
 			HomeView.getHomeView().setHomeViewVisibility(false);
@@ -171,6 +179,11 @@ public class EditContainerView implements ActionListener{
 
 	}
 
+	/**
+	 * Provide Accces to this instance of EditContainerView
+	 * 
+	 * @return the current instance of EditContainerView
+	 */
 	public static EditContainerView getEditContainerView() {
 		return editContainers;
 	}

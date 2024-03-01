@@ -32,6 +32,9 @@ public class HomeView implements ActionListener {
 	 */
 	static JFrame frame = new JFrame("Perfect Pantry");
 
+	/**
+	 * Provide Access to Database
+	 */
 	public static DB data = new DB();
 	
 	/**
@@ -65,11 +68,14 @@ public class HomeView implements ActionListener {
 	 */
 	private JButton viewContainers = new JButton("View Containers");
 
-
+	/**
+	 * Holds this instance of HomeView
+	 */
 	private static HomeView home;
 	
 
 	public static void main(String[] args) {
+		//initialise other views
 		SeeContainersView m = new SeeContainersView();
 		DeleteContainerView d = new DeleteContainerView();
 		EditContainerView e = new EditContainerView();
@@ -96,8 +102,13 @@ public class HomeView implements ActionListener {
 		setHomeViewVisibility(true);
 	}
 
+	/**
+	 * Sets the HomeView Gui components visibility depending on the boolean passed through
+	 * @param b, Value whether gui should be visible or not
+	 */
 	public void setHomeViewVisibility(boolean b) {
 		if (b == true) {
+			//Set other gui visibility to false
 			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
 			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
@@ -197,10 +208,20 @@ public class HomeView implements ActionListener {
 		return frame;
 	}
 	
+	/**
+	 * Provides access to HomeView object
+	 * 
+	 * @return The HomeView object
+	 */
 	public static HomeView getHomeView() {
 		return home;
 	}
 	
+	/**
+	 * Provides access to the hashed JButton and Container map
+	 * 
+	 * @return the ConcurrentHashmap containerMap
+	 */
 	public static ConcurrentHashMap<JButton, Container> getContainerMap(){
 		return containerMap;
 	}

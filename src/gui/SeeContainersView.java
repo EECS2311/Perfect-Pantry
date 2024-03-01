@@ -32,10 +32,6 @@ public class SeeContainersView implements ActionListener{
 	private JPanel containerButtonsPanel = new JPanel();
 
 	/**
-	 * Button to go to container list view
-	 */
-
-	/**
 	 * Holds components for the container list view
 	 */
 	private JPanel viewOfContainerPanel = new JPanel();
@@ -60,6 +56,9 @@ public class SeeContainersView implements ActionListener{
 	 */
 	private JButton deleteContainerButton = new JButton("Delete a Container");
 	
+	/**
+	 * Holds this isntance of SeeContainersView
+	 */
 	private static SeeContainersView containersView;
 
 
@@ -72,9 +71,8 @@ public class SeeContainersView implements ActionListener{
 	}
 
 	/**
-	 * 
-	 * Changes the stage of the home screen between the main view, the Container
-	 * list view, edit container view and delete container view
+	 * Sets the visibility of the SeeContainersView GUI depending on the boolean passed
+	 * @param b the value of whether the visibility is true or not
 	 */
 	public void setSeeContainersViewVisibility(boolean b) {
 		if (b == true) { 
@@ -108,6 +106,7 @@ public class SeeContainersView implements ActionListener{
 
 		}
 		if (b == false) {
+			//Remove Action listeners
 			viewOfContainer2HomeButton.removeActionListener(this);
 			editContainerNameButton.removeActionListener(this);
 			deleteContainerButton.removeActionListener(this);
@@ -132,9 +131,6 @@ public class SeeContainersView implements ActionListener{
 		});
 		p.revalidate(); // refresh panel
 	}
-
-
-
 
 	/**
 	 * Handles action events triggered by various GUI components.
@@ -164,6 +160,11 @@ public class SeeContainersView implements ActionListener{
 
 	}
 	
+	/**
+	 * Provide Accces to this instance of SeeContainersView
+	 * 
+	 * @return the current instance of SeeContainersView
+	 */
 	public static SeeContainersView getContainersView() {
 		return containersView;
 	}

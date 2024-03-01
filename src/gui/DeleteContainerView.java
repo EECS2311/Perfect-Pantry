@@ -52,6 +52,9 @@ public class DeleteContainerView implements ActionListener {
 	 */
 	private JPanel deleteContainerButtonsPanel = new JPanel();
 
+	/**
+	 * Holds this instance of the DeleteContainerView class
+	 */
 	private static DeleteContainerView deleteView;
 
 
@@ -63,6 +66,10 @@ public class DeleteContainerView implements ActionListener {
 
 	}
 
+	/**
+	 * Sets the visibility of the DeleteContainersView GUI depending on the boolean passed
+	 * @param b the value of whether the visibility is true or not
+	 */
 	public void setDeleteContainerViewVisibility(boolean b) {
 		if(b == true) {
 			HomeView.getHomeView().setHomeViewVisibility(false);
@@ -98,6 +105,7 @@ public class DeleteContainerView implements ActionListener {
 		}
 		
 		if (b == false) {
+			//remove actionlisteners
 			deleteBackToContainerView.removeActionListener(this);
 			HomeView.getContainerMap().forEach((button, container) -> {
 				button.removeActionListener(this);
@@ -165,6 +173,11 @@ public class DeleteContainerView implements ActionListener {
 
 	}
 	
+	/**
+	 * Provide Acccess to this instance of DeleteContainerView
+	 * 
+	 * @return the current instance of DeleteContainerView
+	 */
 	public static DeleteContainerView getDeleteContainerView() {
 		return deleteView;
 	}
