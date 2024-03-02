@@ -113,7 +113,7 @@ public class ItemsListView extends JPanel {
 		// Define table columns
 		tableModel.addColumn("Name");
 		tableModel.addColumn("Quantity");
-		tableModel.addColumn("Expiry Date");
+		tableModel.addColumn("Expiry Date (yyyy-mm-dd)");
 		tableModel.addColumn("Food Group");
 		tableModel.addColumn("Food Freshness");
 
