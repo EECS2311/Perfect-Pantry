@@ -134,35 +134,6 @@ public class ItemUtility {
      * @param container The container whose items' freshness will be updated.
      */
     public static void assignFoodFreshness(DB data, Container container) {
-        List<Item> items = data.retrieveItems(container);
-        Date today = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        for (Item item : items) {
-            try {
-                Date expiryDate = sdf.parse(dateFormat(item.getExpiryDate()));
-                // Calculate the difference in milliseconds between today and the expiry date
-                long diffInMillies = expiryDate.getTime() - today.getTime();
-                long diffDays = diffInMillies / (24 * 60 * 60 * 1000);
-
-                FoodFreshness freshness;
-                if (diffDays < 0) {
-                    // If the difference is negative, the item has already expired
-                    freshness = FoodFreshness.EXPIRED;
-                } else if (diffDays <= 7) {
-                    // If the difference is 7 days or less, the item is near expiry
-                    freshness = FoodFreshness.NEAR_EXPIRY;
-                } else {
-                    // Otherwise, the item is considered fresh
-                    freshness = FoodFreshness.FRESH;
-                }
-
-                // Update the item's freshness in the database
-                data.updateItemFreshness(container, item.getName(), freshness);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
+        data.batchUpdateItemFreshness(container);
     }
 }

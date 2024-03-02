@@ -3,6 +3,7 @@ package database;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import domain.logic.*;
 
@@ -311,26 +312,22 @@ public class DB {
 
 	}
 
-	/**
-	 * Updates the freshness status of an item in the database.
-	 * @param container The container of the item.
-	 * @param itemName The name of the item.
-	 * @param freshness The new freshness status.
-	 */
-	public void updateItemFreshness(Container container, String itemName, FoodFreshness freshness) {
-		String sql = "UPDATE item SET fresh = ?::freshness WHERE name = ? AND container = ?";
+	public void batchUpdateItemFreshness(Container container) {
+		// SQL query to update the freshness of items based on their expiry date
+		String sql = "UPDATE item SET fresh = CASE " +
+				"WHEN expiry < CURRENT_DATE THEN 'Expired'::Freshness " +
+				"WHEN expiry > CURRENT_DATE AND expiry <= CURRENT_DATE + interval '7' day THEN 'Near_Expiry'::Freshness " +
+				"ELSE 'Fresh'::Freshness END " +
+				"WHERE container = ?";
 
 		try (Connection conn = this.init();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-			pstmt.setString(1, freshness.getDisplayName());
-			pstmt.setString(2, itemName);
-			pstmt.setString(3, container.getName());
+			pstmt.setString(1, container.getName());
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
 }
