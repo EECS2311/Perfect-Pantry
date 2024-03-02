@@ -280,8 +280,6 @@ public class DB {
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, itemName);
 			pstmt.setString(2, c.getName());
-			System.out.print(pstmt);
-
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
