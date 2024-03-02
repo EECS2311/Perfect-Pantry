@@ -206,7 +206,12 @@ public class Item implements Comparable<Item>{
      * @param tag The new food group tag.
      */
     public void setFoodGroupTag(GenericTag<FoodGroup> tag) {
-        this.foodGroupTag = new GenericTag<>(tag);
+        if (tag == null) {
+            this.foodGroupTag =  null;
+        }
+        else{
+            this.foodGroupTag = new GenericTag<>(tag);
+        }
     }
 
     /**
@@ -238,7 +243,12 @@ public class Item implements Comparable<Item>{
      * @param tag The new food freshness tag.
      */
     public void setFoodFreshnessTag(GenericTag<FoodFreshness> tag) {
-        this.foodFreshnessTag = new GenericTag<>(tag);
+        if (tag == null) {
+            this.foodFreshnessTag =  null;
+        }
+        else{
+            this.foodFreshnessTag = new GenericTag<>(tag);
+        }
     }
 
     /**

@@ -1,16 +1,40 @@
 package gui;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import database.DB;
 import domain.logic.*;
+import domain.logic.Container;
+class EnumComboBoxEditor extends DefaultCellEditor {
+	private Map<String, Object> displayNameToEnumMap = new HashMap<>();
+
+	public <E extends Enum<E> & Tag> EnumComboBoxEditor(E[] values) {
+		super(new JComboBox<>());
+		JComboBox<String> comboBox = (JComboBox<String>) editorComponent;
+		for (E value : values) {
+			String displayName = value.getDisplayName();
+			comboBox.addItem(displayName);
+			displayNameToEnumMap.put(displayName, value);
+		}
+	}
+
+	@Override
+	public Object getCellEditorValue() {
+		String displayName = (String) super.getCellEditorValue();
+		return displayNameToEnumMap.get(displayName);
+	}
+}
+
 
 /**
  * Represents a panel that displays a list of items within a container.
@@ -91,8 +115,9 @@ public class ItemsListView extends JPanel {
 		JComboBox<FoodFreshness> foodFreshnessComboBox = new JComboBox<>(FoodFreshness.values());
 
 		// Set up the food group and food freshness columns with JComboBoxes
-		table.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(foodGroupComboBox));
-		table.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(foodFreshnessComboBox));
+		table.getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
+		table.getColumnModel().getColumn(4).setCellEditor(new EnumComboBoxEditor(FoodFreshness.values()));
+
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		
@@ -137,13 +162,8 @@ public class ItemsListView extends JPanel {
 		String itemName = (String) table.getModel().getValueAt(row, 0);
 		Object newValue = table.getModel().getValueAt(row, column);
 
-		boolean updateSuccess = ItemUtility.updateItem(data, container, row, itemName, newValue, column);
-
-		if (updateSuccess) {
-			JOptionPane.showMessageDialog(this, "Item updated successfully.", "Update", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			JOptionPane.showMessageDialog(this, "Error updating item. Please check the values.", "Error", JOptionPane.ERROR_MESSAGE);
-		}
+		// Call the new ItemUtility update method
+		ItemUtility.updateItem(data, container, itemName, newValue, column);
 	}
 
 }

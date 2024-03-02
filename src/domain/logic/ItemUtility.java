@@ -96,32 +96,16 @@ public class ItemUtility {
      * @param column    The column index corresponding to the property to be updated.
      * @return true if the item was successfully updated, false otherwise.
      */
-    public static boolean updateItem(DB data, Container container, int row, String itemName, Object newValue, int column) {
-        Item item = data.getItem(container, itemName);
-
-        if (item == null) {
-            return false; // Item not found
+    public static void updateItem(DB data, Container container, String itemName, Object newValue, int column) {
+        // Assuming column 3 is FoodGroup and column 4 is FoodFreshness
+        if (column == 3 && newValue instanceof FoodGroup) {
+            data.updateItem(container, itemName, (FoodGroup) newValue, null);
+        } else if (column == 4 && newValue instanceof FoodFreshness) {
+            data.updateItem(container, itemName, null, (FoodFreshness) newValue);
         }
-
-        switch (column) {
-            case 3: // Food Group column
-                if (newValue instanceof FoodGroup) {
-                    FoodGroup selectedGroup = (FoodGroup) newValue;
-                    item.setFoodGroupTag(selectedGroup);
-                }
-                break;
-            case 4: // Food Freshness column
-                if (newValue instanceof FoodFreshness) {
-                    FoodFreshness selectedFreshness = (FoodFreshness) newValue;
-                    item.setFoodFreshnessTag(selectedFreshness);
-                }
-                break;
-            default:
-                return false; // Invalid column for update
-        }
-        return true; // Successfully updated
     }
-    
+
+
     /**
      * Retrieves and initializes the rows in ItemsListViews from the database for a specified container.
      * @param data access to the database

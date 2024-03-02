@@ -49,4 +49,13 @@ public enum FoodGroup implements Tag {
     public String getDisplayName() {
         return displayName;
     }
+
+    public static FoodGroup fromDisplayName(String displayName) {
+        for (FoodGroup group : values()) {
+            if (group.getDisplayName().equals(displayName)) {
+                return group;
+            }
+        }
+        throw new IllegalArgumentException("DisplayName not found: " + displayName);
+    }
 }
