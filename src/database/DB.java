@@ -311,4 +311,26 @@ public class DB {
 
 	}
 
+	/**
+	 * Updates the freshness status of an item in the database.
+	 * @param container The container of the item.
+	 * @param itemName The name of the item.
+	 * @param freshness The new freshness status.
+	 */
+	public void updateItemFreshness(Container container, String itemName, FoodFreshness freshness) {
+		String sql = "UPDATE item SET fresh = ?::freshness WHERE name = ? AND container = ?";
+
+		try (Connection conn = this.init();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, freshness.getDisplayName());
+			pstmt.setString(2, itemName);
+			pstmt.setString(3, container.getName());
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -3,6 +3,7 @@ package domain.logic;
 import gui.HomeView;
 import gui.ItemsListView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
@@ -93,21 +94,18 @@ public class ItemUtility {
      *
      * @param data      The DB instance containing item data.
      * @param container The container where the item resides.
-     * @param row       The row index in the table where the item is displayed.
      * @param itemName  The name of the item to be updated.
      * @param newValue  The new value to be set for the item's property.
      * @param column    The column index corresponding to the property to be updated.
      * @return true if the item was successfully updated, false otherwise.
      */
     public static void updateItem(DB data, Container container, String itemName, Object newValue, int column) {
-        // Assuming column 3 is FoodGroup and column 4 is FoodFreshness
         if (column == 3 && newValue instanceof FoodGroup) {
             data.updateItem(container, itemName, (FoodGroup) newValue, null);
         } else if (column == 4 && newValue instanceof FoodFreshness) {
             data.updateItem(container, itemName, null, (FoodFreshness) newValue);
         }
     }
-
 
     /**
      * Retrieves and initializes the rows in ItemsListViews from the database for a specified container.
@@ -130,4 +128,38 @@ public class ItemUtility {
         return format;
     }
 
+    /**
+     * Assigns FoodFreshness tags to items based on their expiry dates.
+     * @param data The database object to update item freshness.
+     * @param container The container whose items' freshness will be updated.
+     */
+    public static void assignFoodFreshness(DB data, Container container) {
+        List<Item> items = data.retrieveItems(container);
+        Date today = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (Item item : items) {
+            try {
+                Date expiryDate = sdf.parse(dateFormat(item.getExpiryDate()));
+                // Calculate the difference in days between today and the expiry date
+                long diffInMillies = Math.abs(expiryDate.getTime() - today.getTime());
+                long diffDays = diffInMillies / (24 * 60 * 60 * 1000);
+
+                FoodFreshness freshness;
+                if (diffDays < 7) {
+                    freshness = FoodFreshness.NEAR_EXPIRY;
+                } else if (diffDays <= 7) {
+                    freshness = FoodFreshness.FRESH;
+                } else {
+                    freshness = FoodFreshness.EXPIRED;
+                }
+
+                // Update the item's freshness in the database
+                data.updateItemFreshness(container, item.getName(), freshness);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

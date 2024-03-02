@@ -41,15 +41,14 @@ public class ItemsListView extends JPanel {
 		this.container = container;
 		setLayout(new BorderLayout());
 
-		// Initialize the table model
+		// Initialize the table model with the non-editable Food Freshness column
 		tableModel = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				//  "Name" is at index 0, "Quantity" is at index 1, and "Expiry Date" is at index 2
-				return !(column == 0 || column == 1 || column == 2); // columns 0, 1, 2 are not editable
+				// Make all columns except Food Freshness editable according to your needs
+				return column != 4; // Food Freshness column is not editable
 			}
 
-			// Enforce a certain type for each column
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
 				switch (columnIndex) {
@@ -60,9 +59,9 @@ public class ItemsListView extends JPanel {
 					case 2:
 						return String.class;
 					case 3:
-						return FoodGroup.class;
+						return String.class;
 					case 4:
-						return FoodFreshness.class;
+						return String.class;
 					default:
 						return Object.class;
 				}
@@ -70,7 +69,6 @@ public class ItemsListView extends JPanel {
 		};
 
 		table = new JTable(tableModel);
-		// items = new ArrayList<>();
 
 		// Define table columns
 		tableModel.addColumn("Name");
@@ -79,24 +77,24 @@ public class ItemsListView extends JPanel {
 		tableModel.addColumn("Food Group");
 		tableModel.addColumn("Food Freshness");
 
-		// Add a model listener to capture changes to the table model
+		// Add a model listener for updates not related to Food Freshness changes
 		tableModel.addTableModelListener(e -> {
 			if (e.getType() == TableModelEvent.UPDATE) {
 				int row = e.getFirstRow();
 				int column = e.getColumn();
-				if (row >= 0 && column >= 0) {
+				if (row >= 0 && column >= 0 && column != 4) { // Exclude Food Freshness column from manual updates
 					updateItemFromTable(row, column);
 				}
 			}
 		});
 
-		// Set up the food group and food freshness columns with EnumComboBoxEditor
+		// Setup for other columns as needed
 		table.getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
-		table.getColumnModel().getColumn(4).setCellEditor(new EnumComboBoxEditor(FoodFreshness.values()));
-
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
-		
+
+		// Call to assign Food Freshness and initialize items
+		ItemUtility.assignFoodFreshness(data, this.container);
 		ItemUtility.initItems(data, container, tableModel);
 	}
 
@@ -109,6 +107,7 @@ public class ItemsListView extends JPanel {
 		tableModel.addRow(
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
 		data.addItem(container, item.getName(), item); // Keep track of the added item
+		ItemUtility.assignFoodFreshness(data, this.container);
 		ItemUtility.initItems(data, this.container, tableModel);
 
 	}
@@ -140,6 +139,7 @@ public class ItemsListView extends JPanel {
 
 		// Call the new ItemUtility update method
 		ItemUtility.updateItem(data, container, itemName, newValue, column);
+		ItemUtility.assignFoodFreshness(data, this.container);
 		ItemUtility.initItems(data, this.container, tableModel);
 	}
 
