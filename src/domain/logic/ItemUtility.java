@@ -2,6 +2,9 @@ package domain.logic;
 
 import gui.HomeView;
 import gui.ItemsListView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.function.Consumer;
 
 import javax.swing.table.DefaultTableModel;
@@ -113,13 +116,18 @@ public class ItemUtility {
      * @param tableModel the table object to initialize the rows for
      */
     public static void initItems(DB data, Container c, DefaultTableModel tableModel) {
-
     	List<Item> items = data.retrieveItems(c);
     	tableModel.setRowCount(0);
     	for (Item item : items) {
     		tableModel.addRow(
-    				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), item.getFoodGroupTag(), item.getFoodFreshnessTag() });
+    				new Object[] { item.getName(), item.getQuantity(), dateFormat(item.getExpiryDate()), item.getFoodGroupTag(), item.getFoodFreshnessTag() });
     	}
+    }
+
+    public static String dateFormat(Date expiryDate){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String format = formatter.format(expiryDate);
+        return format;
     }
 
 }

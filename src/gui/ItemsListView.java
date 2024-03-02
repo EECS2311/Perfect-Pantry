@@ -110,11 +110,7 @@ public class ItemsListView extends JPanel {
 			}
 		});
 
-		// Populate JComboBoxes with enum values
-		JComboBox<FoodGroup> foodGroupComboBox = new JComboBox<>(FoodGroup.values());
-		JComboBox<FoodFreshness> foodFreshnessComboBox = new JComboBox<>(FoodFreshness.values());
-
-		// Set up the food group and food freshness columns with JComboBoxes
+		// Set up the food group and food freshness columns with EnumComboBoxEditor
 		table.getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
 		table.getColumnModel().getColumn(4).setCellEditor(new EnumComboBoxEditor(FoodFreshness.values()));
 

@@ -286,8 +286,6 @@ public class DB {
 		}
 	}
 
-
-
 	/**
 	 * Returns a list of Items belonging to a Container in the database
 	 * 
