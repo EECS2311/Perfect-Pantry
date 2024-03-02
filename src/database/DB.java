@@ -3,7 +3,6 @@ package database;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import domain.logic.*;
 
@@ -21,9 +20,9 @@ public class DB {
 
 	/**
 	 * Initializes a new database connection.
-	 * 
+	 *
 	 * @return Returns the connection object to be used by other methods.
-	 * 
+	 *
 	 */
 	public Connection init() {
 		try {
@@ -39,7 +38,7 @@ public class DB {
 
 	/**
 	 * Inserts a new container into the database
-	 * 
+	 *
 	 * @param nameOfContainer
 	 */
 	public void putContainer(String nameOfContainer) {
@@ -59,7 +58,7 @@ public class DB {
 
 	/**
 	 * Returns a list of the containers currently stored in the database
-	 * 
+	 *
 	 * @return A list of container names. The caller method will create the
 	 *         containers
 	 */
@@ -86,7 +85,7 @@ public class DB {
 
 	/**
 	 * Verifies if the container is in the database
-	 * 
+	 *
 	 * @param name The name of the database to be found.
 	 * @return True or false depending on if the container is in the database.
 	 */
@@ -111,7 +110,7 @@ public class DB {
 
 	/**
 	 * Removes container from the database
-	 * 
+	 *
 	 * @param name The name of the database to be removed.
 	 */
 	public void removeContainer(String name) {
@@ -131,7 +130,7 @@ public class DB {
 
 	/**
 	 * Updates the name of a specific container
-	 * 
+	 *
 	 * @param prevName The previous name of the container
 	 * @param newName  The new name of the container
 	 */
@@ -154,7 +153,7 @@ public class DB {
 
 	/**
 	 * Removes all the items from a container in the database
-	 * 
+	 *
 	 * @param c the container whose items will be removed from
 	 */
 	public void emptyContainer(Container c) {
@@ -281,6 +280,8 @@ public class DB {
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, itemName);
 			pstmt.setString(2, c.getName());
+			System.out.print(pstmt);
+
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -289,7 +290,7 @@ public class DB {
 
 	/**
 	 * Returns a list of Items belonging to a Container in the database
-	 * 
+	 *
 	 * @param c a Container object to retrieve items from
 	 * @return a list of Items belonging to a Container in the database
 	 */
@@ -330,4 +331,5 @@ public class DB {
 			e.printStackTrace();
 		}
 	}
+
 }

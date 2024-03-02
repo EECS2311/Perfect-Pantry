@@ -48,7 +48,8 @@ public class ItemsListView extends JPanel {
 		tableModel = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column != 4; // Make all columns editable except Food Freshness
+				// Make columns 0, 1, 2, and 4 not editable
+				return column != 0 && column != 1 && column != 2 && column != 4;
 			}
 
 			@Override
@@ -61,9 +62,9 @@ public class ItemsListView extends JPanel {
 					case 2:
 						return String.class;
 					case 3:
-						return String.class;
+						return FoodGroup.class;
 					case 4:
-						return String.class;
+						return FoodFreshness.class;
 					default:
 						return Object.class;
 				}
@@ -90,13 +91,13 @@ public class ItemsListView extends JPanel {
 					// Apply background color based on the freshness string
 					switch (freshness) {
 						case "Expired":
-							c.setBackground(new Color(252, 156, 156)); // Custom red
+							c.setBackground(new Color(252, 156, 156));
 							break;
 						case "Near_Expiry":
-							c.setBackground(new Color(236, 236, 127)); // Custom yellow
+							c.setBackground(new Color(236, 236, 127));
 							break;
 						case "Fresh":
-							c.setBackground(new Color(145, 252, 145)); // Custom green, darker than Color.GREEN
+							c.setBackground(new Color(145, 252, 145));
 							break;
 						default:
 							c.setBackground(Color.WHITE); // Default background
@@ -104,7 +105,6 @@ public class ItemsListView extends JPanel {
 					}
 				} else {
 					// If row is selected, use default selection background
-					// c.setBackground(Color.LIGHT_GRAY);
 				}
 				return c;
 			}
@@ -116,6 +116,17 @@ public class ItemsListView extends JPanel {
 		tableModel.addColumn("Expiry Date");
 		tableModel.addColumn("Food Group");
 		tableModel.addColumn("Food Freshness");
+
+		// Add a model listener for updates not related to Food Freshness changes
+		tableModel.addTableModelListener(e -> {
+			if (e.getType() == TableModelEvent.UPDATE) {
+				int row = e.getFirstRow();
+				int column = e.getColumn();
+				if (column == 3) { // Include Food Freshness column from manual updates
+					updateItemFromTable(row, column);
+				}
+			}
+		});
 
 		table.getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
 

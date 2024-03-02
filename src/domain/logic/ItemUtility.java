@@ -102,8 +102,6 @@ public class ItemUtility {
     public static void updateItem(DB data, Container container, String itemName, Object newValue, int column) {
         if (column == 3 && newValue instanceof FoodGroup) {
             data.updateItem(container, itemName, (FoodGroup) newValue, null);
-        } else if (column == 4 && newValue instanceof FoodFreshness) {
-            data.updateItem(container, itemName, null, (FoodFreshness) newValue);
         }
     }
 
