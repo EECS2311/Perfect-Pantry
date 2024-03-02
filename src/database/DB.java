@@ -1,15 +1,12 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.logic.Container;
-import domain.logic.Item;
+import domain.logic.*;
+
+import static domain.logic.GenericTag.fromString;
 
 /**
  * The {@code DB} class represents a simple database for storing and managing
@@ -242,23 +239,51 @@ public class DB {
 		Connection conn = init();
 
 		try {
-
 			Statement s = conn.createStatement();
 			ResultSet rs = s.executeQuery(
 					String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
 
 			if (rs.next()) {
 				System.out.println(itemName);
+				GenericTag<FoodGroup> fg = (rs.getString("fg") != null) ? GenericTag.fromString(FoodGroup.class, rs.getString("fg")) : null;
+				GenericTag<FoodFreshness> fresh = (rs.getString("fresh") != null) ? GenericTag.fromString(FoodFreshness.class, rs.getString("fresh")) : null;
+
 				conn.close();
-				return Item.getInstance(rs.getString("name"), rs.getInt("quantity"), rs.getDate("expiry"));
+				return Item.getInstance(rs.getString("name"), fg, fresh, rs.getInt("quantity"), rs.getDate("expiry"));
 			}
-			// Return null if the Container or Item is not found.
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		return null;
 
+	}
+
+	public void updateItem(Container c, String itemName, FoodGroup newFoodGroup, FoodFreshness newFreshness) {
+		List<String> setClauses = new ArrayList<>();
+		if (newFoodGroup != null) {
+			setClauses.add("fg = '" + newFoodGroup.getDisplayName() + "'");
+		}
+		if (newFreshness != null) {
+			setClauses.add("fresh = '" + newFreshness.getDisplayName() + "'");
+		}
+
+		if (setClauses.isEmpty()) {
+			// If there are no updates to make, simply return
+			return;
+		}
+
+		String setClause = String.join(", ", setClauses);
+		String sql = "UPDATE item SET " + setClause + " WHERE name = ? AND container = ?";
+
+		try (Connection conn = this.init();
+			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, itemName);
+			pstmt.setString(2, c.getName());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -25,6 +25,7 @@ class ItemTest {
 	Item item1, item2, itemExpired, itemNearExpiry;
 	Date date1, date2, expiredDate, nearExpiryDate;
 
+	GenericTag<FoodGroup> grain, diary, fruit, veg;
 	@BeforeEach
 	void init() throws ParseException {
 		date1 = sdf.parse("5-May-2024");
@@ -32,18 +33,19 @@ class ItemTest {
 		expiredDate = sdf.parse("1-January-2023");
 		nearExpiryDate = sdf.parse("26-February-2024");
 
-		Set<GenericTag<FoodGroup>> grain = new HashSet<>();
-		grain.add(new GenericTag<>(FoodGroup.GRAIN));
-		Set<GenericTag<FoodGroup>> fruit = new HashSet<>();
-		fruit.add(new GenericTag<>(FoodGroup.FRUIT));
+		GenericTag<FoodGroup> grain = new GenericTag<>(FoodGroup.GRAIN);
+		GenericTag<FoodGroup> dairy = new GenericTag<>(FoodGroup.DAIRY);
+		GenericTag<FoodGroup> fruit = new GenericTag<>(FoodGroup.FRUIT);
+		GenericTag<FoodGroup> veg = new GenericTag<>(FoodGroup.VEGETABLE);
+
 		GenericTag<FoodFreshness> fresh = new GenericTag<>(FoodFreshness.FRESH);
 		GenericTag<FoodFreshness> expired = new GenericTag<>(FoodFreshness.EXPIRED);
 		GenericTag<FoodFreshness> nearExpiry = new GenericTag<>(FoodFreshness.NEAR_EXPIRY);
 
 		item1 = Item.getInstance("Bread", grain, fresh, 3, date1);
 		item2 = Item.getInstance("Apple", fruit, expired, 2, date2);
-		itemExpired = Item.getInstance("Expired Milk", new HashSet<>(), expired, 1, expiredDate);
-		itemNearExpiry = Item.getInstance("Chicken salad", new HashSet<>(), nearExpiry, 1, nearExpiryDate);
+		itemExpired = Item.getInstance("Expired Milk", dairy, expired, 1, expiredDate);
+		itemNearExpiry = Item.getInstance("Chicken salad", veg, nearExpiry, 1, nearExpiryDate);
 	}
 
 	@Test
@@ -55,7 +57,7 @@ class ItemTest {
 
 	@Test
 	void testEqualityAndHashCode() {
-		Item item1Copy = Item.getInstance("Bread", new HashSet<>(), new GenericTag<>(FoodFreshness.FRESH), 3, date1);
+		Item item1Copy = Item.getInstance("Bread", new GenericTag<FoodGroup>(FoodGroup.GRAIN), new GenericTag<>(FoodFreshness.FRESH), 3, date1);
 		assertEquals(item1, item1Copy);
 		assertEquals(item1.hashCode(), item1Copy.hashCode());
 	}
@@ -84,26 +86,24 @@ class ItemTest {
 
 	@Test
 	void testInvalidDateFormat() {
-		assertThrows(RuntimeException.class, () -> Item.getInstance("Bad Date Item", new HashSet<>(),
+		assertThrows(RuntimeException.class, () -> Item.getInstance("Bad Date Item", null,
 				new GenericTag<>(FoodFreshness.FRESH), 1, "31-02-2024"));
 	}
 
 	@Test
 	void testToString() throws ParseException {
-		HashSet<GenericTag<FoodGroup>> foodGroupTags = new HashSet<>();
-		foodGroupTags.add(new GenericTag<>(FoodGroup.DAIRY));
 		Date date = new SimpleDateFormat("dd-MMMM-yyyy").parse("09-january-2024");
 
-		Item item = Item.getInstance("Test Item", foodGroupTags, new GenericTag<>(FoodFreshness.FRESH), 1, date);
-		String expected = "Item{name='Test Item', foodGroupTags=[dairy], foodFreshnessTag=fresh, quantity=1, expiryDate=Tue Jan 09 00:00:00 EST 2024}";
+		Item item = Item.getInstance("Test Item", new GenericTag<>(FoodGroup.DAIRY), new GenericTag<>(FoodFreshness.FRESH), 1, date);
+		String expected = "Item{name='Test Item', foodGroupTags=Dairy, foodFreshnessTag=Fresh, quantity=1, expiryDate=Tue Jan 09 00:00:00 EST 2024}";
 		assertEquals(expected, item.toString(), "toString does not format item as expected.");
 	}
 
 	@Test
 	void testEdgeCaseDateLeapYear() throws ParseException {
 		Date leapYearDate = new SimpleDateFormat("dd-MMMM-yyyy").parse("29-February-2024");
-		HashSet<GenericTag<FoodGroup>> foodGroupTags = new HashSet<>();
-		Item leapYearItem = Item.getInstance("Leap Year Item", foodGroupTags, new GenericTag<>(FoodFreshness.FRESH), 1,
+
+		Item leapYearItem = Item.getInstance("Leap Year Item", new GenericTag<FoodGroup>(FoodGroup.DAIRY), new GenericTag<>(FoodFreshness.FRESH), 1,
 				leapYearDate);
 		assertEquals(leapYearDate, leapYearItem.getExpiryDate(), "Leap year date is not set correctly.");
 	}

@@ -7,17 +7,17 @@ public enum FoodFreshness implements Tag {
     /**
      * Indicates that the food item has expired.
      */
-    EXPIRED("expired"),
+    EXPIRED("Expired"),
 
     /**
      * Indicates that the food item is fresh.
      */
-    FRESH("fresh"),
+    FRESH("Fresh"),
 
     /**
      * Indicates that the food item is nearing its expiry date.
      */
-    NEAR_EXPIRY("near expiry");
+    NEAR_EXPIRY("Near_Expiry");
 
     private final String displayName;
 
