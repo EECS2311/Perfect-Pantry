@@ -15,26 +15,6 @@ import javax.swing.table.TableModel;
 import database.DB;
 import domain.logic.*;
 import domain.logic.Container;
-class EnumComboBoxEditor extends DefaultCellEditor {
-	private Map<String, Object> displayNameToEnumMap = new HashMap<>();
-
-	public <E extends Enum<E> & Tag> EnumComboBoxEditor(E[] values) {
-		super(new JComboBox<>());
-		JComboBox<String> comboBox = (JComboBox<String>) editorComponent;
-		for (E value : values) {
-			String displayName = value.getDisplayName();
-			comboBox.addItem(displayName);
-			displayNameToEnumMap.put(displayName, value);
-		}
-	}
-
-	@Override
-	public Object getCellEditorValue() {
-		String displayName = (String) super.getCellEditorValue();
-		return displayNameToEnumMap.get(displayName);
-	}
-}
-
 
 /**
  * Represents a panel that displays a list of items within a container.
@@ -160,6 +140,7 @@ public class ItemsListView extends JPanel {
 
 		// Call the new ItemUtility update method
 		ItemUtility.updateItem(data, container, itemName, newValue, column);
+		ItemUtility.initItems(data, this.container, tableModel);
 	}
 
 }
