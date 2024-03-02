@@ -75,17 +75,19 @@ public class ItemsListView extends JPanel {
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
-				if (!isRowSelected(row) && colourCodingEnabled) { // Check if the current row is not selected and if colouring is enabled
-					Object freshnessValue = getValueAt(row, 4); // Retrieve the value without casting
-					String freshness; // To store the string representation of the freshness value
+				if (!isRowSelected(row) && colourCodingEnabled) {
+					// Dynamically find the index of the 'Food Freshness' column
+					int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
+
+					// Retrieve the value from the correct column, regardless of its position
+					Object freshnessValue = getValueAt(row, freshnessCol);
+					String freshness = "";
 
 					// Check the type of the freshness value and convert it to String appropriately
 					if (freshnessValue instanceof GenericTag) {
 						freshness = ((GenericTag<FoodFreshness>) freshnessValue).toString();
 					} else if (freshnessValue != null) {
-						freshness = freshnessValue.toString(); // fallback
-					} else {
-						freshness = ""; // Default case if the value is null
+						freshness = freshnessValue.toString();
 					}
 
 					// Apply background color based on the freshness string
@@ -117,7 +119,6 @@ public class ItemsListView extends JPanel {
 		tableModel.addColumn("Food Group");
 		tableModel.addColumn("Food Freshness");
 
-		// Add a model listener for updates not related to Food Freshness changes
 		tableModel.addTableModelListener(e -> {
 			if (e.getType() == TableModelEvent.UPDATE) {
 				int row = e.getFirstRow();
