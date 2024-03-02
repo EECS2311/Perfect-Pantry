@@ -24,12 +24,14 @@ import domain.logic.Container;
 public class ItemsListView extends JPanel {
 	private DefaultTableModel tableModel;
 	private JTable table;
-	// private List<Item> items;
+
+	private boolean colourCodingEnabled = true;
 
 	private HomeView home;
 
 	private DB data;
 	private Container container;
+
 
 	/**
 	 * Constructs an ItemsListView panel associated with a specific container.
@@ -72,7 +74,7 @@ public class ItemsListView extends JPanel {
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
-				if (!isRowSelected(row)) { // Check if the current row is not selected
+				if (!isRowSelected(row) && colourCodingEnabled) { // Check if the current row is not selected and if colouring is enabled
 					Object freshnessValue = getValueAt(row, 4); // Retrieve the value without casting
 					String freshness; // To store the string representation of the freshness value
 
@@ -102,7 +104,7 @@ public class ItemsListView extends JPanel {
 					}
 				} else {
 					// If row is selected, use default selection background
-					c.setBackground(getSelectionBackground());
+					// c.setBackground(Color.LIGHT_GRAY);
 				}
 				return c;
 			}
@@ -169,4 +171,8 @@ public class ItemsListView extends JPanel {
 		ItemUtility.initItems(data, this.container, tableModel);
 	}
 
+	public void toggleColorCoding() {
+		colourCodingEnabled = !colourCodingEnabled;
+		table.repaint(); // Repaint the table to reflect the change
+	}
 }
