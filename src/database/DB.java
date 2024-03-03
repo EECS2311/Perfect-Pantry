@@ -3,7 +3,6 @@ package database;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import domain.logic.*;
 
@@ -21,9 +20,9 @@ public class DB {
 
 	/**
 	 * Initializes a new database connection.
-	 * 
+	 *
 	 * @return Returns the connection object to be used by other methods.
-	 * 
+	 *
 	 */
 	public Connection init() {
 		try {
@@ -39,7 +38,7 @@ public class DB {
 
 	/**
 	 * Inserts a new container into the database
-	 * 
+	 *
 	 * @param nameOfContainer
 	 */
 	public void putContainer(String nameOfContainer) {
@@ -59,7 +58,7 @@ public class DB {
 
 	/**
 	 * Returns a list of the containers currently stored in the database
-	 * 
+	 *
 	 * @return A list of container names. The caller method will create the
 	 *         containers
 	 */
@@ -86,7 +85,7 @@ public class DB {
 
 	/**
 	 * Verifies if the container is in the database
-	 * 
+	 *
 	 * @param name The name of the database to be found.
 	 * @return True or false depending on if the container is in the database.
 	 */
@@ -111,7 +110,7 @@ public class DB {
 
 	/**
 	 * Removes container from the database
-	 * 
+	 *
 	 * @param name The name of the database to be removed.
 	 */
 	public void removeContainer(String name) {
@@ -131,7 +130,7 @@ public class DB {
 
 	/**
 	 * Updates the name of a specific container
-	 * 
+	 *
 	 * @param prevName The previous name of the container
 	 * @param newName  The new name of the container
 	 */
@@ -154,7 +153,7 @@ public class DB {
 
 	/**
 	 * Removes all the items from a container in the database
-	 * 
+	 *
 	 * @param c the container whose items will be removed from
 	 */
 	public void emptyContainer(Container c) {
@@ -260,13 +259,19 @@ public class DB {
 
 	}
 
-	public void updateItem(Container c, String itemName, FoodGroup newFoodGroup, FoodFreshness newFreshness) {
+	/**
+	 * Updates the food group  of a specific item within a container.
+	 * If the new values for food group are provided (not null), the corresponding
+	 * field of the item are updated in the database. If value is null, no update is made.
+	 *
+	 * @param c             The container that contains the item to be updated.
+	 * @param itemName      The name of the item to be updated.
+	 * @param newFoodGroup  The new food group classification for the item (can be null if not updating).
+	 */
+	public void updateItemFoodGroup(Container c, String itemName, FoodGroup newFoodGroup) {
 		List<String> setClauses = new ArrayList<>();
 		if (newFoodGroup != null) {
 			setClauses.add("fg = '" + newFoodGroup.getDisplayName() + "'");
-		}
-		if (newFreshness != null) {
-			setClauses.add("fresh = '" + newFreshness.getDisplayName() + "'");
 		}
 
 		if (setClauses.isEmpty()) {
@@ -289,7 +294,7 @@ public class DB {
 
 	/**
 	 * Returns a list of Items belonging to a Container in the database
-	 * 
+	 *
 	 * @param c a Container object to retrieve items from
 	 * @return a list of Items belonging to a Container in the database
 	 */
@@ -312,6 +317,14 @@ public class DB {
 
 	}
 
+	/**
+	 * Updates the freshness status of all items within a specified container in the database.
+	 * This method sets the freshness status based on the current date and the expiry date of the items.
+	 * Items past the current date are marked as 'Expired', items expiring within the next 7 days are marked as 'Near_Expiry',
+	 * and all other items are marked as 'Fresh'.
+	 *
+	 * @param container The container whose items' freshness statuses are to be updated.
+	 */
 	public void batchUpdateItemFreshness(Container container) {
 		// SQL query to update the freshness of items based on their expiry date
 		String sql = "UPDATE item SET fresh = CASE " +
@@ -330,4 +343,5 @@ public class DB {
 			e.printStackTrace();
 		}
 	}
+
 }
