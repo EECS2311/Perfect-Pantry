@@ -1,12 +1,19 @@
 package database;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.logic.*;
-
-import static domain.logic.GenericTag.fromString;
+import domain.logic.Container;
+import domain.logic.FoodFreshness;
+import domain.logic.FoodGroup;
+import domain.logic.GenericTag;
+import domain.logic.Item;
 
 /**
  * The {@code DB} class represents a simple database for storing and managing
@@ -231,8 +238,8 @@ public class DB {
 	/**
 	 * Retrieves an {@link Item} by its container and name.
 	 *
-	 * @param c The container in which the item is stored.
-	 * @param itemName  The name of the item to retrieve.
+	 * @param c        The container in which the item is stored.
+	 * @param itemName The name of the item to retrieve.
 	 * @return The {@link Item} object if found, {@code null} otherwise.
 	 */
 	public Item getItem(Container c, String itemName) {
@@ -244,9 +251,12 @@ public class DB {
 					String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
 
 			if (rs.next()) {
-				System.out.println(itemName);
-				GenericTag<FoodGroup> fg = (rs.getString("fg") != null) ? GenericTag.fromString(FoodGroup.class, rs.getString("fg")) : null;
-				GenericTag<FoodFreshness> fresh = (rs.getString("fresh") != null) ? GenericTag.fromString(FoodFreshness.class, rs.getString("fresh")) : null;
+				GenericTag<FoodGroup> fg = (rs.getString("fg") != null)
+						? GenericTag.fromString(FoodGroup.class, rs.getString("fg"))
+						: null;
+				GenericTag<FoodFreshness> fresh = (rs.getString("fresh") != null)
+						? GenericTag.fromString(FoodFreshness.class, rs.getString("fresh"))
+						: null;
 
 				conn.close();
 				return Item.getInstance(rs.getString("name"), fg, fresh, rs.getInt("quantity"), rs.getDate("expiry"));
@@ -260,13 +270,14 @@ public class DB {
 	}
 
 	/**
-	 * Updates the food group  of a specific item within a container.
-	 * If the new values for food group are provided (not null), the corresponding
-	 * field of the item are updated in the database. If value is null, no update is made.
+	 * Updates the food group of a specific item within a container. If the new
+	 * values for food group are provided (not null), the corresponding field of the
+	 * item are updated in the database. If value is null, no update is made.
 	 *
-	 * @param c             The container that contains the item to be updated.
-	 * @param itemName      The name of the item to be updated.
-	 * @param newFoodGroup  The new food group classification for the item (can be null if not updating).
+	 * @param c            The container that contains the item to be updated.
+	 * @param itemName     The name of the item to be updated.
+	 * @param newFoodGroup The new food group classification for the item (can be
+	 *                     null if not updating).
 	 */
 	public void updateItemFoodGroup(Container c, String itemName, FoodGroup newFoodGroup) {
 		List<String> setClauses = new ArrayList<>();
@@ -282,8 +293,7 @@ public class DB {
 		String setClause = String.join(", ", setClauses);
 		String sql = "UPDATE item SET " + setClause + " WHERE name = ? AND container = ?";
 
-		try (Connection conn = this.init();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = this.init(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, itemName);
 			pstmt.setString(2, c.getName());
 			pstmt.executeUpdate();
@@ -318,23 +328,22 @@ public class DB {
 	}
 
 	/**
-	 * Updates the freshness status of all items within a specified container in the database.
-	 * This method sets the freshness status based on the current date and the expiry date of the items.
-	 * Items past the current date are marked as 'Expired', items expiring within the next 7 days are marked as 'Near_Expiry',
+	 * Updates the freshness status of all items within a specified container in the
+	 * database. This method sets the freshness status based on the current date and
+	 * the expiry date of the items. Items past the current date are marked as
+	 * 'Expired', items expiring within the next 7 days are marked as 'Near_Expiry',
 	 * and all other items are marked as 'Fresh'.
 	 *
-	 * @param container The container whose items' freshness statuses are to be updated.
+	 * @param container The container whose items' freshness statuses are to be
+	 *                  updated.
 	 */
 	public void batchUpdateItemFreshness(Container container) {
 		// SQL query to update the freshness of items based on their expiry date
-		String sql = "UPDATE item SET fresh = CASE " +
-				"WHEN expiry < CURRENT_DATE THEN 'Expired'::Freshness " +
-				"WHEN expiry > CURRENT_DATE AND expiry <= CURRENT_DATE + interval '7' day THEN 'Near_Expiry'::Freshness " +
-				"ELSE 'Fresh'::Freshness END " +
-				"WHERE container = ?";
+		String sql = "UPDATE item SET fresh = CASE " + "WHEN expiry < CURRENT_DATE THEN 'Expired'::Freshness "
+				+ "WHEN expiry > CURRENT_DATE AND expiry <= CURRENT_DATE + interval '7' day THEN 'Near_Expiry'::Freshness "
+				+ "ELSE 'Fresh'::Freshness END " + "WHERE container = ?";
 
-		try (Connection conn = this.init();
-			 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = this.init(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 			pstmt.setString(1, container.getName());
 			pstmt.executeUpdate();
