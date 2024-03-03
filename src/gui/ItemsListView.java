@@ -183,6 +183,12 @@ public class ItemsListView extends JPanel {
 		ItemUtility.initItems(data, this.container, tableModel);
 	}
 
+	/**
+	 * Toggles the color coding feature on or off in the table view.
+	 * When color coding is enabled, rows will be colored based on the 'Food Freshness' status.
+	 * When disabled, the default background color is used for all rows.
+	 * The table is repainted after toggling to reflect the change immediately.
+	 */
 	public void toggleColorCoding() {
 		colourCodingEnabled = !colourCodingEnabled;
 		table.repaint(); // Repaint the table to reflect the change

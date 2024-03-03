@@ -101,7 +101,7 @@ public class ItemUtility {
      */
     public static void updateItem(DB data, Container container, String itemName, Object newValue, int column) {
         if (column == 3 && newValue instanceof FoodGroup) {
-            data.updateItem(container, itemName, (FoodGroup) newValue, null);
+            data.updateItemFoodGroup(container, itemName, (FoodGroup) newValue);
         }
     }
 
@@ -120,6 +120,13 @@ public class ItemUtility {
     	}
     }
 
+    /**
+     * Formats a Date object into a string representation with the format "yyyy-MM-dd".
+     * This format is often used for SQL date columns.
+     *
+     * @param expiryDate The date to be formatted.
+     * @return A string representation of the date in "yyyy-MM-dd" format.
+     */
     public static String dateFormat(Date expiryDate){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String format = formatter.format(expiryDate);

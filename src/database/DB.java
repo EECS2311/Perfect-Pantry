@@ -259,13 +259,19 @@ public class DB {
 
 	}
 
-	public void updateItem(Container c, String itemName, FoodGroup newFoodGroup, FoodFreshness newFreshness) {
+	/**
+	 * Updates the food group  of a specific item within a container.
+	 * If the new values for food group are provided (not null), the corresponding
+	 * field of the item are updated in the database. If value is null, no update is made.
+	 *
+	 * @param c             The container that contains the item to be updated.
+	 * @param itemName      The name of the item to be updated.
+	 * @param newFoodGroup  The new food group classification for the item (can be null if not updating).
+	 */
+	public void updateItemFoodGroup(Container c, String itemName, FoodGroup newFoodGroup) {
 		List<String> setClauses = new ArrayList<>();
 		if (newFoodGroup != null) {
 			setClauses.add("fg = '" + newFoodGroup.getDisplayName() + "'");
-		}
-		if (newFreshness != null) {
-			setClauses.add("fresh = '" + newFreshness.getDisplayName() + "'");
 		}
 
 		if (setClauses.isEmpty()) {
@@ -311,6 +317,14 @@ public class DB {
 
 	}
 
+	/**
+	 * Updates the freshness status of all items within a specified container in the database.
+	 * This method sets the freshness status based on the current date and the expiry date of the items.
+	 * Items past the current date are marked as 'Expired', items expiring within the next 7 days are marked as 'Near_Expiry',
+	 * and all other items are marked as 'Fresh'.
+	 *
+	 * @param container The container whose items' freshness statuses are to be updated.
+	 */
 	public void batchUpdateItemFreshness(Container container) {
 		// SQL query to update the freshness of items based on their expiry date
 		String sql = "UPDATE item SET fresh = CASE " +
