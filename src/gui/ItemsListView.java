@@ -170,7 +170,6 @@ public class ItemsListView extends JPanel {
 					Point p = e.getPoint();
 					int row = table.rowAtPoint(p);
 					table.setRowSelectionInterval(row, row);
-					String name = tableModel.getValueAt(row, 0).toString();
 				}
 			}
 
