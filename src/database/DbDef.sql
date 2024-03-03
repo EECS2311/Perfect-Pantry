@@ -8,11 +8,12 @@ CREATE TABLE container (
 
 
 CREATE TABLE item(
-    name varchar(50) PRIMARY KEY,
+    name varchar(50),
     container varchar(50) REFERENCES container(container_name) ON DELETE CASCADE,
     quantity INTEGER, 
     expiry Date,
     fg Food_Group,
-    fresh Freshness
+    fresh Freshness,
+    PRIMARY KEY(name, container)
 );
 

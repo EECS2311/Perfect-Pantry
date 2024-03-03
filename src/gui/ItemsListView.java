@@ -148,7 +148,7 @@ public class ItemsListView extends JPanel {
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
 		// Initialize items and assign food freshness
-		ItemUtility.assignFoodFreshness(data, this.container);
+		ItemUtility.assignFoodFreshness(data, this.getC());
 		ItemUtility.initItems(data, container, tableModel);
 
 		// Init the right click popup menu
@@ -164,6 +164,7 @@ public class ItemsListView extends JPanel {
 		table.setComponentPopupMenu(popup);
 		table.addMouseListener(new MouseAdapter() {
 
+			// Code Adapted from codejava.net
 			public void mouseClicked(MouseEvent e) {
 				Boolean b = SwingUtilities.isRightMouseButton(e);
 				if (b) {
@@ -176,10 +177,9 @@ public class ItemsListView extends JPanel {
 		});
 
 		removeItem.addActionListener(e -> {
-
 			int row = table.getSelectedRow();
 			String name = tableModel.getValueAt(row, 0).toString();
-			ItemUtility.verifyDeleteItem(name, this.container, this);
+			ItemUtility.verifyDeleteItem(name, this.getC(), this);
 
 		});
 
@@ -193,9 +193,8 @@ public class ItemsListView extends JPanel {
 	public void addItem(Item item) {
 		tableModel.addRow(
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
-		data.addItem(container, item.getName(), item); // Keep track of the added item
-		ItemUtility.assignFoodFreshness(data, this.container);
-		ItemUtility.initItems(data, this.container, tableModel);
+		ItemUtility.assignFoodFreshness(data, this.getC());
+		ItemUtility.initItems(data, this.getC(), tableModel);
 
 	}
 
@@ -227,9 +226,9 @@ public class ItemsListView extends JPanel {
 		Object newValue = table.getModel().getValueAt(row, column);
 
 		// Call the new ItemUtility update method
-		ItemUtility.updateItem(data, container, itemName, newValue, column);
-		ItemUtility.assignFoodFreshness(data, this.container);
-		ItemUtility.initItems(data, this.container, tableModel);
+		ItemUtility.updateItem(data, getC(), itemName, newValue, column);
+		ItemUtility.assignFoodFreshness(data, this.getC());
+		ItemUtility.initItems(data, this.getC(), tableModel);
 	}
 
 	/**
@@ -241,5 +240,9 @@ public class ItemsListView extends JPanel {
 	public void toggleColorCoding() {
 		colourCodingEnabled = !colourCodingEnabled;
 		table.repaint(); // Repaint the table to reflect the change
+	}
+
+	public Container getC() {
+		return container;
 	}
 }
