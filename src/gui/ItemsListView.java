@@ -1,29 +1,42 @@
 package gui;
 
-import java.awt.*;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.*;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 
 import database.DB;
-import domain.logic.*;
 import domain.logic.Container;
+import domain.logic.FoodFreshness;
+import domain.logic.FoodGroup;
+import domain.logic.GenericTag;
+import domain.logic.Item;
+import domain.logic.ItemUtility;
 
 /**
- * Represents a panel that displays a list of items within a container.
- * It provides functionalities to add and remove items, and update item properties directly from the table.
+ * Represents a panel that displays a list of items within a container. It
+ * provides functionalities to add and remove items, and update item properties
+ * directly from the table.
  */
 public class ItemsListView extends JPanel {
 	private DefaultTableModel tableModel;
 	private JTable table;
+	private JPopupMenu popup;
+	private JMenuItem removeItem;
+	private JMenuItem editQty;
+	private JMenuItem generateTip;
 
 	private boolean colourCodingEnabled = true;
 
@@ -32,11 +45,11 @@ public class ItemsListView extends JPanel {
 	private DB data;
 	private Container container;
 
-
 	/**
 	 * Constructs an ItemsListView panel associated with a specific container.
 	 *
-	 * @param home      The reference to the Home GUI, allowing for interaction with the main application frame.
+	 * @param home      The reference to the Home GUI, allowing for interaction with
+	 *                  the main application frame.
 	 * @param container The container whose items are to be displayed and managed.
 	 */
 	public ItemsListView(HomeView home, Container container) {
@@ -55,23 +68,24 @@ public class ItemsListView extends JPanel {
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
 				switch (columnIndex) {
-					case 0:
-						return String.class;
-					case 1:
-						return Integer.class;
-					case 2:
-						return String.class;
-					case 3:
-						return FoodGroup.class;
-					case 4:
-						return FoodFreshness.class;
-					default:
-						return Object.class;
+				case 0:
+					return String.class;
+				case 1:
+					return Integer.class;
+				case 2:
+					return String.class;
+				case 3:
+					return FoodGroup.class;
+				case 4:
+					return FoodFreshness.class;
+				default:
+					return Object.class;
 				}
 			}
 		};
 
 		table = new JTable(tableModel) {
+
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
@@ -92,18 +106,18 @@ public class ItemsListView extends JPanel {
 
 					// Apply background color based on the freshness string
 					switch (freshness) {
-						case "Expired":
-							c.setBackground(new Color(252, 156, 156));
-							break;
-						case "Near_Expiry":
-							c.setBackground(new Color(236, 236, 127));
-							break;
-						case "Fresh":
-							c.setBackground(new Color(145, 252, 145));
-							break;
-						default:
-							c.setBackground(Color.WHITE); // Default background
-							break;
+					case "Expired":
+						c.setBackground(new Color(252, 156, 156));
+						break;
+					case "Near_Expiry":
+						c.setBackground(new Color(236, 236, 127));
+						break;
+					case "Fresh":
+						c.setBackground(new Color(145, 252, 145));
+						break;
+					default:
+						c.setBackground(Color.WHITE); // Default background
+						break;
 					}
 				} else {
 					// If row is selected, use default selection background
@@ -136,11 +150,44 @@ public class ItemsListView extends JPanel {
 		// Initialize items and assign food freshness
 		ItemUtility.assignFoodFreshness(data, this.container);
 		ItemUtility.initItems(data, container, tableModel);
-	}
 
+		// Init the right click popup menu
+		popup = new JPopupMenu();
+		removeItem = new JMenuItem("Delete Item");
+		editQty = new JMenuItem("Update Quantity");
+		generateTip = new JMenuItem("Storage Tip");
+
+		popup.add(removeItem);
+		popup.add(editQty);
+		popup.add(generateTip);
+
+		table.setComponentPopupMenu(popup);
+		table.addMouseListener(new MouseAdapter() {
+
+			public void mouseClicked(MouseEvent e) {
+				Boolean b = SwingUtilities.isRightMouseButton(e);
+				if (b) {
+					Point p = e.getPoint();
+					int row = table.rowAtPoint(p);
+					table.setRowSelectionInterval(row, row);
+				}
+			}
+
+		});
+
+		removeItem.addActionListener(e -> {
+
+			int row = table.getSelectedRow();
+			String name = tableModel.getValueAt(row, 0).toString();
+			ItemUtility.verifyDeleteItem(name, this.container, this);
+
+		});
+
+	}
 
 	/**
 	 * Adds an item to the table and updates the underlying container.
+	 * 
 	 * @param item The item to be added.
 	 */
 	public void addItem(Item item) {
@@ -154,6 +201,7 @@ public class ItemsListView extends JPanel {
 
 	/**
 	 * Removes an item from the table based on its name.
+	 * 
 	 * @param itemName The name of the item to be removed.
 	 */
 	public void removeItem(String itemName) {
@@ -170,7 +218,8 @@ public class ItemsListView extends JPanel {
 
 	/**
 	 * Updates an item's properties based on changes made within the table.
-	 * @param row The row index of the item in the table.
+	 * 
+	 * @param row    The row index of the item in the table.
 	 * @param column The column index of the property that was changed.
 	 */
 	private void updateItemFromTable(int row, int column) {
@@ -184,10 +233,10 @@ public class ItemsListView extends JPanel {
 	}
 
 	/**
-	 * Toggles the color coding feature on or off in the table view.
-	 * When color coding is enabled, rows will be colored based on the 'Food Freshness' status.
-	 * When disabled, the default background color is used for all rows.
-	 * The table is repainted after toggling to reflect the change immediately.
+	 * Toggles the color coding feature on or off in the table view. When color
+	 * coding is enabled, rows will be colored based on the 'Food Freshness' status.
+	 * When disabled, the default background color is used for all rows. The table
+	 * is repainted after toggling to reflect the change immediately.
 	 */
 	public void toggleColorCoding() {
 		colourCodingEnabled = !colourCodingEnabled;
