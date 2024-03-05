@@ -149,8 +149,7 @@ public class ItemUtility {
 		data.batchUpdateItemFreshness(container);
 	}
 
-	public static String retrieveStorageTip(String name) {
-		// TODO Auto-generated method 
-		return null;
+	public static String retrieveStorageTip(String foodName, DB data) {
+		return data.getStorageTip(foodName);
 	}
 }

@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -186,10 +187,15 @@ public class ItemsListView extends JPanel {
 
 			int row = table.getSelectedRow();
 			String name = tableModel.getValueAt(row, 0).toString();
-			String sTip = ItemUtility.retrieveStorageTip(name);
+			String sTip = ItemUtility.retrieveStorageTip(name, data);
 
 			if (sTip != null) {
-				add(new StorageTipView(name, sTip));
+				JOptionPane.showMessageDialog(this,
+						"<html><body><p style='width:300px;'>" + sTip + "</p></body></html>", name + " - Storage Tip",
+						JOptionPane.PLAIN_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this, "No Storage Tips Available", "NoStorageTipsError",
+						JOptionPane.ERROR_MESSAGE);
 			}
 
 		});

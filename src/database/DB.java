@@ -355,4 +355,23 @@ public class DB {
 		}
 	}
 
+	public String getStorageTip(String name) {
+		Connection conn = init();
+		String tip = null;
+
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s.executeQuery(String.format("SELECT * FROM storage_tips WHERE name='%s'", name));
+
+			while (result.next()) {
+				tip = result.getString("info");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return tip;
+	}
+
 }
