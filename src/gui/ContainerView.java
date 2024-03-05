@@ -26,6 +26,8 @@ public class ContainerView implements ActionListener {
 	private ItemsListView itemsListPanel;
 	private AddItemView addItemPanel;
 	private Container container;
+	
+	private JButton viewCalendar = new JButton ("View Calendar");
 
 	DB data = home.data;
 
@@ -45,6 +47,8 @@ public class ContainerView implements ActionListener {
 
 		itemsListPanel = new ItemsListView(home, container);
 		addItemPanel = new AddItemView(itemsListPanel);
+		addItemPanel.add(viewCalendar);
+		viewCalendar.addActionListener(this);
 
 		back.addActionListener(this);
 
@@ -91,6 +95,10 @@ public class ContainerView implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == back) {
 			setupContainerViewGUI(false); // Hide this view
+		}
+		if(e.getSource() == viewCalendar) {
+			setupContainerViewGUI(false);
+			new CalendarView(container);
 		}
 
 	}
