@@ -148,4 +148,9 @@ public class ItemUtility {
 	public static void assignFoodFreshness(DB data, Container container) {
 		data.batchUpdateItemFreshness(container);
 	}
+
+	public static String retrieveStorageTip(String name) {
+		// TODO Auto-generated method 
+		return null;
+	}
 }

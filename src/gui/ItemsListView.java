@@ -182,6 +182,17 @@ public class ItemsListView extends JPanel {
 			ItemUtility.verifyDeleteItem(name, this.getC(), this);
 
 		});
+		generateTip.addActionListener(e -> {
+
+			int row = table.getSelectedRow();
+			String name = tableModel.getValueAt(row, 0).toString();
+			String sTip = ItemUtility.retrieveStorageTip(name);
+
+			if (sTip != null) {
+				add(new StorageTipView(name, sTip));
+			}
+
+		});
 
 	}
 
