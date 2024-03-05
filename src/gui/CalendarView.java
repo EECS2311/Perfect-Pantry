@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 import domain.logic.Container;
 
-public class CalendarView implements ActionListener {
+public class CalendarView {
 	private JFrame frame = HomeView.getFrame();
 	
 	private JPanel mainPanel = new JPanel();
@@ -22,7 +22,7 @@ public class CalendarView implements ActionListener {
 	private Container container;
 	
 	
-	public CalendarView(Container container) {
+	public CalendarView(Container container, ContainerView c, HomeView h) {
 		this.container = container;
 		//frame.getContentPane().setVisible(false);
 
@@ -34,15 +34,15 @@ public class CalendarView implements ActionListener {
 		mainPanel.add(Exit);
 		
 		
-		Exit.addActionListener(e -> mainPanel.setVisible(false));
+		Exit.addActionListener(e -> {
+			new ContainerView(h, this.container);
+			c.setupContainerViewGUI(true);
+			
+		});
 		
 		
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 }
