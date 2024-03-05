@@ -58,7 +58,6 @@ public class ContainerView implements ActionListener {
 		containerView.add(buttonPanel, BorderLayout.NORTH); // Add the button panel to the top of the main panel
 		containerView.add(itemsListPanel, BorderLayout.CENTER); // Add the items list panel to the center
 		containerView.add(addItemPanel, BorderLayout.SOUTH); // Add the add item panel to the bottom
-
 	}
 
 	/**
@@ -97,8 +96,10 @@ public class ContainerView implements ActionListener {
 			setupContainerViewGUI(false); // Hide this view
 		}
 		if(e.getSource() == viewCalendar) {
-			setupContainerViewGUI(false);
-			new CalendarView(container);
+			setupContainerViewGUI(false); //hide this view
+			home.setHomeViewVisibility(false); //hides the view setup displays
+			new CalendarView(container, this, home); //initialises Calendar
+			
 		}
 
 	}
