@@ -194,12 +194,12 @@ public class DB {
 	 * @param name The name of the item.
 	 * @param ite  The {@link Item} object to be added.
 	 */
-	public void addItem(Container c, String name, Item ite) {
+	public Boolean addItem(Container c, String name, Item ite) {
 
 		Connection conn = init();
 
 		if (this.getItem(c, name) != null) {
-			return;
+			return false;
 		}
 
 		try {
@@ -209,8 +209,10 @@ public class DB {
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 
+		return true;
 	}
 
 	/**
@@ -351,6 +353,25 @@ public class DB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getStorageTip(String name) {
+		Connection conn = init();
+		String tip = null;
+
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s.executeQuery(String.format("SELECT * FROM storage_tips WHERE name='%s'", name));
+
+			while (result.next()) {
+				tip = result.getString("info");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return tip;
 	}
 
 }
