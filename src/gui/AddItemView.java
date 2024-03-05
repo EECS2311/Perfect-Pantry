@@ -37,10 +37,10 @@ public class AddItemView extends JPanel {
         add(new JLabel("Expiration Date (dd-MMM-yyyy):"));
         add(itemExpiryField);
         add(addButton);
-        add(viewCalendar);
+//        add(viewCalendar);
 
         addButton.addActionListener(e -> addItem());
-        viewCalendar.addActionListener(e -> new CalendarView());
+//        viewCalendar.addActionListener(e -> new CalendarView());
     }
 
     /**
