@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -14,12 +15,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import database.DB;
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
-import domain.logic.ItemUtility;
-
 /**
  * The main GUI frame for the application, serving as the entry point for user
  * interaction. It includes functionality to add and edit container names, and
@@ -48,12 +48,12 @@ public class HomeView implements ActionListener {
 	/**
 	 * Title name
 	 */
-	private JLabel titleLabel = new JLabel("Perfect Pantry");;
+	private JLabel titleLabel = new JLabel("Perfect Pantry");
 
 	/**
 	 * Button that will add new container, apart of homeButtonsPanel
 	 */
-	private JButton createContainer = new JButton("Create");;
+	private JButton createContainer = new JButton("Create");
 
 	/**
 	 * Hold buttons pertaining to its containers
@@ -88,7 +88,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Text of edit view
 	 */
-	private JLabel editNameLabel = new JLabel("Click the Container Button you wish to rename");;
+	private JLabel editNameLabel = new JLabel("Click the Container Button you wish to rename");
 
 	/**
 	 * Holds buttons of edit view
@@ -98,7 +98,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Button to go back from edit screen to home screen
 	 */
-	private JButton editBackToContainerView = new JButton("Back");;
+	private JButton editBackToContainerView = new JButton("Back");
 
 	/**
 	 * Panel to hold container buttons
@@ -108,7 +108,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Add text for name of container
 	 */
-	private JTextField newContainerText = new JTextField(40);;
+	private JTextField newContainerText = new JTextField(40);
 
 	/**
 	 * Button to go to container list view
@@ -170,6 +170,12 @@ public class HomeView implements ActionListener {
 	 */
 	private JPanel deleteContainerButtonsPanel = new JPanel();
 
+	// Panel to hold the grocery list button
+    private JPanel groceryListPanel = new JPanel();
+
+    // Button for the grocery list
+    private JButton groceryListButton = new JButton("Grocery List");
+
 	public static void main(String[] args) {
 		HomeView m = new HomeView();
 
@@ -180,11 +186,12 @@ public class HomeView implements ActionListener {
 	 */
 	public HomeView() {
 		// Initialize frame
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
 		frame.setResizable(false); // stop resize
 		frame.setMinimumSize(new Dimension(800, 600));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
+
 
 		// Initilize containerMap
 		containerMap = new ConcurrentHashMap<>();
@@ -198,6 +205,9 @@ public class HomeView implements ActionListener {
 		editBackToContainerView.addActionListener(this);
 		deleteContainerButton.addActionListener(this);
 		deleteBackToContainerView.addActionListener(this);
+		// Initialize the grocery list button
+        groceryListButton.addActionListener(this);
+
 
 		stage = 0; // home stage
 		ContainerUtility.initContainers(containerMap, data, this);
@@ -205,7 +215,7 @@ public class HomeView implements ActionListener {
 	}
 
 	/**
-	 * 
+	 *
 	 * Changes the stage of the home screen between the main view, the Container
 	 * list view, edit container view and delete container view
 	 */
@@ -243,6 +253,11 @@ public class HomeView implements ActionListener {
 			viewContainers.setBackground(new Color(76, 183, 242));
 			viewContainers.setBounds(240, 300, 250, 40);
 			homePanel.setVisible(true);
+
+			homePanel.add(groceryListButton);
+			groceryListButton.setBackground(new Color(76, 183, 242));
+			groceryListButton.setBounds(500, 10, 200, 40);
+
 
 		} else if (stage == 1) { // Edit name of container screen
 			homePanel.setVisible(false);
@@ -331,6 +346,19 @@ public class HomeView implements ActionListener {
 			deletePanel.setVisible(true);
 
 		}
+		else if (stage == 4) { // see Grocery List View
+			homePanel.setVisible(false);
+	        viewOfContainerPanel.setVisible(false);
+	        deletePanel.setVisible(false);
+	        editPanel.setVisible(false);
+	        groceryListPanel.setVisible(false);
+
+	        // Create an instance of GroceryListView
+	        GroceryListView groceryListView = new GroceryListView(this);
+
+	        // Add the GroceryListView to the frame
+	        frame.getContentPane().add(groceryListView, BorderLayout.CENTER);
+		}
 	}
 
 	/**
@@ -355,7 +383,7 @@ public class HomeView implements ActionListener {
 	/**
 	 * Dynamically adds container buttons to the specified panel based on the
 	 * current containerMap state.
-	 * 
+	 *
 	 * @param p The panel to which container buttons will be added.
 	 */
 	private void addContainerButtons(JPanel p) {
@@ -369,7 +397,7 @@ public class HomeView implements ActionListener {
 
 	/**
 	 * Initiates the container renaming process for a given container button.
-	 * 
+	 *
 	 * @param b The button corresponding to the container to be renamed.
 	 */
 	private void renameContainerButton(JButton b) {
@@ -391,7 +419,7 @@ public class HomeView implements ActionListener {
 
 	/**
 	 * Deletes a container from the data and its map
-	 * 
+	 *
 	 * @param b the button corresponding to the container to be deleted
 	 */
 
@@ -419,6 +447,9 @@ public class HomeView implements ActionListener {
 				addNewContainer();
 			} else if (source == viewContainers) {
 				stage = 2;
+				changeStageOfHome();
+			} else if (source == groceryListButton) {
+				stage = 4;
 				changeStageOfHome();
 			}
 
@@ -465,11 +496,17 @@ public class HomeView implements ActionListener {
 			}
 
 		}
-	}
+		else if (stage == 4) {
+			if (source == GroceryListView.backButton) {
+				stage = 0;
+				changeStageOfHome();
+			}
 
+		}
+	}
 	/**
 	 * Provides access to the main application frame.
-	 * 
+	 *
 	 * @return The main JFrame of the application.
 	 */
 	public static JFrame getFrame() {

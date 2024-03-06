@@ -2,18 +2,15 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import domain.logic.Container;
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
 import domain.logic.Item;
 
 /**
@@ -25,15 +22,15 @@ import domain.logic.Item;
 public class DB {
 
 	Connection conn;
-	private HashMap<String, Container> containers = new HashMap<String, Container>();
+	private HashMap<String, Container> containers = new HashMap<>();
 
-	private HashMap<Container, HashMap<String, Item>> items = new HashMap<Container, HashMap<String, Item>>();
+	private HashMap<Container, HashMap<String, Item>> items = new HashMap<>();
 
 	/**
 	 * Initializes a new database connection.
-	 * 
+	 *
 	 * @return Returns the connection object to be used by other methods.
-	 * 
+	 *
 	 */
 	public Connection init() {
 		try {
@@ -49,7 +46,7 @@ public class DB {
 
 	/**
 	 * Inserts a new container into the database
-	 * 
+	 *
 	 * @param nameOfContainer
 	 */
 	public void putContainer(String nameOfContainer) {
@@ -69,7 +66,7 @@ public class DB {
 
 	/**
 	 * Returns a list of the containers currently stored in the database
-	 * 
+	 *
 	 * @return A list of container names. The caller method will create the
 	 *         containers
 	 */
@@ -79,7 +76,7 @@ public class DB {
 		try {
 			Statement s = conn.createStatement();
 			ResultSet result = s.executeQuery("Select * from container");
-			List<String> l = new ArrayList<String>();
+			List<String> l = new ArrayList<>();
 
 			while (result.next()) {
 				l.add(result.getString("container_name"));
@@ -96,7 +93,7 @@ public class DB {
 
 	/**
 	 * Verifies if the container is in the database
-	 * 
+	 *
 	 * @param name The name of the database to be found.
 	 * @return True or false depending on if the container is in the database.
 	 */
@@ -121,7 +118,7 @@ public class DB {
 
 	/**
 	 * Removes container from the database
-	 * 
+	 *
 	 * @param name The name of the database to be removed.
 	 */
 	public void removeContainer(String name) {
@@ -140,7 +137,7 @@ public class DB {
 
 	/**
 	 * Updates the name of a specific container
-	 * 
+	 *
 	 * @param prevName The previous name of the container
 	 * @param newName  The new name of the container
 	 */
@@ -159,15 +156,15 @@ public class DB {
 		}
 
 	}
-	
+
 	/**
 	 * Removes all the items from a container in the database
 	 * @param c the container whose items will be removed from
 	 */
 	public void emptyContainer(Container c) {
-		
+
 		Connection conn = init();
-		
+
 		try {
 			Statement s = conn.createStatement();
 			s.execute(String.format("DELETE FROM item WHERE container='%s'", c.getName()));
@@ -217,13 +214,13 @@ public class DB {
 	 * @param ite  The {@link Item} object to be added.
 	 */
 	public void addItem(Container c, String name, Item ite) {
-		
+
 		Connection conn = init();
-				
+
 		if (this.getItem(c, name) != null) {
 			return;
 		}
-		
+
 		try {
 			Statement s = conn.createStatement();
 			s.execute("INSERT INTO item(name, container, quantity, expiry) VALUES('" + name + "', "
@@ -246,7 +243,7 @@ public class DB {
 	public void removeItem(Container c, String name, Item ite) {
 
 		Connection conn = init();
-		
+
 		try {
 			Statement s = conn.createStatement();
 			s.execute(String.format("DELETE FROM item WHERE name='%s'", name));
@@ -254,9 +251,9 @@ public class DB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		// Any method that calls removeItem() will ensure that the item exists.
-		
+
 	}
 
 	/**
@@ -268,12 +265,12 @@ public class DB {
 	 */
 	public Item getItem(Container c, String itemName) {
 		Connection conn = init();
-		
+
 		try {
 			System.out.println(itemName);
 			Statement s = conn.createStatement();
 			ResultSet rs = s.executeQuery(String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
-			
+
 			if (rs.next()) {
 				System.out.println(itemName);
 				conn.close();
@@ -283,11 +280,11 @@ public class DB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 
 	}
-	
+
 	/**
 	 * Returns a list of Items belonging to a Container in the database
 	 * @param c a Container object to retrieve items from
@@ -298,7 +295,7 @@ public class DB {
 		try {
 			Statement s = conn.createStatement();
 			ResultSet result = s.executeQuery(String.format("SELECT * FROM item WHERE container='%s'", c.getName()));
-			List<Item> l = new ArrayList<Item>();
+			List<Item> l = new ArrayList<>();
 
 			while (result.next()) {
 				l.add(this.getItem(new Container(result.getString("container")), result.getString("name")));
@@ -309,7 +306,96 @@ public class DB {
 		}
 
 		return null;
-		
+
 	}
+
+	/**
+	 * Adds an item to the grocery list in the database.
+	 *
+	 * @param itemName The name of the item to add to the grocery list.
+	 */
+	public void addToGroceryList(String itemName) {
+	    // Establish a connection to the database
+	    Connection conn = init();
+	    try {
+	        // Prepare an SQL statement to insert an item into the grocery table
+	        PreparedStatement statement = conn.prepareStatement("INSERT INTO grocery (name) VALUES (?)");
+	        // Set the item name as a parameter in the SQL statement
+	        statement.setString(1, itemName);
+	        // Execute the SQL statement to insert the item into the grocery table
+	        statement.executeUpdate();
+	        // Close the prepared statement
+	        statement.close();
+	        // Close the database connection
+	        conn.close();
+	    } catch (SQLException e) {
+	        // Handle any SQL exceptions by printing the stack trace
+	        e.printStackTrace();
+	    }
+	}
+
+	/**
+	 * Removes an item from the grocery list in the database.
+	 *
+	 * @param itemName The name of the item to remove from the grocery list.
+	 */
+	public void removeFromGroceryList(String itemName) {
+	    // Establish a connection to the database
+	    Connection conn = init();
+	    try {
+	        // Prepare an SQL statement to delete an item from the grocery table based on its name
+	        PreparedStatement statement = conn.prepareStatement("DELETE FROM grocery WHERE name = ?");
+	        // Set the item name as a parameter in the SQL statement
+	        statement.setString(1, itemName);
+	        // Execute the SQL statement to delete the item from the grocery table
+	        statement.executeUpdate();
+	        // Close the prepared statement
+	        statement.close();
+	        // Close the database connection
+	        conn.close();
+	    } catch (SQLException e) {
+	        // Handle any SQL exceptions by printing the stack trace
+	        e.printStackTrace();
+	    }
+	}
+
+	/**
+     * Retrieves all grocery items from the database.
+     *
+     * @return A 2D array containing all grocery items, where each row represents an item.
+     */
+    public Object[][] getAllGroceryItems() {
+        Connection conn = init();
+        List<Object[]> itemList = new ArrayList<>();
+
+        if (conn != null) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("SELECT * FROM grocery");
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    String itemName = resultSet.getString("name");
+                    // You can add more columns as needed, such as ID, quantity, etc.
+                    // For simplicity, this example assumes only the item name is retrieved.
+
+                    // Create an array representing the current item
+                    Object[] itemData = { itemName };
+                    itemList.add(itemData);
+                }
+
+                resultSet.close();
+                statement.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Convert the list to a 2D array
+        Object[][] itemArray = new Object[itemList.size()][];
+        itemList.toArray(itemArray);
+
+        return itemArray;
+    }
 
 }

@@ -16,3 +16,6 @@ CREATE TABLE item(
     fresh Freshness
 );
 
+CREATE TABLE grocery(
+    name VARCHAR(50) PRIMARY KEY UNIQUE
+);
