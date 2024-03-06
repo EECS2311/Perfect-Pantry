@@ -28,6 +28,7 @@ public class GroceryListView extends JPanel implements ActionListener {
     private JPanel viewOfAllPanel = new JPanel();
     private JPanel tablePanel = new JPanel();
     private JPanel buttonsPanel = new JPanel();
+    private JPanel topPanel = new JPanel();
 
     // Buttons for interacting with the grocery list
     JButton addButton = new JButton("Add Item");
@@ -51,17 +52,26 @@ public class GroceryListView extends JPanel implements ActionListener {
         
         buttonsPanel.setLayout(null); // Set layout to null for absolute positioning
         buttonsPanel.setBackground(new Color(253, 241, 203));
-
+        
+        topPanel.setLayout(null); // Set layout to null for absolute positioning
+        topPanel.setBackground(new Color(253, 241, 203));
+        
+        //Add title Label and back button to the top panel
+        topPanel.add(titleLabel);
+        topPanel.add(backButton);
+        
         // Add panels and label to the main panel
         viewOfAllPanel.add(tablePanel);
         viewOfAllPanel.add(buttonsPanel);
-        viewOfAllPanel.add(titleLabel);
+        viewOfAllPanel.add(topPanel);
 
         // Set positions and sizes of components
         tablePanel.setBounds(10, 80, 800, 300);
         buttonsPanel.setBounds(10, 400, 530, 50);
+        topPanel.setBounds(10, 0, 600, 100);
         titleLabel.setBounds(300, 0, 600, 100);
         titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
+        backButton.setBounds(20, 20, 80, 30);
         
         // Initialize the table model
         tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Name"}) {
@@ -86,11 +96,9 @@ public class GroceryListView extends JPanel implements ActionListener {
         addButton.setBounds(20, 0, 100, 30);
         removeButton.setBounds(140, 0, 120, 30);
         exportButton.setBounds(280, 0, 100, 30);
-        backButton.setBounds(400, 0, 80, 30);
         buttonsPanel.add(addButton);
         buttonsPanel.add(removeButton);
         buttonsPanel.add(exportButton);
-        buttonsPanel.add(backButton);  
     }
     
     /**
