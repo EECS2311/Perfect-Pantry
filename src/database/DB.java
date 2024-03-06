@@ -7,10 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import domain.logic.Container;
+import domain.logic.FoodFreshness;
+import domain.logic.FoodGroup;
+import domain.logic.GenericTag;
 import domain.logic.Item;
 
 /**
@@ -22,9 +24,6 @@ import domain.logic.Item;
 public class DB {
 
 	Connection conn;
-	private HashMap<String, Container> containers = new HashMap<>();
-
-	private HashMap<Container, HashMap<String, Item>> items = new HashMap<>();
 
 	/**
 	 * Initializes a new database connection.
@@ -76,7 +75,7 @@ public class DB {
 		try {
 			Statement s = conn.createStatement();
 			ResultSet result = s.executeQuery("Select * from container");
-			List<String> l = new ArrayList<>();
+			List<String> l = new ArrayList<String>();
 
 			while (result.next()) {
 				l.add(result.getString("container_name"));
@@ -127,6 +126,7 @@ public class DB {
 		try {
 			Statement s = conn.createStatement();
 			s.execute("DELETE from container WHERE container_name = '" + name + "'");
+
 			conn.close();
 
 		} catch (SQLException e) {
@@ -149,6 +149,7 @@ public class DB {
 			Statement s = conn.createStatement();
 			s.execute("UPDATE container SET container_name = '" + newName + "' WHERE container_name = '" + prevName
 					+ "'");
+
 			conn.close();
 
 		} catch (SQLException e) {
@@ -159,6 +160,7 @@ public class DB {
 
 	/**
 	 * Removes all the items from a container in the database
+	 *
 	 * @param c the container whose items will be removed from
 	 */
 	public void emptyContainer(Container c) {
@@ -175,16 +177,6 @@ public class DB {
 	}
 
 	/**
-	 * Retrieves a {@link Container} by its name.
-	 *
-	 * @param containerName The name of the container to retrieve.
-	 * @return The {@link Container} object if found, {@code null} otherwise.
-	 */
-	public Container getContainer(String containerName) {
-		return containers.get(containerName);
-	}
-
-	/**
 	 * Adds a new container to the database.
 	 *
 	 * @param containerName The name of the container to add.
@@ -196,42 +188,31 @@ public class DB {
 	}
 
 	/**
-	 * Deletes container in database
-	 *
-	 * @param containerName The name of the container to deleted.
-	 * @param c             The {@link Container} object to be deleted.
-	 */
-	public void deleteContainer(String containerName, Container c) {
-		containers.remove(containerName, c);
-
-	}
-
-	/**
 	 * Adds an item to a specific container.
 	 *
 	 * @param c    The container to which the item will be added.
 	 * @param name The name of the item.
 	 * @param ite  The {@link Item} object to be added.
 	 */
-	public void addItem(Container c, String name, Item ite) {
+	public Boolean addItem(Container c, String name, Item ite) {
 
 		Connection conn = init();
 
 		if (this.getItem(c, name) != null) {
-			return;
+			return false;
 		}
 
 		try {
 			Statement s = conn.createStatement();
-			s.execute("INSERT INTO item(name, container, quantity, expiry) VALUES('" + name + "', "
-					+ "'" + c.getName() +"', "
-					+ "" + ite.getQuantity() + ", '"
-							+ "" + ite.getExpiryDate() +"')");
+			s.execute("INSERT INTO item(name, container, quantity, expiry) VALUES('" + name + "', " + "'" + c.getName()
+					+ "', " + "" + ite.getQuantity() + ", '" + "" + ite.getExpiryDate() + "')");
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 
+		return true;
 	}
 
 	/**
@@ -259,24 +240,29 @@ public class DB {
 	/**
 	 * Retrieves an {@link Item} by its container and name.
 	 *
-	 * @param container The container in which the item is stored.
-	 * @param itemName  The name of the item to retrieve.
+	 * @param c        The container in which the item is stored.
+	 * @param itemName The name of the item to retrieve.
 	 * @return The {@link Item} object if found, {@code null} otherwise.
 	 */
 	public Item getItem(Container c, String itemName) {
 		Connection conn = init();
 
 		try {
-			System.out.println(itemName);
 			Statement s = conn.createStatement();
-			ResultSet rs = s.executeQuery(String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
+			ResultSet rs = s.executeQuery(
+					String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
 
 			if (rs.next()) {
-				System.out.println(itemName);
+				GenericTag<FoodGroup> fg = (rs.getString("fg") != null)
+						? GenericTag.fromString(FoodGroup.class, rs.getString("fg"))
+						: null;
+				GenericTag<FoodFreshness> fresh = (rs.getString("fresh") != null)
+						? GenericTag.fromString(FoodFreshness.class, rs.getString("fresh"))
+						: null;
+
 				conn.close();
-				return Item.getInstance(rs.getString("name"), rs.getInt("quantity"), rs.getDate("expiry"));
+				return Item.getInstance(rs.getString("name"), fg, fresh, rs.getInt("quantity"), rs.getDate("expiry"));
 			}
-			// Return null if the Container or Item is not found.
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -286,7 +272,41 @@ public class DB {
 	}
 
 	/**
+	 * Updates the food group of a specific item within a container. If the new
+	 * values for food group are provided (not null), the corresponding field of the
+	 * item are updated in the database. If value is null, no update is made.
+	 *
+	 * @param c            The container that contains the item to be updated.
+	 * @param itemName     The name of the item to be updated.
+	 * @param newFoodGroup The new food group classification for the item (can be
+	 *                     null if not updating).
+	 */
+	public void updateItemFoodGroup(Container c, String itemName, FoodGroup newFoodGroup) {
+		List<String> setClauses = new ArrayList<>();
+		if (newFoodGroup != null) {
+			setClauses.add("fg = '" + newFoodGroup.getDisplayName() + "'");
+		}
+
+		if (setClauses.isEmpty()) {
+			// If there are no updates to make, simply return
+			return;
+		}
+
+		String setClause = String.join(", ", setClauses);
+		String sql = "UPDATE item SET " + setClause + " WHERE name = ? AND container = ?";
+
+		try (Connection conn = this.init(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, itemName);
+			pstmt.setString(2, c.getName());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Returns a list of Items belonging to a Container in the database
+	 *
 	 * @param c a Container object to retrieve items from
 	 * @return a list of Items belonging to a Container in the database
 	 */
@@ -295,7 +315,7 @@ public class DB {
 		try {
 			Statement s = conn.createStatement();
 			ResultSet result = s.executeQuery(String.format("SELECT * FROM item WHERE container='%s'", c.getName()));
-			List<Item> l = new ArrayList<>();
+			List<Item> l = new ArrayList<Item>();
 
 			while (result.next()) {
 				l.add(this.getItem(new Container(result.getString("container")), result.getString("name")));
@@ -309,6 +329,51 @@ public class DB {
 
 	}
 
+	/**
+	 * Updates the freshness status of all items within a specified container in the
+	 * database. This method sets the freshness status based on the current date and
+	 * the expiry date of the items. Items past the current date are marked as
+	 * 'Expired', items expiring within the next 7 days are marked as 'Near_Expiry',
+	 * and all other items are marked as 'Fresh'.
+	 *
+	 * @param container The container whose items' freshness statuses are to be
+	 *                  updated.
+	 */
+	public void batchUpdateItemFreshness(Container container) {
+		// SQL query to update the freshness of items based on their expiry date
+		String sql = "UPDATE item SET fresh = CASE " + "WHEN expiry < CURRENT_DATE THEN 'Expired'::Freshness "
+				+ "WHEN expiry > CURRENT_DATE AND expiry <= CURRENT_DATE + interval '7' day THEN 'Near_Expiry'::Freshness "
+				+ "ELSE 'Fresh'::Freshness END " + "WHERE container = ?";
+
+		try (Connection conn = this.init(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, container.getName());
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String getStorageTip(String name) {
+		Connection conn = init();
+		String tip = null;
+
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s.executeQuery(String.format("SELECT * FROM storage_tips WHERE name='%s'", name));
+
+			while (result.next()) {
+				tip = result.getString("info");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return tip;
+	}
+	
 	/**
 	 * Adds an item to the grocery list in the database.
 	 *
@@ -333,7 +398,7 @@ public class DB {
 	        e.printStackTrace();
 	    }
 	}
-
+	
 	/**
 	 * Removes an item from the grocery list in the database.
 	 *
