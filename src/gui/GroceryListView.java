@@ -1,18 +1,27 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 import database.DB;
 import domain.logic.Container;
@@ -29,10 +38,15 @@ public class GroceryListView extends JPanel implements ActionListener {
     private JPanel tablePanel = new JPanel();
     private JPanel buttonsPanel = new JPanel();
     private JPanel topPanel = new JPanel();
+    
+    // Create a text field for adding items
+    JTextField addItemTextField = new JTextField();
+    
+    // Maintain a set of crossed off rows
+    private Set<Integer> crossedOffRows;
 
     // Buttons for interacting with the grocery list
     JButton addButton = new JButton("Add Item");
-    JButton removeButton = new JButton("Remove Item");
     JButton backButton = new JButton("Back");
     JButton exportButton = new JButton("Export to .txt");
     
@@ -42,6 +56,7 @@ public class GroceryListView extends JPanel implements ActionListener {
     public GroceryListView() {
     	groceryListView = this;
         this.data = HomeView.data;
+        this.crossedOffRows = new HashSet<>();
 
         // Initialize the view panels
         viewOfAllPanel.setLayout(null);
@@ -77,11 +92,14 @@ public class GroceryListView extends JPanel implements ActionListener {
         tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Name"}) {
             @Override
             public boolean isCellEditable(int row, int column) {
-            	return column == 1; 
+            	return false; 
             }
         };
         // Create a JTable with the specified table model
         table = new JTable(tableModel);
+        
+        // Set the cell renderer for the table
+        table.setDefaultRenderer(Object.class, new StrikeThroughRenderer(table.getFont()));
         
         // Create a scroll pane to hold the table, allowing scrolling if needed
         JScrollPane scrollPane = new JScrollPane(table);
@@ -92,13 +110,13 @@ public class GroceryListView extends JPanel implements ActionListener {
         // Add the scroll pane to the table panel
         tablePanel.add(scrollPane);
         
-        // Set the position of buttons and add buttons to the buttons panel
-        addButton.setBounds(20, 0, 100, 30);
-        removeButton.setBounds(140, 0, 120, 30);
-        exportButton.setBounds(280, 0, 100, 30);
+        // Set the position of buttons and add text field to the buttons panel
+        addButton.setBounds(170, 0, 100, 30);
+        exportButton.setBounds(300, 0, 100, 30);
+        addItemTextField.setBounds(20, 0, 150, 30);
         buttonsPanel.add(addButton);
-        buttonsPanel.add(removeButton);
         buttonsPanel.add(exportButton);
+        buttonsPanel.add(addItemTextField);
     }
     
     /**
@@ -113,7 +131,6 @@ public class GroceryListView extends JPanel implements ActionListener {
 
             // Attach action listeners to buttons
             addButton.addActionListener(this);
-            removeButton.addActionListener(this);
             exportButton.addActionListener(this);
             backButton.addActionListener(this);
             
@@ -123,13 +140,31 @@ public class GroceryListView extends JPanel implements ActionListener {
             //Add all panels
             HomeView.getFrame().add(viewOfAllPanel);
             
+            // Add right-click event handler for table rows
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (e.isPopupTrigger()) {
+                        int r = table.rowAtPoint(e.getPoint());
+                        if (r >= 0 && r < table.getRowCount()) {
+                            table.setRowSelectionInterval(r, r);
+                        } else {
+                            table.clearSelection();
+                        }
+
+                        JPopupMenu popup = createPopupMenu();
+                        popup.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            });
+        
+            
             // Set visibility to true
             viewOfAllPanel.setVisible(true); 
             
         } else {
             // Remove action listeners
             addButton.removeActionListener(this);
-            removeButton.removeActionListener(this);
             exportButton.removeActionListener(this);
             backButton.removeActionListener(this);
 
@@ -142,7 +177,7 @@ public class GroceryListView extends JPanel implements ActionListener {
      * Adds an item to the table and database.
      */
     private void addItem() {
-        String itemName = JOptionPane.showInputDialog(this, "Enter item name:");
+        String itemName = addItemTextField.getText();
         if (itemName != null && !itemName.trim().isEmpty()) {
             try {
                 data.addToGroceryList(itemName);
@@ -227,11 +262,67 @@ public class GroceryListView extends JPanel implements ActionListener {
 			setGroceryListViewVisibility(false);
 		} else if (source == addButton) {
 			addItem();
-		} else if (source == removeButton) {
-			removeItem();
 		} else if (source == exportButton){
 			exportToTxt();
-		}
+		} 
+	}
+	private JPopupMenu createPopupMenu() {
+	    JPopupMenu popupMenu = new JPopupMenu();
+	    
+	    // Create menu items
+	    JMenuItem strikethroughItem = new JMenuItem("Cross off");
+	    JMenuItem deleteItem = new JMenuItem("Delete");
+
+	    // ActionListener for strikethroughItem
+	    strikethroughItem.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            int selectedRow = table.getSelectedRow();
+	            if (selectedRow != -1) {
+	                if (crossedOffRows.contains(selectedRow)) {
+	                    crossedOffRows.remove(selectedRow);
+	                } else {
+	                    crossedOffRows.add(selectedRow);
+	                }
+	                table.repaint();
+	            }
+	        }
+	    });
+
+	    // ActionListener for deleteItem
+	    deleteItem.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            removeItem(); // Call removeItem method
+	        }
+	    });
+
+	    // Add menu items to the popup menu
+	    popupMenu.add(strikethroughItem);
+	    popupMenu.add(deleteItem);
+	    
+	    return popupMenu;
 	}
 
+    class StrikeThroughRenderer extends DefaultTableCellRenderer {
+        private Font font;
+
+        StrikeThroughRenderer(Font font) {
+            this.font = font;
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (crossedOffRows.contains(row)) {
+                Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
+                attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+                Font newFont = font.deriveFont(attributes);
+                c.setFont(newFont);
+            } else {
+                c.setFont(font);
+            }
+            return c;
+        }
+    }
 }
