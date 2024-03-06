@@ -109,7 +109,7 @@ public class GroceryListView extends JPanel implements ActionListener {
         
         // Set the position of buttons and add text field to the buttons panel
         addButton.setBounds(170, 0, 100, 30);
-        exportButton.setBounds(300, 0, 100, 30);
+        exportButton.setBounds(300, 0, 140, 30);
         addItemTextField.setBounds(20, 0, 150, 30);
         buttonsPanel.add(addButton);
         buttonsPanel.add(exportButton);
