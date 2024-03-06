@@ -67,6 +67,9 @@ public class HomeView implements ActionListener {
 	 * Button to go to container list view
 	 */
 	private JButton viewContainers = new JButton("View Containers");
+	
+	// Button for the grocery list
+    private JButton groceryListButton = new JButton("Grocery List");
 
 	/**
 	 * Holds this instance of HomeView
@@ -79,8 +82,8 @@ public class HomeView implements ActionListener {
 		SeeContainersView m = new SeeContainersView();
 		DeleteContainerView d = new DeleteContainerView();
 		EditContainerView e = new EditContainerView();
+		GroceryListView g = new GroceryListView();
 		home = new HomeView();
-
 	}
 
 
@@ -117,6 +120,7 @@ public class HomeView implements ActionListener {
 			newContainerText.addActionListener(this);
 			createContainer.addActionListener(this);
 			viewContainers.addActionListener(this);
+			groceryListButton.addActionListener(this);
 			
 			// Initialse mainMenuPanel
 			homePanel.setLayout(null);
@@ -145,6 +149,11 @@ public class HomeView implements ActionListener {
 			homePanel.add(viewContainers);
 			viewContainers.setBackground(new Color(76, 183, 242));
 			viewContainers.setBounds(240, 300, 250, 40);
+			
+			homePanel.add(groceryListButton);
+			groceryListButton.setBackground(new Color(76, 183, 242));
+			groceryListButton.setBounds(500, 10, 200, 40);
+			
 			homePanel.setVisible(true);
 		}
 		if (b == false) {
@@ -152,6 +161,7 @@ public class HomeView implements ActionListener {
 			newContainerText.removeActionListener(this);
 			createContainer.removeActionListener(this);
 			viewContainers.removeActionListener(this);
+			groceryListButton.removeActionListener(this);
 			homePanel.setVisible(false);
 		}
 	}
@@ -193,9 +203,10 @@ public class HomeView implements ActionListener {
 				addNewContainer();
 			} else if (source == viewContainers) {
 				SeeContainersView.getContainersView().setSeeContainersViewVisibility(true);
-
+			} else if (source == groceryListButton) {
+				GroceryListView.getGroceryListView().setGroceryListViewVisibility(true);
 			}
-
+	
 		
 	}
 

@@ -57,7 +57,7 @@ public class SeeContainersView implements ActionListener{
 	private JButton deleteContainerButton = new JButton("Delete a Container");
 	
 	/**
-	 * Holds this isntance of SeeContainersView
+	 * Holds this instance of SeeContainersView
 	 */
 	private static SeeContainersView containersView;
 

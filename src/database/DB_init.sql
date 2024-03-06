@@ -25,3 +25,7 @@ create Table storage_tips(
 create Table general_tips(
     info TEXT
 );
+
+CREATE TABLE grocery(
+    name VARCHAR(50) PRIMARY KEY UNIQUE
+);
