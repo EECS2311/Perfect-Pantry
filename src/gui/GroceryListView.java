@@ -267,7 +267,7 @@ public class GroceryListView extends JPanel implements ActionListener {
 	    JPopupMenu popupMenu = new JPopupMenu();
 	    
 	    // Create menu items
-	    JMenuItem strikethroughItem = new JMenuItem("Cross off");
+	    JMenuItem strikethroughItem = new JMenuItem("Cross off/Uncross off");
 	    JMenuItem deleteItem = new JMenuItem("Delete");
 
 	    // ActionListener for strikethroughItem
