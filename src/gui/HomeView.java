@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -15,11 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.WindowConstants;
 
 import database.DB;
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
+import domain.logic.ItemUtility;
+
 /**
  * The main GUI frame for the application, serving as the entry point for user
  * interaction. It includes functionality to add and edit container names, and
@@ -32,7 +32,15 @@ public class HomeView implements ActionListener {
 	 */
 	static JFrame frame = new JFrame("Perfect Pantry");
 
+	/**
+	 * Provide Access to Database
+	 */
 	public static DB data = new DB();
+	
+	/**
+	 * Map of button and its corresponding Container object
+	 */
+	private static ConcurrentHashMap<JButton, Container> containerMap;
 
 	/**
 	 * home panel of the application, will hold all components pertaining to home
@@ -41,190 +49,79 @@ public class HomeView implements ActionListener {
 	private JPanel homePanel = new JPanel();
 
 	/**
-	 * Title part of home screen
-	 */
-	private JPanel titlePanel = new JPanel();
-
-	/**
 	 * Title name
 	 */
-	private JLabel titleLabel = new JLabel("Perfect Pantry");
+	private JLabel titleLabel = new JLabel("Perfect Pantry");;
 
 	/**
 	 * Button that will add new container, apart of homeButtonsPanel
 	 */
-	private JButton createContainer = new JButton("Create");
-
-	/**
-	 * Hold buttons pertaining to its containers
-	 */
-	private JPanel containerButtonsPanel = new JPanel();
-
-	/**
-	 * Map of button and its corresponding Container object
-	 */
-	private ConcurrentHashMap<JButton, Container> containerMap;
-
-	/**
-	 * Stages of the home screen; 0 = home 1 = edit screen 2= view conntainers
-	 */
-	private int stage;
-
-	/**
-	 * main components of edit view
-	 */
-	private JPanel editPanel = new JPanel();
-
-	/**
-	 * Hold components of editView
-	 */
-	private JPanel editNameOfContainerPanel = new JPanel();
-
-	/**
-	 * Title panel of edit view
-	 */
-	private JPanel editNameOfContainerTitlePanel = new JPanel();
-
-	/**
-	 * Text of edit view
-	 */
-	private JLabel editNameLabel = new JLabel("Click the Container Button you wish to rename");
-
-	/**
-	 * Holds buttons of edit view
-	 */
-	private JPanel editGUIButtonsPanel = new JPanel();
-
-	/**
-	 * Button to go back from edit screen to home screen
-	 */
-	private JButton editBackToContainerView = new JButton("Back");
-
-	/**
-	 * Panel to hold container buttons
-	 */
-	private JPanel editContainerButtonsPanel = new JPanel();
+	private JButton createContainer = new JButton("Create");;
 
 	/**
 	 * Add text for name of container
 	 */
-	private JTextField newContainerText = new JTextField(40);
+	private JTextField newContainerText = new JTextField(40);;
 
 	/**
 	 * Button to go to container list view
 	 */
 	private JButton viewContainers = new JButton("View Containers");
-
-	/**
-	 * Holds components for the container list view
-	 */
-	private JPanel viewOfContainerPanel = new JPanel();
-
-	/**
-	 * Holds button on container list view
-	 */
-	private JPanel backPanel = new JPanel();
-
-	/**
-	 * Button to go from container view to home
-	 */
-	private JButton viewOfContainer2HomeButton = new JButton("Back");
-
-	/**
-	 * Button to change name of container
-	 */
-	private JButton editContainerNameButton = new JButton("Edit Name of Container");
-
-	/**
-	 * Button to go to delete Container view
-	 */
-	private JButton deleteContainerButton = new JButton("Delete a Container");
-
-	/**
-	 * Panel to hold delete view components
-	 */
-	private JPanel deletePanel = new JPanel();
-
-	/**
-	 * Panel to hold delete view title
-	 */
-	private JPanel deleteContainerTitlePanel = new JPanel();
-
-	/**
-	 * Label to tell to click on button to delete
-	 */
-	private JLabel deleteLabel = new JLabel("Click the Container button you wish to delete");
-
-	/**
-	 * Panel to hold delete view container buttons
-	 */
-	private JPanel deleteGUIButtonsPanel = new JPanel();
-
-	/**
-	 * Button to go back from delete view to containers view
-	 */
-	private JButton deleteBackToContainerView = new JButton("Back");
-
-	/**
-	 * Panel to hold delete view buttons
-	 */
-	private JPanel deleteContainerButtonsPanel = new JPanel();
-
-	// Panel to hold the grocery list button
-    private JPanel groceryListPanel = new JPanel();
-
-    // Button for the grocery list
+	
+	// Button for the grocery list
     private JButton groceryListButton = new JButton("Grocery List");
 
-	public static void main(String[] args) {
-		HomeView m = new HomeView();
+	/**
+	 * Holds this instance of HomeView
+	 */
+	private static HomeView home;
+	
 
+	public static void main(String[] args) {
+		//initialise other views
+		SeeContainersView m = new SeeContainersView();
+		DeleteContainerView d = new DeleteContainerView();
+		EditContainerView e = new EditContainerView();
+		GroceryListView g = new GroceryListView();
+		home = new HomeView();
 	}
+
 
 	/**
 	 * Launches the application and initializes the main GUI components.
 	 */
 	public HomeView() {
 		// Initialize frame
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Close on exit
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
 		frame.setResizable(false); // stop resize
 		frame.setMinimumSize(new Dimension(800, 600));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
-
-
-		// Initilize containerMap
+		
+		// Initialize containerMap
 		containerMap = new ConcurrentHashMap<>();
-
-		// Initialise all actionlisteners here
-		newContainerText.addActionListener(this);
-		createContainer.addActionListener(this);
-		viewContainers.addActionListener(this);
-		viewOfContainer2HomeButton.addActionListener(this);
-		editContainerNameButton.addActionListener(this);
-		editBackToContainerView.addActionListener(this);
-		deleteContainerButton.addActionListener(this);
-		deleteBackToContainerView.addActionListener(this);
-		// Initialize the grocery list button
-        groceryListButton.addActionListener(this);
-
-
-		stage = 0; // home stage
 		ContainerUtility.initContainers(containerMap, data, this);
-		changeStageOfHome();
+
+		setHomeViewVisibility(true);
 	}
 
 	/**
-	 *
-	 * Changes the stage of the home screen between the main view, the Container
-	 * list view, edit container view and delete container view
+	 * Sets the HomeView Gui components visibility depending on the boolean passed through
+	 * @param b, Value whether gui should be visible or not
 	 */
-	public void changeStageOfHome() {
-		if (stage == 0) { // Home screen
-			editPanel.setVisible(false);
-			viewOfContainerPanel.setVisible(false);
-			deletePanel.setVisible(false);
-
+	public void setHomeViewVisibility(boolean b) {
+		if (b == true) {
+			//Set other gui visibility to false
+			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
+			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
+			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
+			
+			// Initialise all actionlisteners 
+			newContainerText.addActionListener(this);
+			createContainer.addActionListener(this);
+			viewContainers.addActionListener(this);
+			groceryListButton.addActionListener(this);
+			
 			// Initialse mainMenuPanel
 			homePanel.setLayout(null);
 			frame.getContentPane().add(homePanel);
@@ -252,114 +149,23 @@ public class HomeView implements ActionListener {
 			homePanel.add(viewContainers);
 			viewContainers.setBackground(new Color(76, 183, 242));
 			viewContainers.setBounds(240, 300, 250, 40);
-			homePanel.setVisible(true);
-
+			
 			homePanel.add(groceryListButton);
 			groceryListButton.setBackground(new Color(76, 183, 242));
 			groceryListButton.setBounds(500, 10, 200, 40);
-
-
-		} else if (stage == 1) { // Edit name of container screen
-			homePanel.setVisible(false);
-			viewOfContainerPanel.setVisible(false);
-			deletePanel.setVisible(false);
-
-			editPanel.setLayout(null);
-			frame.add(editPanel);
-
-			editNameOfContainerPanel.setBounds(0, 0, 800, 80);
-			editNameOfContainerPanel.setBackground(new Color(203, 253, 232));
-			editPanel.add(editNameOfContainerPanel);
-
-			editNameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
-			editNameOfContainerPanel.add(editNameLabel);
-
-			editGUIButtonsPanel.setBackground(new Color(203, 253, 232));
-			editGUIButtonsPanel.setBounds(0, frame.getHeight() - 90, 800, 90);
-			editPanel.add(editGUIButtonsPanel);
-
-			editGUIButtonsPanel.add(editBackToContainerView);
-
-			editContainerButtonsPanel.setBounds(0, 80, 800, 500);
-			editContainerButtonsPanel.setBackground(new Color(203, 253, 232));
-			editContainerButtonsPanel.setLayout(new FlowLayout());
-			addContainerButtons(editContainerButtonsPanel);
-
-			editPanel.add(editContainerButtonsPanel);
-			editPanel.setVisible(true);
+			
+			homePanel.setVisible(true);
 		}
-
-		else if (stage == 2) { // See list of containers as buttons
+		if (b == false) {
+			//RemoveActionListeners
+			newContainerText.removeActionListener(this);
+			createContainer.removeActionListener(this);
+			viewContainers.removeActionListener(this);
+			groceryListButton.removeActionListener(this);
 			homePanel.setVisible(false);
-			deletePanel.setVisible(false);
-			editPanel.setVisible(false);
-
-			frame.add(viewOfContainerPanel);
-			viewOfContainerPanel.setLayout(null);
-			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
-
-			backPanel.setBackground(new Color(253, 241, 203));
-			viewOfContainerPanel.add(backPanel);
-			backPanel.setLayout(new FlowLayout());
-			backPanel.setBounds(0, 0, 800, 50);
-
-			backPanel.add(viewOfContainer2HomeButton);
-			backPanel.add(editContainerNameButton);
-			backPanel.add(deleteContainerButton);
-
-			viewOfContainerPanel.add(containerButtonsPanel);
-			containerButtonsPanel.setBounds(0, 50, 800, 500);
-			containerButtonsPanel.setBackground(new Color(253, 241, 200));
-			addContainerButtons(containerButtonsPanel);
-
-			viewOfContainerPanel.setVisible(true);
-
-		}
-
-		else if (stage == 3) { // delete Container view
-			homePanel.setVisible(false);
-			viewOfContainerPanel.setVisible(false);
-			editPanel.setVisible(false);
-
-			deletePanel.setLayout(null);
-			frame.add(deletePanel);
-
-			deleteContainerTitlePanel.setBounds(0, 0, 800, 80);
-			deleteContainerTitlePanel.setBackground(new Color(253, 206, 203));
-			deletePanel.add(deleteContainerTitlePanel);
-
-			deleteLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
-			deleteContainerTitlePanel.add(deleteLabel);
-
-			deleteGUIButtonsPanel.setBackground(new Color(253, 206, 203));
-			deleteGUIButtonsPanel.setBounds(0, frame.getHeight() - 90, 800, 90);
-			deletePanel.add(deleteGUIButtonsPanel);
-
-			deleteGUIButtonsPanel.add(deleteBackToContainerView);
-
-			deleteContainerButtonsPanel.setBounds(0, 80, 800, 500);
-			deleteContainerButtonsPanel.setBackground(new Color(253, 206, 203));
-			deleteContainerButtonsPanel.setLayout(new FlowLayout());
-			addContainerButtons(deleteContainerButtonsPanel);
-
-			deletePanel.add(deleteContainerButtonsPanel);
-			deletePanel.setVisible(true);
-
-		}
-		else if (stage == 4) { // see Grocery List View
-			homePanel.setVisible(false);
-	        viewOfContainerPanel.setVisible(false);
-	        deletePanel.setVisible(false);
-	        editPanel.setVisible(false);
-	        groceryListPanel.setVisible(false);
-
-	        // Create an instance of GroceryListView
-	        GroceryListView groceryListView = new GroceryListView(this);
-
-	        // Add the GroceryListView to the frame
-	        frame.getContentPane().add(groceryListView, BorderLayout.CENTER);
 		}
 	}
+
 
 	/**
 	 * Adds a new container and its corresponding button to the GUI.
@@ -371,145 +177,63 @@ public class HomeView implements ActionListener {
 		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?");
 		if (opt == JOptionPane.YES_OPTION) {
 			ContainerUtility
-					.verifyAddContainer(
-							nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
-									.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
-							() -> {
-								newContainerText.setText("Pantry" + (containerMap.size() + 1));
-							});
-		}
-	}
-
-	/**
-	 * Dynamically adds container buttons to the specified panel based on the
-	 * current containerMap state.
-	 *
-	 * @param p The panel to which container buttons will be added.
-	 */
-	private void addContainerButtons(JPanel p) {
-		p.removeAll();
-		containerMap.forEach((button, container) -> {
-			p.add(button);
-			button.addActionListener(this);
-		});
-		p.revalidate(); // refresh panel
-	}
-
-	/**
-	 * Initiates the container renaming process for a given container button.
-	 *
-	 * @param b The button corresponding to the container to be renamed.
-	 */
-	private void renameContainerButton(JButton b) {
-		Container c = containerMap.get(b);
-
-		String nameOfContainer = JOptionPane.showInputDialog(frame,
-				"What would you like to rename container " + c.getName() + " to?");
-
-		ContainerUtility.verifyEditContainer(c.getName(), nameOfContainer, data, b, containerMap,
-				(errorMsg) -> JOptionPane.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
-				() -> {
-					c.setName(nameOfContainer);
-					// Update the button text directly instead of replacing the button in the map
-					b.setText(c.getName());
-					stage = 0;
-					changeStageOfHome();
-				});
-	}
-
-	/**
-	 * Deletes a container from the data and its map
-	 *
-	 * @param b the button corresponding to the container to be deleted
-	 */
-
-	public void deleteContainerButton(JButton b) {
-		Container c = containerMap.get(b);
-		int opt = JOptionPane.showConfirmDialog(frame, "Delete Container \"" + c.getName() + "\"?");
-		if (opt == JOptionPane.YES_OPTION) { // if not cancelled
-			ContainerUtility.verifyDeleteContainer(c.getName(), data, b, containerMap, (errorMsg) -> JOptionPane
-					.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-						stage = 0;
-						changeStageOfHome();
+			.verifyAddContainer(
+					nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
+					.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+					() -> {
+						newContainerText.setText("Pantry" + (containerMap.size() + 1));
 					});
-
-			c = null;
-
 		}
 	}
 
+
+
+
+	/**
+	 * Handles action events triggered by various GUI components.
+	 * This method is the central hub for processing user interactions within the home view.
+	 *
+	 * @param e The ActionEvent object containing details about the event.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 
-		if (stage == 0) { // home screen
 			if (source == createContainer) {
 				addNewContainer();
 			} else if (source == viewContainers) {
-				stage = 2;
-				changeStageOfHome();
+				SeeContainersView.getContainersView().setSeeContainersViewVisibility(true);
 			} else if (source == groceryListButton) {
-				stage = 4;
-				changeStageOfHome();
+				GroceryListView.getGroceryListView().setGroceryListViewVisibility(true);
 			}
-
-		} else if (stage == 1) { // edit name screen
-			if (source == editBackToContainerView) {
-				stage = 2;
-				changeStageOfHome();
-			} else {
-				Container c = containerMap.get(source); // This will return null if the button is not found
-				if (c != null) {
-					renameContainerButton((JButton) source);
-				}
-			}
-		}
-
-		else if (stage == 2) { // view containers screen
-			if (source == viewOfContainer2HomeButton) {
-				stage = 0;
-				changeStageOfHome();
-			} else if (source == editContainerNameButton) {
-				stage = 1;
-				changeStageOfHome();
-			} else if (source == deleteContainerButton) {
-				stage = 3;
-				changeStageOfHome();
-			} else {
-				Container c = containerMap.get(source); // This will return null if the button is not found
-				if (c != null) {
-					c.getGUI();
-				}
-
-			}
-		}
-
-		else if (stage == 3) {
-			if (source == deleteBackToContainerView) {
-				stage = 2;
-				changeStageOfHome();
-			} else {
-				Container c = containerMap.get(source); // This will return null if the button is not found
-				if (c != null) {
-					deleteContainerButton((JButton) source);
-				}
-			}
-
-		}
-		else if (stage == 4) {
-			if (source == GroceryListView.backButton) {
-				stage = 0;
-				changeStageOfHome();
-			}
-
-		}
+	
+		
 	}
+
 	/**
 	 * Provides access to the main application frame.
-	 *
+	 * 
 	 * @return The main JFrame of the application.
 	 */
 	public static JFrame getFrame() {
 		return frame;
+	}
+	
+	/**
+	 * Provides access to HomeView object
+	 * 
+	 * @return The HomeView object
+	 */
+	public static HomeView getHomeView() {
+		return home;
+	}
+	
+	/**
+	 * Provides access to the hashed JButton and Container map
+	 * 
+	 * @return the ConcurrentHashmap containerMap
+	 */
+	public static ConcurrentHashMap<JButton, Container> getContainerMap(){
+		return containerMap;
 	}
 }
