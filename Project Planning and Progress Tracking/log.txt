@@ -108,6 +108,15 @@ Focus:
 - Setting up the Database
 - Writing detailed ITr2 User Stories
 
+# Iteration 2 
 
+## Meeting Minutes 
+## March 1st 
+- Team meeting on Zoom
+- Discussed old bugs from deliverable 1 and any feedback given from the presentation.
+- Reviewed the detailed iteration 2 stories and discussed how they might work.
+- Assigned one user story to each member
+
+## Iteration 2 Summary 
 
 
