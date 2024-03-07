@@ -7,7 +7,7 @@ import java.util.Objects;
  *
  * @param <T> the type of the tag (either {@code FoodFreshness} or {@code FoodGroup}), extending the Tag interface.
  */
-public class GenericTag<T extends Tag> {
+public class GenericTag<T extends Tag> implements Comparable {
     private T tag;
 
     /**
@@ -106,4 +106,10 @@ public class GenericTag<T extends Tag> {
         }
         throw new IllegalArgumentException("No enum constant with display name " + displayName + " found in " + enumType.getSimpleName());
     }
+
+	@Override
+	public int compareTo(Object o) {
+		return tag.toString().compareTo(o.toString());
+	}
+    
 }

@@ -17,6 +17,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import database.DB;
 import domain.logic.Container;
@@ -199,6 +201,9 @@ public class ItemsListView extends JPanel {
 			}
 
 		});
+		
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+		table.setRowSorter(sorter);
 
 	}
 
