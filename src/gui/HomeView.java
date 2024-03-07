@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,11 +13,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import database.DB;
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
-import domain.logic.ItemUtility;
 
 /**
  * The main GUI frame for the application, serving as the entry point for user
@@ -36,7 +35,7 @@ public class HomeView implements ActionListener {
 	 * Provide Access to Database
 	 */
 	public static DB data = new DB();
-	
+
 	/**
 	 * Map of button and its corresponding Container object
 	 */
@@ -51,23 +50,23 @@ public class HomeView implements ActionListener {
 	/**
 	 * Title name
 	 */
-	private JLabel titleLabel = new JLabel("Perfect Pantry");;
+	private JLabel titleLabel = new JLabel("Perfect Pantry");
 
 	/**
 	 * Button that will add new container, apart of homeButtonsPanel
 	 */
-	private JButton createContainer = new JButton("Create");;
+	private JButton createContainer = new JButton("Create");
 
 	/**
 	 * Add text for name of container
 	 */
-	private JTextField newContainerText = new JTextField(40);;
+	private JTextField newContainerText = new JTextField(40);
 
 	/**
 	 * Button to go to container list view
 	 */
 	private JButton viewContainers = new JButton("View Containers");
-	
+
 	// Button for the grocery list
     private JButton groceryListButton = new JButton("Grocery List");
 
@@ -75,7 +74,7 @@ public class HomeView implements ActionListener {
 	 * Holds this instance of HomeView
 	 */
 	private static HomeView home;
-	
+
 
 	public static void main(String[] args) {
 		//initialise other views
@@ -92,12 +91,12 @@ public class HomeView implements ActionListener {
 	 */
 	public HomeView() {
 		// Initialize frame
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
 		frame.setResizable(false); // stop resize
 		frame.setMinimumSize(new Dimension(800, 600));
 		frame.getContentPane().setBackground(new Color(245, 223, 162));
-		
+
 		// Initialize containerMap
 		containerMap = new ConcurrentHashMap<>();
 		ContainerUtility.initContainers(containerMap, data, this);
@@ -110,18 +109,18 @@ public class HomeView implements ActionListener {
 	 * @param b, Value whether gui should be visible or not
 	 */
 	public void setHomeViewVisibility(boolean b) {
-		if (b == true) {
+		if (b) {
 			//Set other gui visibility to false
 			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
 			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
-			
-			// Initialise all actionlisteners 
+
+			// Initialise all actionlisteners
 			newContainerText.addActionListener(this);
 			createContainer.addActionListener(this);
 			viewContainers.addActionListener(this);
 			groceryListButton.addActionListener(this);
-			
+
 			// Initialse mainMenuPanel
 			homePanel.setLayout(null);
 			frame.getContentPane().add(homePanel);
@@ -149,14 +148,14 @@ public class HomeView implements ActionListener {
 			homePanel.add(viewContainers);
 			viewContainers.setBackground(new Color(76, 183, 242));
 			viewContainers.setBounds(240, 300, 250, 40);
-			
+
 			homePanel.add(groceryListButton);
 			groceryListButton.setBackground(new Color(76, 183, 242));
 			groceryListButton.setBounds(500, 10, 200, 40);
-			
+
 			homePanel.setVisible(true);
 		}
-		if (b == false) {
+		if (!b) {
 			//RemoveActionListeners
 			newContainerText.removeActionListener(this);
 			createContainer.removeActionListener(this);
@@ -206,31 +205,31 @@ public class HomeView implements ActionListener {
 			} else if (source == groceryListButton) {
 				GroceryListView.getGroceryListView().setGroceryListViewVisibility(true);
 			}
-	
-		
+
+
 	}
 
 	/**
 	 * Provides access to the main application frame.
-	 * 
+	 *
 	 * @return The main JFrame of the application.
 	 */
 	public static JFrame getFrame() {
 		return frame;
 	}
-	
+
 	/**
 	 * Provides access to HomeView object
-	 * 
+	 *
 	 * @return The HomeView object
 	 */
 	public static HomeView getHomeView() {
 		return home;
 	}
-	
+
 	/**
 	 * Provides access to the hashed JButton and Container map
-	 * 
+	 *
 	 * @return the ConcurrentHashmap containerMap
 	 */
 	public static ConcurrentHashMap<JButton, Container> getContainerMap(){
