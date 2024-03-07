@@ -86,7 +86,7 @@ public class GroceryListView extends JPanel implements ActionListener {
         backButton.setBounds(20, 20, 80, 30);
         
         // Initialize the table model
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Name"}) {
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Item Name"}) {
             @Override
             public boolean isCellEditable(int row, int column) {
             	return false; 
