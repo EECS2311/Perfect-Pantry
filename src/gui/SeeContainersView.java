@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import database.DB;
@@ -97,7 +98,7 @@ public class SeeContainersView implements ActionListener{
 			backPanel.add(editContainerNameButton);
 			backPanel.add(deleteContainerButton);
 
-			viewOfContainerPanel.add(containerButtonsPanel);
+			viewOfContainerPanel.add(new JScrollPane(containerButtonsPanel));
 			containerButtonsPanel.setBounds(0, 50, 800, 500);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
 			
