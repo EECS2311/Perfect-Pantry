@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
@@ -40,6 +42,8 @@ public class ItemsListView extends JPanel {
 	private JMenuItem removeItem;
 	private JMenuItem editQty;
 	private JMenuItem generateTip;
+	
+	private TableRowSorter<TableModel> sorter;
 
 	private boolean colourCodingEnabled = true;
 
@@ -202,11 +206,24 @@ public class ItemsListView extends JPanel {
 
 		});
 		
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+		sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
-
+		
 	}
-
+	
+	public void filterTable(String str) {
+		RowFilter<TableModel, Object> rf = null;
+		try {
+			rf = RowFilter.regexFilter(str);
+		} catch (java.util.regex.PatternSyntaxException e) {
+			return;
+		}
+		
+		sorter.setRowFilter(rf);
+		
+	}
+	
+	
 	/**
 	 * Adds an item to the table and updates the underlying container.
 	 * 
