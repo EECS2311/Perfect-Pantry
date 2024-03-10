@@ -5,19 +5,26 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 
 import database.DB;
 import domain.logic.Container;
@@ -34,7 +41,7 @@ public class SeeContainersView implements ActionListener{
 	 * Hold buttons pertaining to its containers
 	 */
 	private JPanel containerButtonsPanel = new JPanel();
-	
+
 	/**
 	 * Allows containerButtonPanel to be Scrollable
 	 */
@@ -64,7 +71,7 @@ public class SeeContainersView implements ActionListener{
 	 * Button to go to delete Container view
 	 */
 	private JButton deleteContainerButton = new JButton("Delete a Container");
-	
+
 	/**
 	 * Holds this isntance of SeeContainersView
 	 */
@@ -83,17 +90,20 @@ public class SeeContainersView implements ActionListener{
 	 * Sets the visibility of the SeeContainersView GUI depending on the boolean passed
 	 * @param b the value of whether the visibility is true or not
 	 */
-	
+	private JPopupMenu popup;
+	private JMenuItem renameContainerBtn;
+	private JMenuItem removeContainerBtn;
+
 	public void setSeeContainersViewVisibility(boolean b) {
 		if (b == true) { 
 			HomeView.getHomeView().setHomeViewVisibility(false);
 			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
 			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
-			
+
 			viewOfContainer2HomeButton.addActionListener(this);
 			editContainerNameButton.addActionListener(this);
 			deleteContainerButton.addActionListener(this);
-			
+
 			HomeView.getFrame().add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
 			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
@@ -107,22 +117,45 @@ public class SeeContainersView implements ActionListener{
 			backPanel.add(editContainerNameButton);
 			backPanel.add(deleteContainerButton);
 
-			
-//			viewOfContainerPanel.add(containerButtonsPanel);
+
+			//			viewOfContainerPanel.add(containerButtonsPanel);
 			containerButtonsPanel.setBounds(0, 50, 800, 500);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
 			containerButtonsPanel.setLayout(new GridLayout((HomeView.getContainerMap().size()/3 +1), 3));
-			
-			
+
+
 			containerButtonsPanel.removeAll();
+
+			popup = new JPopupMenu();
+			removeContainerBtn = new JMenuItem("Delete Container");
+			renameContainerBtn = new JMenuItem("Rename Container");
+
+			popup.add(renameContainerBtn);
+			popup.add(removeContainerBtn);
+
 			HomeView.getContainerMap().forEach((button, container) -> {
 				containerButtonsPanel.add(button);
 				button.addActionListener(this);
+				button.setComponentPopupMenu(popup);
+				button.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent p) {
+						Boolean bool = SwingUtilities.isRightMouseButton(p);
+						if (bool) {	
+							renameContainerBtn.addActionListener(e ->{
+								renameContainer(button);
+							});
+							removeContainerBtn.addActionListener(e ->{
+								removeContainer(button);
+							});
+						}
+					}
+
+				});
 			});
-			
+
 			viewOfContainerPanel.add(pane);
 			pane.setBounds(0, 50, 800, 500);
-		
+
 			viewOfContainerPanel.setVisible(true);
 
 		}
@@ -139,6 +172,45 @@ public class SeeContainersView implements ActionListener{
 		}
 	}
 
+	/**
+	 * Initiates the container renaming process for a given container button.
+	 * 
+	 * @param b The button corresponding to the container to be renamed.
+	 */
+	public void renameContainer(JButton b) {
+		Container c = HomeView.getContainerMap().get(b);
+
+		String nameOfContainer = JOptionPane.showInputDialog(HomeView.getFrame(),
+				"What would you like to rename container " + c.getName() + " to?");
+
+		ContainerUtility.verifyEditContainer(c.getName(), nameOfContainer, HomeView.data, b, HomeView.getContainerMap(),
+				(errorMsg) -> JOptionPane.showMessageDialog(HomeView.getFrame(), errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+				() -> {
+					c.setName(nameOfContainer);
+					// Update the button text directly instead of replacing the button in the map
+					b.setText(c.getName());
+					HomeView.getHomeView().setHomeViewVisibility(true);
+				});
+	}
+	
+	/**
+	 * Deletes a container from the data and its map
+	 * 
+	 * @param b the button corresponding to the container to be deleted
+	 */
+	public void removeContainer(JButton b) {
+		Container c = HomeView.getContainerMap().get(b);
+		int opt = JOptionPane.showConfirmDialog(HomeView.getFrame(), "Delete Container \"" + c.getName() + "\"?");
+		if (opt == JOptionPane.YES_OPTION) { // if not cancelled
+			ContainerUtility.verifyDeleteContainer(c.getName(), HomeView.data, b, HomeView.getContainerMap(), (errorMsg) -> JOptionPane
+					.showMessageDialog(HomeView.getFrame(), errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
+						HomeView.getHomeView().setHomeViewVisibility(true);
+					});
+
+			c = null;
+
+		}
+	}
 	/**
 	 * Handles action events triggered by various GUI components.
 	 * This method is the central hub for processing user interactions within the home view.
@@ -164,9 +236,11 @@ public class SeeContainersView implements ActionListener{
 
 		}
 
-
 	}
-	
+
+
+
+
 	/**
 	 * Provide Accces to this instance of SeeContainersView
 	 * 
@@ -175,6 +249,8 @@ public class SeeContainersView implements ActionListener{
 	public static SeeContainersView getContainersView() {
 		return containersView;
 	}
+
+
 
 
 
