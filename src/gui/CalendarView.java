@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -151,6 +152,7 @@ public class CalendarView {
 		month.setText(monthsOfTheYear[current.get(Calendar.MONTH)] + " " + current.get(Calendar.YEAR));
 		month.setFont(monthFont);
 
+		
 
 
 
@@ -196,10 +198,15 @@ public class CalendarView {
 		BorderLayout bl = new BorderLayout();
 		int day = 1;
 
+		JPanel datePanel;
+		JPanel numberPanel;
+		JPanel ItemPanel;
+		
+		
 		for(int i = 0; i<(listOfPanels.length); i++) {
 			JPanel p = new JPanel();
-			p.setLayout(new BorderLayout());
-			p.setLayout(new FlowLayout());
+//			p.setLayout(new BorderLayout());
+			p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 			p.setBorder(BorderFactory.createLineBorder(Color.black));
 
 
@@ -237,8 +244,7 @@ public class CalendarView {
 				}	
 			}
 			listOfPanels[i] = p;
-			JScrollPane pane = new JScrollPane(p);
-			daysOfMonthPanel.add(pane);	
+			daysOfMonthPanel.add(new JScrollPane(p));	
 		}
 		daysOfMonthPanel.repaint();
 		daysOfMonthPanel.revalidate();
