@@ -77,8 +77,6 @@ public class HomeView implements ActionListener {
 	public static void main(String[] args) {
 		//initialise other views
 		SeeContainersView m = new SeeContainersView();
-		DeleteContainerView d = new DeleteContainerView();
-		EditContainerView e = new EditContainerView();
 		home = new HomeView();
 
 	}
@@ -109,9 +107,8 @@ public class HomeView implements ActionListener {
 	public void setHomeViewVisibility(boolean b) {
 		if (b == true) {
 			//Set other gui visibility to false
-			EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
-			DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
+
 			
 			// Initialise all actionlisteners 
 			newContainerText.addActionListener(this);
