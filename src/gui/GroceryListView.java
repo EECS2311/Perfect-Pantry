@@ -48,8 +48,8 @@ public class GroceryListView extends JPanel implements ActionListener {
     // Create a text field for adding items
     JTextField addItemTextField = new JTextField();
 
-    // Maintain a set of crossed off rows
-    private Set<Integer> crossedOffRows;
+    // Maintain a set of crossed off items
+    private Set<String> crossedOffItems;
 
     // Buttons for interacting with the grocery list
     JButton addButton = new JButton("Add Item");
@@ -62,7 +62,7 @@ public class GroceryListView extends JPanel implements ActionListener {
     public GroceryListView() {
     	groceryListView = this;
         this.data = HomeView.data;
-        this.crossedOffRows = new HashSet<>();
+        this.crossedOffItems = new HashSet<>();
 
         // Initialize the view panels
         viewOfAllPanel.setLayout(null);
@@ -105,7 +105,7 @@ public class GroceryListView extends JPanel implements ActionListener {
         table = new JTable(tableModel);
 
         // Set the cell renderer for the table
-        table.setDefaultRenderer(Object.class, new StrikeThroughRenderer(table.getFont()));
+        table.setDefaultRenderer(Object.class, new StrikeThroughRenderer(table.getFont(), crossedOffItems));
 
         // Create a scroll pane to hold the table, allowing scrolling if needed
         JScrollPane scrollPane = new JScrollPane(table);
@@ -204,6 +204,7 @@ public class GroceryListView extends JPanel implements ActionListener {
         if (selectedRow != -1) {
             String itemName = (String) tableModel.getValueAt(selectedRow, 0);
             data.removeFromGroceryList(itemName);
+            crossedOffItems.remove(itemName);
         } else {
             JOptionPane.showMessageDialog(this, "Please select an item to remove.");
         }
@@ -285,12 +286,12 @@ public class GroceryListView extends JPanel implements ActionListener {
 	    strikethroughItem.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	            int selectedRow = table.getSelectedRow();
-	            if (selectedRow != -1) {
-	                if (crossedOffRows.contains(selectedRow)) {
-	                    crossedOffRows.remove(selectedRow);
+	            String selectedItem = (String) table.getValueAt(table.getSelectedRow(), 0);
+	            if (selectedItem != "" & selectedItem != null) {
+	                if (crossedOffItems.contains(selectedItem)) {
+	                    crossedOffItems.remove(selectedItem);
 	                } else {
-	                    crossedOffRows.add(selectedRow);
+	                    crossedOffItems.add(selectedItem);
 	                }
 	                table.repaint();
 	            }
@@ -313,16 +314,19 @@ public class GroceryListView extends JPanel implements ActionListener {
 	}
 
     class StrikeThroughRenderer extends DefaultTableCellRenderer {
-        private Font font;
+    	private Font font;
+        private Set<String> crossedOffItems;
 
-        StrikeThroughRenderer(Font font) {
+        public StrikeThroughRenderer(Font font, Set<String> crossedOffItems) {
             this.font = font;
+            this.crossedOffItems = crossedOffItems;
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (crossedOffRows.contains(row)) {
+            String itemName = (String) value;
+            if (crossedOffItems.contains(itemName)) {
                 Map<TextAttribute, Object> attributes = new HashMap<>(font.getAttributes());
                 attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
                 Font newFont = font.deriveFont(attributes);
