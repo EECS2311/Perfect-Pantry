@@ -1,16 +1,11 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,7 +55,7 @@ public class CalendarView {
 	/**
 	 * Month and Year
 	 */
-	private JLabel month;
+	private JLabel month = new JLabel();
 
 	/**
 	 * Holds JLabel for days of the week
@@ -107,8 +102,12 @@ public class CalendarView {
 	private Calendar nextCal;
 
 
-
-
+	/**
+	 * Launches CalendarView of a container
+	 * @param container The container the Calendar is based off of
+	 * @param c the containerView
+	 * @param h the homeView
+	 */
 	public CalendarView(Container container, ContainerView c, HomeView h) {
 		this.container = container;
 		actualCurrentDate = Calendar.getInstance();
@@ -119,6 +118,10 @@ public class CalendarView {
 
 	}
 
+	/**
+	 * Sets up the month of the Calendar gui using the current Calendar
+	 * @param current The Calendar that will be used to create gui
+	 */
 	public void setupCalendarViewGUI(Calendar current){
 		frame.add(mainPanel);
 		mainPanel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
@@ -128,10 +131,9 @@ public class CalendarView {
 		topBar.setBounds(0, 0, frame.getWidth(), 50);
 		mainPanel.add(topBar);
 
-		month = new JLabel(getMonthAndYear(current));
 		month.setFont(monthFont);
 		topBar.add(month);
-		
+
 		topBar.add(Exit);
 		topBar.add(previousMonth);
 		topBar.add(actualCurrentMonth);
@@ -141,22 +143,31 @@ public class CalendarView {
 		weekdayBar.setLayout(new GridLayout(0, 7));
 		mainPanel.add(weekdayBar);
 		addWeekdaysToPanel(weekdayBar);
-		
+
 		daysOfMonthPanel.setBounds(0, 80, frame.getWidth(), frame.getHeight()-100);
 		mainPanel.add(daysOfMonthPanel);
-		
+
 		addMonthDays(current);
-		
+
 
 	}
 
-	public String getMonthAndYear(Calendar current) {
+	/**
+	 * Formats String for month and Year of a Calendar
+	 * @param current The Calendar that will be used to get month and year of
+	 * @return The formatted string in form of "month year"
+	 */
+	public String getMonthAndYearFormatted(Calendar current) {
 		String monthString = monthsOfTheYear[current.get(Calendar.MONTH)];
 		int year = current.get(Calendar.YEAR);
 
 		return monthString + " " + year;
 	}
 
+	/**
+	 * Adds weekday panels to panel given
+	 * @param panel the panel the weekday labels should be added to
+	 */
 	public void addWeekdaysToPanel(JPanel panel) {
 		for (int i = 0; i < daysOfTheWeek.length; i++) {
 			JLabel weekday = new JLabel(daysOfTheWeek[i]);
@@ -164,11 +175,17 @@ public class CalendarView {
 			weekday.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		}
 	}
-	
-	public void addActionListenersToButtons(ContainerView c, HomeView h){
+
+	/**
+	 * Adds action listeners to buttons,
+	 * Exit uses containerView and HomeView
+	 * @param containerView The view of Container
+	 * @param homeView The homeView the application uses
+	 */
+	public void addActionListenersToButtons(ContainerView containerView, HomeView homeView){
 		Exit.addActionListener(e -> {
-			new ContainerView(h, this.container);
-			c.setupContainerViewGUI(true);
+			new ContainerView(homeView, this.container);
+			containerView.setupContainerViewGUI(true);
 
 		});
 
@@ -194,117 +211,120 @@ public class CalendarView {
 		});
 	}
 
+	/**
+	 * Add the dates and items to the month
+	 * @param current The current month the date and items used
+	 */
 	public void addMonthDays(Calendar current) {
-		GridLayout g;
+		month.setText(getMonthAndYearFormatted(current));
+
 		daysOfMonthPanel.removeAll();
 		Calendar startOfMonth = Calendar.getInstance(); //Start at the first of the calendar month given
 		int dayOfWeekStart; //What day of the week the first of the month is on
-		JPanel[] listOfPanels;
-		int maxDays = current.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-		//Month Label
-		month.setText(monthsOfTheYear[current.get(Calendar.MONTH)] + " " + current.get(Calendar.YEAR));
-		month.setFont(monthFont);
-
-
-
-
+		int maxDaysInMonth = current.getActualMaximum(Calendar.DAY_OF_MONTH);
 
 		startOfMonth.set(current.get(Calendar.YEAR), current.get(Calendar.MONTH), 1);
-		//How many rows? Depends on if month starts fri/sat or not
 		dayOfWeekStart = startOfMonth.get(Calendar.DAY_OF_WEEK) -1;
-		if((dayOfWeekStart == 5 && maxDays == 31) || //Thursday + 31 days
-				dayOfWeekStart == 6 && maxDays >=30) {  //Friday + 30+ days
-			g = new GridLayout(6, 7); //needs extra row
-			listOfPanels = new JPanel[42];
+
+		int numofPanels = setupGridLayout(current, dayOfWeekStart, maxDaysInMonth);
+		HashMap<Integer, ArrayList<Item>> itemDate = getItemThatExpireInMonth(current);
+
+
+		boolean emptyBox;
+		JLabel date;
+		int day = 1;
+
+		for(int i = 0; i<numofPanels; i++) {
+			emptyBox = getEmptyBoxBoolean(day, dayOfWeekStart, maxDaysInMonth, i);
+			
+			JPanel panel = new JPanel();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+			panel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+			if(emptyBox) {
+				panel.setBackground(new Color(253, 241, 203));
+			}
+			else {
+				date = new JLabel("" + day);
+				panel.add(date);
+				if(itemDate.containsKey(day)) {
+					for (Item item : itemDate.get(day)) {
+						panel.add(new JLabel(item.getName()));
+					}
+				}
+				day++;
+			}
+
+			daysOfMonthPanel.add(new JScrollPane(panel));	
+		}
+		daysOfMonthPanel.repaint();
+		daysOfMonthPanel.revalidate();
+	}
+
+	/**
+	 * sets up the gridLayout of panel and finds how many panels will be used
+	 * @param current The current Calendar the GUI is being made of
+	 * @param dayOfWeekStart The day that the week starts
+	 * @param maxDaysInMonth The amount of days in month
+	 * @return The number of panels needed based on the gridlayout
+	 */
+	public int setupGridLayout(Calendar current, int dayOfWeekStart, int maxDaysInMonth) {
+		GridLayout gridLayout;
+		int numOfPanels = 0;
+
+		if((dayOfWeekStart == 5 && maxDaysInMonth == 31) || //Thursday + 31 days
+				dayOfWeekStart == 6 && maxDaysInMonth >=30) {  //Friday + 30+ days
+			gridLayout = new GridLayout(6, 7); //needs extra row
+			numOfPanels = 42;
 		}
 		else {
-			g = new GridLayout(5, 7);
-			listOfPanels = new JPanel[35];
+			gridLayout = new GridLayout(5, 7);
+			numOfPanels = 35;
 		}
-		daysOfMonthPanel.setLayout(g);
+		daysOfMonthPanel.setLayout(gridLayout);
+		return numOfPanels;
 
+	}
 
-		//Get list of items that expires to this month
-		List<Item> items = HomeView.data.retrieveItems(container);
+	/**
+	 * Calculates the items that are apart of the Calendar month and returns a list of them
+	 * @param current The calendar month the list should be about
+	 * @return A hasmap of the integer date and arraylist of items that expire on that date
+	 */
+	public HashMap<Integer, ArrayList<Item>> getItemThatExpireInMonth(Calendar current){
+		List<Item> allItems = HomeView.data.retrieveItems(container);
 		HashMap<Integer, ArrayList<Item>> itemDate = new HashMap<Integer, ArrayList<Item>>();
-		List<Item> currentMonthItems = new ArrayList<Item>();
-		for (Item m : items) {
+		
+		for (Item m : allItems) {
 			//Convert Date to Calendar
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(m.getExpiryDate());
 
 			if (cal.get(Calendar.MONTH) == current.get(Calendar.MONTH) && cal.get(Calendar.YEAR) == current.get(Calendar.YEAR)) {
-				currentMonthItems.add(m);
-
 				if(!itemDate.containsKey(cal.get(Calendar.DATE))) {
 					itemDate.put(cal.get(Calendar.DATE), new ArrayList<Item>());
 				}
-
 				itemDate.get(cal.get(Calendar.DATE)).add(m);
-
 			}
 		}
+		return itemDate;
+	}
 
-		//Add JPanels to daysOfMonthPanel
-		boolean firstDay = false;
-		JLabel date;
-		BorderLayout bl = new BorderLayout();
-		int day = 1;
-
-		JPanel datePanel;
-		JPanel numberPanel;
-		JPanel ItemPanel;
-
-
-		for(int i = 0; i<(listOfPanels.length); i++) {
-			JPanel p = new JPanel();
-			//			p.setLayout(new BorderLayout());
-			p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-			p.setBorder(BorderFactory.createLineBorder(Color.black));
-
-
-			if(!firstDay) { //if first day hasnt been placed or last day has been placed
-				if(i == dayOfWeekStart) { //if month started
-					date = new JLabel("" + day);
-					p.add(date);
-					if(itemDate.containsKey(day)) {
-						for (Item item : itemDate.get(day)) {
-							p.add(new JLabel(item.getName()));
-						}
-					}
-
-					day++;
-					firstDay = true;
-				}
-				else {
-					p.setBackground(Color.gray);
-				}
-				daysOfMonthPanel.add(p);
-			}
-			else {
-				date = new JLabel("" + day);
-				p.add(date);
-				if(itemDate.containsKey(day)) {
-					for (Item item : itemDate.get(day)) {
-						p.add(new JLabel(item.getName()));
-					}
-				}
-
-				day++;
-
-				if(day > maxDays) {
-					firstDay = false;
-				}	
-			}
-			listOfPanels[i] = p;
-			daysOfMonthPanel.add(new JScrollPane(p));	
+	/**
+	 * Gets boolean ffor if panel should be empty or not
+	 * @param day The day the panel will be on
+	 * @param dayOfWeekStart What day the week starts on
+	 * @param maxDaysInMonth The amount of days the month has
+	 * @param i the current iteration of the loop
+	 * @return boolean to see if panel should be empty or not
+	 */
+	public boolean getEmptyBoxBoolean(int day, int dayOfWeekStart, int maxDaysInMonth, int i) {
+		if(i < dayOfWeekStart || day > maxDaysInMonth) {
+			return true;
 		}
-		daysOfMonthPanel.repaint();
-		daysOfMonthPanel.revalidate();
-
-
-
+		else {
+			return false;
+		}
 	}
 
 
