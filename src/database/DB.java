@@ -440,8 +440,6 @@ public class DB {
 
                 while (resultSet.next()) {
                     String itemName = resultSet.getString("name");
-                    // You can add more columns as needed, such as ID, quantity, etc.
-                    // For simplicity, this example assumes only the item name is retrieved.
 
                     // Create an array representing the current item
                     Object[] itemData = { itemName };
