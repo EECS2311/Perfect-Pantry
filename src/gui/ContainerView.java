@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import database.DB;
 import domain.logic.Container;
@@ -20,7 +21,8 @@ import domain.logic.Container;
 public class ContainerView implements ActionListener {
 	private JPanel containerView;
 	private JButton back;
-	private JButton delete;
+	private JButton filter = new JButton("Find");
+	private JTextField itemFilterText;
 
 	private HomeView home;
 	private ItemsListView itemsListPanel;
@@ -43,17 +45,20 @@ public class ContainerView implements ActionListener {
 		containerView = new JPanel(new BorderLayout()); // Set BorderLayout for the main panel
 		back = new JButton("Back");
 
-		// add = new JButton("Add Item");
-
+		itemFilterText = new JTextField(10);
+		
 		itemsListPanel = new ItemsListView(home, container);
 		addItemPanel = new AddItemView(itemsListPanel);
 		addItemPanel.add(viewCalendar);
 		viewCalendar.addActionListener(this);
 
 		back.addActionListener(this);
+		filter.addActionListener(this);
 
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Create a panel for buttons with FlowLayout
 		buttonPanel.add(back); // Add back button to the button panel
+		buttonPanel.add(itemFilterText);
+		buttonPanel.add(filter);
 
 		containerView.add(buttonPanel, BorderLayout.NORTH); // Add the button panel to the top of the main panel
 		containerView.add(itemsListPanel, BorderLayout.CENTER); // Add the items list panel to the center
@@ -95,12 +100,21 @@ public class ContainerView implements ActionListener {
 		if (e.getSource() == back) {
 			setupContainerViewGUI(false); // Hide this view
 		}
+
+		if (e.getSource() == filter) {
+			itemsListPanel.filterTable(getItemFilterText());
+    }
+    
 		if(e.getSource() == viewCalendar) {
 			setupContainerViewGUI(false); //hide this view
 			home.setHomeViewVisibility(false); //hides the view setup displays
 			new CalendarView(container, this, home); //initialises Calendar
-			
 		}
 
+	}
+	
+	private String getItemFilterText() {
+		System.out.println(itemFilterText.getText());
+		return itemFilterText.getText();
 	}
 }

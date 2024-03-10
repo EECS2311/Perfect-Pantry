@@ -13,10 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import database.DB;
 import domain.logic.Container;
@@ -38,6 +42,8 @@ public class ItemsListView extends JPanel {
 	private JMenuItem removeItem;
 	private JMenuItem editQty;
 	private JMenuItem generateTip;
+	
+	private TableRowSorter<TableModel> sorter;
 
 	private boolean colourCodingEnabled = true;
 
@@ -199,9 +205,30 @@ public class ItemsListView extends JPanel {
 			}
 
 		});
-
+		
+		sorter = new TableRowSorter<TableModel>(table.getModel());
+		table.setRowSorter(sorter);
+		
 	}
-
+	
+	// Code adapted from docs.oracle.com for SwingUI table component
+	/**
+	 * Updates the table sorter with the string provided from the filter text box
+	 * @param str The string from the filter text box to filter the items by.
+	 */
+	public void filterTable(String str) {
+		RowFilter<TableModel, Object> rf = null;
+		try {
+			rf = RowFilter.regexFilter(str);
+		} catch (java.util.regex.PatternSyntaxException e) {
+			return;
+		}
+		
+		sorter.setRowFilter(rf);
+		
+	}
+	
+	
 	/**
 	 * Adds an item to the table and updates the underlying container.
 	 * 
