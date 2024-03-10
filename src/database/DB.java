@@ -194,12 +194,12 @@ public class DB {
 	 * @param name The name of the item.
 	 * @param ite  The {@link Item} object to be added.
 	 */
-	public void addItem(Container c, String name, Item ite) {
+	public Boolean addItem(Container c, String name, Item ite) {
 
 		Connection conn = init();
 
 		if (this.getItem(c, name) != null) {
-			return;
+			return false;
 		}
 
 		try {
@@ -209,8 +209,10 @@ public class DB {
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 
+		return true;
 	}
 
 	/**
@@ -340,7 +342,7 @@ public class DB {
 	public void batchUpdateItemFreshness(Container container) {
 		// SQL query to update the freshness of items based on their expiry date
 		String sql = "UPDATE item SET fresh = CASE " + "WHEN expiry < CURRENT_DATE THEN 'Expired'::Freshness "
-				+ "WHEN expiry > CURRENT_DATE AND expiry <= CURRENT_DATE + interval '7' day THEN 'Near_Expiry'::Freshness "
+				+ "WHEN expiry >= CURRENT_DATE AND expiry <= CURRENT_DATE + interval '7' day THEN 'Near_Expiry'::Freshness "
 				+ "ELSE 'Fresh'::Freshness END " + "WHERE container = ?";
 
 		try (Connection conn = this.init(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -352,5 +354,113 @@ public class DB {
 			e.printStackTrace();
 		}
 	}
+
+	public String getStorageTip(String name) {
+		Connection conn = init();
+		String tip = null;
+
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result = s.executeQuery(String.format("SELECT * FROM storage_tips WHERE name='%s'", name));
+
+			while (result.next()) {
+				tip = result.getString("info");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return tip;
+	}
+	
+	/**
+	 * Adds an item to the grocery list in the database.
+	 *
+	 * @param itemName The name of the item to add to the grocery list.
+	 */
+	public void addToGroceryList(String itemName) {
+	    // Establish a connection to the database
+	    Connection conn = init();
+	    try {
+	        // Prepare an SQL statement to insert an item into the grocery table
+	        PreparedStatement statement = conn.prepareStatement("INSERT INTO grocery (name) VALUES (?)");
+	        // Set the item name as a parameter in the SQL statement
+	        statement.setString(1, itemName);
+	        // Execute the SQL statement to insert the item into the grocery table
+	        statement.executeUpdate();
+	        // Close the prepared statement
+	        statement.close();
+	        // Close the database connection
+	        conn.close();
+	    } catch (SQLException e) {
+	        // Handle any SQL exceptions by printing the stack trace
+	        e.printStackTrace();
+	    }
+	}
+	
+	/**
+	 * Removes an item from the grocery list in the database.
+	 *
+	 * @param itemName The name of the item to remove from the grocery list.
+	 */
+	public void removeFromGroceryList(String itemName) {
+	    // Establish a connection to the database
+	    Connection conn = init();
+	    try {
+	        // Prepare an SQL statement to delete an item from the grocery table based on its name
+	        PreparedStatement statement = conn.prepareStatement("DELETE FROM grocery WHERE name = ?");
+	        // Set the item name as a parameter in the SQL statement
+	        statement.setString(1, itemName);
+	        // Execute the SQL statement to delete the item from the grocery table
+	        statement.executeUpdate();
+	        // Close the prepared statement
+	        statement.close();
+	        // Close the database connection
+	        conn.close();
+	    } catch (SQLException e) {
+	        // Handle any SQL exceptions by printing the stack trace
+	        e.printStackTrace();
+	    }
+	}
+
+	/**
+     * Retrieves all grocery items from the database.
+     *
+     * @return A 2D array containing all grocery items, where each row represents an item.
+     */
+    public Object[][] getAllGroceryItems() {
+        Connection conn = init();
+        List<Object[]> itemList = new ArrayList<>();
+
+        if (conn != null) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("SELECT * FROM grocery");
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    String itemName = resultSet.getString("name");
+                    // You can add more columns as needed, such as ID, quantity, etc.
+                    // For simplicity, this example assumes only the item name is retrieved.
+
+                    // Create an array representing the current item
+                    Object[] itemData = { itemName };
+                    itemList.add(itemData);
+                }
+
+                resultSet.close();
+                statement.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Convert the list to a 2D array
+        Object[][] itemArray = new Object[itemList.size()][];
+        itemList.toArray(itemArray);
+
+        return itemArray;
+    }
 
 }

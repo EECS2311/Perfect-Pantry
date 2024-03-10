@@ -72,7 +72,7 @@ public class SeeContainersView implements ActionListener{
 	private JButton buttonPressed;
 	
 	/**
-	 * Holds this isntance of SeeContainersView
+	 * Holds this instance of SeeContainersView
 	 */
 	private static SeeContainersView containersView;
 

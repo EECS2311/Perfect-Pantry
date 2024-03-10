@@ -6,13 +6,26 @@ CREATE TABLE container (
     container_name varchar(50) PRIMARY KEY
 );
 
-
 CREATE TABLE item(
-    name varchar(50) PRIMARY KEY,
+    name varchar(50),
     container varchar(50) REFERENCES container(container_name) ON DELETE CASCADE,
     quantity INTEGER, 
     expiry Date,
     fg Food_Group,
-    fresh Freshness
+    fresh Freshness,
+    PRIMARY KEY(name, container)
 );
 
+create Table storage_tips(
+    name varchar(50),
+    info TEXT,
+    PRIMARY KEY(name)
+);
+
+create Table general_tips(
+    info TEXT
+);
+
+CREATE TABLE grocery(
+    name VARCHAR(50) PRIMARY KEY UNIQUE
+);
