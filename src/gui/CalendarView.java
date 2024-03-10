@@ -26,14 +26,29 @@ import domain.logic.Container;
 import domain.logic.Item;
 
 public class CalendarView {
+	/**
+	 * frame of the gui
+	 */
 	private JFrame frame = HomeView.getFrame();
 
+	/**
+	 * mainPanel that holds all other components for this gui
+	 */
 	private JPanel mainPanel = new JPanel();
 
+	/**
+	 * Button that exits the Calendar gui
+	 */
 	private JButton Exit = new JButton("Exit");
 
+	/**
+	 * Current Container the GUI is making a Calendar of
+	 */
 	private Container container;
 
+	/**
+	 * actual Current date
+	 */
 	private static Calendar actualCurrentDate;
 
 
@@ -42,6 +57,9 @@ public class CalendarView {
 	 */
 	private JPanel topBar = new JPanel();
 
+	/**
+	 * Month and Year
+	 */
 	private JLabel month;
 
 	/**
@@ -50,21 +68,42 @@ public class CalendarView {
 	private JPanel weekdayBar = new JPanel();
 
 	/**
-	 * Holds day Panels
+	 * Holds dates Panels
 	 */
 	private JPanel daysOfMonthPanel = new JPanel();
 
+	/**
+	 * Days of the week
+	 */
 	private String [] daysOfTheWeek = {"     Sunday", "     Monday", "    Tuesday", "   Wednesday", "    Thursday", "       Friday", "    Saturday"};
 
+	/**
+	 * Months of the year
+	 */
 	private String [] monthsOfTheYear = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
+	/**
+	 * Font for month
+	 */
 	private Font monthFont = new Font("Lucida Grande", Font.BOLD, 30);
 
-
+	/**
+	 * Button to see next month of calendar
+	 */
 	private JButton nextMonth = new JButton ("Next Month");
+	/**
+	 * Button to see Todays date calendar
+	 */
 	private JButton actualCurrentMonth = new JButton ("Today");
+
+	/**
+	 * Button to see previous month
+	 */
 	private JButton previousMonth = new JButton ("Previous Month");
 
+	/**
+	 * Shows calendar view for the month given
+	 */
 	private Calendar nextCal;
 
 
@@ -75,39 +114,58 @@ public class CalendarView {
 		actualCurrentDate = Calendar.getInstance();
 		nextCal = Calendar.getInstance();
 
+		setupCalendarViewGUI(nextCal);
+		addActionListenersToButtons(c, h);
+
+	}
+
+	public void setupCalendarViewGUI(Calendar current){
 		frame.add(mainPanel);
 		mainPanel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-		mainPanel.setBackground(Color.pink);
-
 		mainPanel.setLayout(null);
 
 		topBar.setLayout(new FlowLayout());
 		topBar.setBounds(0, 0, frame.getWidth(), 50);
 		mainPanel.add(topBar);
 
-		month = new JLabel(monthsOfTheYear[actualCurrentDate.get(Calendar.MONTH)] + " " + actualCurrentDate.get(Calendar.YEAR));
+		month = new JLabel(getMonthAndYear(current));
 		month.setFont(monthFont);
 		topBar.add(month);
-
-		weekdayBar.setBounds(0, 50, frame.getWidth(), 30);
-		weekdayBar.setLayout(new GridLayout(0, 7));
-		mainPanel.add(weekdayBar);
-
-		for (int i = 0; i < daysOfTheWeek.length; i++) {
-			JLabel weekday = new JLabel(daysOfTheWeek[i]);
-			weekdayBar.add(weekday);
-			weekday.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		}
-
-		daysOfMonthPanel.setBounds(0, 80, frame.getWidth(), frame.getHeight()-100);
-		mainPanel.add(daysOfMonthPanel);
-
+		
 		topBar.add(Exit);
-		addMonthDays(actualCurrentDate);
 		topBar.add(previousMonth);
 		topBar.add(actualCurrentMonth);
 		topBar.add(nextMonth);
 
+		weekdayBar.setBounds(0, 50, frame.getWidth(), 30);
+		weekdayBar.setLayout(new GridLayout(0, 7));
+		mainPanel.add(weekdayBar);
+		addWeekdaysToPanel(weekdayBar);
+		
+		daysOfMonthPanel.setBounds(0, 80, frame.getWidth(), frame.getHeight()-100);
+		mainPanel.add(daysOfMonthPanel);
+		
+		addMonthDays(current);
+		
+
+	}
+
+	public String getMonthAndYear(Calendar current) {
+		String monthString = monthsOfTheYear[current.get(Calendar.MONTH)];
+		int year = current.get(Calendar.YEAR);
+
+		return monthString + " " + year;
+	}
+
+	public void addWeekdaysToPanel(JPanel panel) {
+		for (int i = 0; i < daysOfTheWeek.length; i++) {
+			JLabel weekday = new JLabel(daysOfTheWeek[i]);
+			panel.add(weekday);
+			weekday.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		}
+	}
+	
+	public void addActionListenersToButtons(ContainerView c, HomeView h){
 		Exit.addActionListener(e -> {
 			new ContainerView(h, this.container);
 			c.setupContainerViewGUI(true);
@@ -120,7 +178,6 @@ public class CalendarView {
 			}
 			nextCal.roll(Calendar.MONTH, true);
 			addMonthDays(nextCal);
-			//addMonthDays()
 		});
 
 		actualCurrentMonth.addActionListener(e -> {
@@ -135,9 +192,6 @@ public class CalendarView {
 			nextCal.roll(Calendar.MONTH, false);
 			addMonthDays(nextCal);
 		});
-
-
-
 	}
 
 	public void addMonthDays(Calendar current) {
@@ -152,7 +206,7 @@ public class CalendarView {
 		month.setText(monthsOfTheYear[current.get(Calendar.MONTH)] + " " + current.get(Calendar.YEAR));
 		month.setFont(monthFont);
 
-		
+
 
 
 
@@ -201,11 +255,11 @@ public class CalendarView {
 		JPanel datePanel;
 		JPanel numberPanel;
 		JPanel ItemPanel;
-		
-		
+
+
 		for(int i = 0; i<(listOfPanels.length); i++) {
 			JPanel p = new JPanel();
-//			p.setLayout(new BorderLayout());
+			//			p.setLayout(new BorderLayout());
 			p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 			p.setBorder(BorderFactory.createLineBorder(Color.black));
 
