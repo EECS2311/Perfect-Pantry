@@ -136,8 +136,6 @@ public class GroceryListView extends JPanel implements ActionListener {
     public void setGroceryListViewVisibility(boolean b) {
         if (b) {
             HomeView.getHomeView().setHomeViewVisibility(false);
-            DeleteContainerView.getDeleteContainerView().setDeleteContainerViewVisibility(false);
-            EditContainerView.getEditContainerView().setEditContainerViewVisibility(false);
 
             // Attach action listeners to buttons
             addButton.addActionListener(this);

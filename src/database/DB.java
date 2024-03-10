@@ -342,7 +342,7 @@ public class DB {
 	public void batchUpdateItemFreshness(Container container) {
 		// SQL query to update the freshness of items based on their expiry date
 		String sql = "UPDATE item SET fresh = CASE " + "WHEN expiry < CURRENT_DATE THEN 'Expired'::Freshness "
-				+ "WHEN expiry > CURRENT_DATE AND expiry <= CURRENT_DATE + interval '7' day THEN 'Near_Expiry'::Freshness "
+				+ "WHEN expiry >= CURRENT_DATE AND expiry <= CURRENT_DATE + interval '7' day THEN 'Near_Expiry'::Freshness "
 				+ "ELSE 'Fresh'::Freshness END " + "WHERE container = ?";
 
 		try (Connection conn = this.init(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
