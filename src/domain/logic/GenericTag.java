@@ -106,10 +106,15 @@ public class GenericTag<T extends Tag> implements Comparable {
         }
         throw new IllegalArgumentException("No enum constant with display name " + displayName + " found in " + enumType.getSimpleName());
     }
-
+    
+    /**
+     * Compares two GenericTags lexicographically
+     * @param o GenericTag object to compare with
+     * @return an integer representing the equality of the two object names
+     */
 	@Override
 	public int compareTo(Object o) {
-		return tag.toString().compareTo(o.toString());
+			return tag.toString().compareTo(o.toString());
 	}
     
 }

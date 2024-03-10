@@ -211,6 +211,11 @@ public class ItemsListView extends JPanel {
 		
 	}
 	
+	// Code adapted from docs.oracle.com for SwingUI table component
+	/**
+	 * Updates the table sorter with the string provided from the filter text box
+	 * @param str The string from the filter text box to filter the items by.
+	 */
 	public void filterTable(String str) {
 		RowFilter<TableModel, Object> rf = null;
 		try {

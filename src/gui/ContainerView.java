@@ -21,7 +21,6 @@ import domain.logic.Container;
 public class ContainerView implements ActionListener {
 	private JPanel containerView;
 	private JButton back;
-	private JButton delete;
 	private JButton filter = new JButton("Find");
 	private JTextField itemFilterText;
 
