@@ -28,6 +28,8 @@ public class ContainerView implements ActionListener {
 	private ItemsListView itemsListPanel;
 	private AddItemView addItemPanel;
 	private Container container;
+	
+	private JButton viewCalendar = new JButton ("View Calendar");
 
 	DB data = home.data;
 
@@ -47,6 +49,8 @@ public class ContainerView implements ActionListener {
 		
 		itemsListPanel = new ItemsListView(home, container);
 		addItemPanel = new AddItemView(itemsListPanel);
+		addItemPanel.add(viewCalendar);
+		viewCalendar.addActionListener(this);
 
 		back.addActionListener(this);
 		filter.addActionListener(this);
@@ -59,7 +63,6 @@ public class ContainerView implements ActionListener {
 		containerView.add(buttonPanel, BorderLayout.NORTH); // Add the button panel to the top of the main panel
 		containerView.add(itemsListPanel, BorderLayout.CENTER); // Add the items list panel to the center
 		containerView.add(addItemPanel, BorderLayout.SOUTH); // Add the add item panel to the bottom
-
 	}
 
 	/**
@@ -97,9 +100,15 @@ public class ContainerView implements ActionListener {
 		if (e.getSource() == back) {
 			setupContainerViewGUI(false); // Hide this view
 		}
-		
+
 		if (e.getSource() == filter) {
 			itemsListPanel.filterTable(getItemFilterText());
+    }
+    
+		if(e.getSource() == viewCalendar) {
+			setupContainerViewGUI(false); //hide this view
+			home.setHomeViewVisibility(false); //hides the view setup displays
+			new CalendarView(container, this, home); //initialises Calendar
 		}
 
 	}

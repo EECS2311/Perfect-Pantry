@@ -17,6 +17,7 @@ public class AddItemView extends JPanel {
     private JTextField itemQuantityField = new JTextField(5);
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
+    private JButton viewCalendar = new JButton("View Calendar");
 
     private ItemsListView itemsListPanel;
 
@@ -36,8 +37,10 @@ public class AddItemView extends JPanel {
         add(new JLabel("Expiration Date (dd-MMM-yyyy):"));
         add(itemExpiryField);
         add(addButton);
+//        add(viewCalendar);
 
         addButton.addActionListener(e -> addItem());
+//        viewCalendar.addActionListener(e -> new CalendarView());
     }
 
     /**
