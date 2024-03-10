@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 import database.DB;
 import domain.logic.Container;
@@ -31,6 +34,11 @@ public class SeeContainersView implements ActionListener{
 	 * Hold buttons pertaining to its containers
 	 */
 	private JPanel containerButtonsPanel = new JPanel();
+	
+	/**
+	 * Allows containerButtonPanel to be Scrollable
+	 */
+	JScrollPane pane = new JScrollPane(containerButtonsPanel);
 
 	/**
 	 * Holds components for the container list view
@@ -75,6 +83,7 @@ public class SeeContainersView implements ActionListener{
 	 * Sets the visibility of the SeeContainersView GUI depending on the boolean passed
 	 * @param b the value of whether the visibility is true or not
 	 */
+	
 	public void setSeeContainersViewVisibility(boolean b) {
 		if (b == true) { 
 			HomeView.getHomeView().setHomeViewVisibility(false);
@@ -98,16 +107,22 @@ public class SeeContainersView implements ActionListener{
 			backPanel.add(editContainerNameButton);
 			backPanel.add(deleteContainerButton);
 
-			viewOfContainerPanel.add(new JScrollPane(containerButtonsPanel));
+			
+//			viewOfContainerPanel.add(containerButtonsPanel);
 			containerButtonsPanel.setBounds(0, 50, 800, 500);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
+			containerButtonsPanel.setLayout(new GridLayout((HomeView.getContainerMap().size()/3 +1), 3));
+			
 			
 			containerButtonsPanel.removeAll();
 			HomeView.getContainerMap().forEach((button, container) -> {
 				containerButtonsPanel.add(button);
 				button.addActionListener(this);
 			});
-
+			
+			viewOfContainerPanel.add(pane);
+			pane.setBounds(0, 50, 800, 500);
+		
 			viewOfContainerPanel.setVisible(true);
 
 		}
