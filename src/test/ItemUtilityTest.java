@@ -1,11 +1,38 @@
 package test;
 
+import domain.logic.Container;
+import domain.logic.Item;
 import domain.logic.ItemUtility;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.function.Consumer;
 
 public class ItemUtilityTest {
+    private Container testContainer;
+    private String existingItemName = "TestItem";
+    private String nonExistingItemName = "NonExistingTestItem";
+
+    void setUpContainer() {
+        testContainer = new Container("TestContainer");
+        testContainer.addNewItem(Item.getInstance(existingItemName, 1, "1-jan-2024"));
+    }
+
+    @Test
+    void verifyDeleteExistingItem() {
+        setUpContainer();
+        boolean itemRemoved = testContainer.getItems().removeIf(item -> item.getName().equals(existingItemName));
+
+        assertTrue(itemRemoved, "Item should be successfully deleted.");
+    }
+
+    @Test
+    void verifyDeleteNonExistingItem() {
+        setUpContainer();
+        boolean itemRemoved = testContainer.getItems().removeIf(item -> item.getName().equals(nonExistingItemName));
+
+        assertFalse(itemRemoved, "Item should not be deleted because it doesn't exist.");
+    }
 
     @Test
     void testVerifyAddItemWithValidInput() {
@@ -83,4 +110,5 @@ public class ItemUtilityTest {
         String actualTip = ItemUtility.retrieveStorageTip(foodName);
         assertNull(actualTip, "Storage tip should be null for unknown or unsupported food items.");
     }
+
 }

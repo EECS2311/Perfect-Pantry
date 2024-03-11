@@ -119,7 +119,7 @@ public class ItemUtility {
 	 * @param expiryDate The date to be formatted.
 	 * @return A string representation of the date in "yyyy-MM-dd" format.
 	 */
-	public static String dateFormat(Date expiryDate) {
+	private static String dateFormat(Date expiryDate) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String format = formatter.format(expiryDate);
 		return format;
