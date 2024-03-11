@@ -8,7 +8,12 @@ INSERT INTO item (name, container, quantity, expiry, fg, fresh)
 VALUES
 ('GoudaCheese','MainPantry',12, '2024-05-12', 'Dairy', 'Fresh'),
 ('FruitLoops', 'MainPantry', 1, '2024-08-1', 'Grain', 'Fresh'),
-('JollyRanchersBox', 'MainPantry', 2, '2024-4-14', 'Fruit', 'Fresh');
+('Apple', 'MainPantry', 2, '2024-4-14', 'Fruit', 'Fresh'),
+('Banana', 'MainPantry', 2, '2024-3-12', 'Fruit', 'Near_Expiry'),
+('Eggs', 'MiniFridge', 12, '2024-2-10', 'Dairy', 'Expired'),
+('Milk', 'MiniFridge', 1, '2024-4-14', 'Dairy', 'Fresh'),
+('Celery', 'MiniFridge', 2, '2024-5-1', 'Vegetable', 'Fresh'),
+('JollyRanchersBox', 'MainPantry', 2, '2024-9-14', 'Fruit', 'Fresh');
 
 -- Tips obtained from https://cookieandkate.com/food-storage-tips/
 INSERT INTO storage_tips(name, info)
