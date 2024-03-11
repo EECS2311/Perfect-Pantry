@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 import javax.swing.table.DefaultTableModel;
 
-import database.DB;
 import gui.HomeView;
 import gui.ItemsListView;
 
@@ -22,16 +21,16 @@ public class ItemUtility {
 	 * Itemslist panel.
 	 *
 	 * @param itemName The name of the item to verify and delete.
-	 * @param con      The container from which to delete the item.
+	 * @param container      The container from which to delete the item.
 	 * @param list     The Itemslist panel to update after deletion.
 	 * @return Boolean indicating the success or failure of the item deletion.
 	 */
-	public static Boolean verifyDeleteItem(String itemName, Container con, ItemsListView list) {
+	public static Boolean verifyDeleteItem(String itemName, Container container, ItemsListView list) {
 
 		// Checking to see if item is in the database
-		if (HomeView.data.getItem(con, itemName) != null) {
+		if (HomeView.data.getItem(container, itemName) != null) {
 			// Remove the item if its present
-			HomeView.data.removeItem(con, itemName, null);
+			HomeView.data.removeItem(container, itemName, null);
 
 			// Remove the item from the datalist
 			list.removeItem(itemName);
@@ -95,7 +94,6 @@ public class ItemUtility {
 	 * column index. The update is only performed if the item exists in the
 	 * container.
 	 *
-	 * @param data      The DB instance containing item data.
 	 * @param container The container where the item resides.
 	 * @param itemName  The name of the item to be updated.
 	 * @param newValue  The new value to be set for the item's property.
@@ -103,9 +101,9 @@ public class ItemUtility {
 	 *                  updated.
 	 * @return true if the item was successfully updated, false otherwise.
 	 */
-	public static void updateItem(DB data, Container container, String itemName, Object newValue, int column) {
+	public static void updateItem(Container container, String itemName, Object newValue, int column) {
 		if (column == 3 && newValue instanceof FoodGroup) {
-			data.updateItemFoodGroup(container, itemName, (FoodGroup) newValue);
+			HomeView.data.updateItemFoodGroup(container, itemName, (FoodGroup) newValue);
 		}
 	}
 
@@ -113,12 +111,11 @@ public class ItemUtility {
 	 * Retrieves and initializes the rows in ItemsListViews from the database for a
 	 * specified container.
 	 * 
-	 * @param data       access to the database
 	 * @param c          Container object to initialize the items for
 	 * @param tableModel the table object to initialize the rows for
 	 */
-	public static void initItems(DB data, Container c, DefaultTableModel tableModel) {
-		List<Item> items = data.retrieveItems(c);
+	public static void initItems(Container c, DefaultTableModel tableModel) {
+		List<Item> items = HomeView.data.retrieveItems(c);
 		tableModel.setRowCount(0);
 		for (Item item : items) {
 			tableModel.addRow(new Object[] { item.getName(), item.getQuantity(), dateFormat(item.getExpiryDate()),
@@ -142,14 +139,13 @@ public class ItemUtility {
 	/**
 	 * Assigns FoodFreshness tags to items based on their expiry dates.
 	 * 
-	 * @param data      The database object to update item freshness.
 	 * @param container The container whose items' freshness will be updated.
 	 */
-	public static void assignFoodFreshness(DB data, Container container) {
-		data.batchUpdateItemFreshness(container);
+	public static void assignFoodFreshness(Container container) {
+		HomeView.data.batchUpdateItemFreshness(container);
 	}
 
-	public static String retrieveStorageTip(String foodName, DB data) {
-		return data.getStorageTip(foodName);
+	public static String retrieveStorageTip(String foodName) {
+		return HomeView.data.getStorageTip(foodName);
 	}
 }
