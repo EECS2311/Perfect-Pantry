@@ -1,11 +1,8 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +16,8 @@ public class StubDB extends DB {
 
 	HashMap<String, Container> containerMap = new HashMap<String, Container>();
 	HashMap<String, Item> itemMap = new HashMap<String, Item>();
+	HashMap<String, String> storageTipMap = new HashMap<String, String>();
+	ArrayList<String> groceryList = new ArrayList<String>();
 
 	/**
 	 * Inserts a new container into the database
@@ -155,29 +154,7 @@ public class StubDB extends DB {
 	 */
 	public Item getItem(Container c, String itemName) {
 
-		Connection conn = init();
-
-		try {
-			Statement s = conn.createStatement();
-			ResultSet rs = s.executeQuery(
-					String.format("SELECT * FROM item WHERE name='%s' AND container='%s'", itemName, c.getName()));
-
-			if (rs.next()) {
-				GenericTag<FoodGroup> fg = (rs.getString("fg") != null)
-						? GenericTag.fromString(FoodGroup.class, rs.getString("fg"))
-						: null;
-				GenericTag<FoodFreshness> fresh = (rs.getString("fresh") != null)
-						? GenericTag.fromString(FoodFreshness.class, rs.getString("fresh"))
-						: null;
-
-				conn.close();
-				return Item.getInstance(rs.getString("name"), fg, fresh, rs.getInt("quantity"), rs.getDate("expiry"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		return c.getItem(itemName);
 
 	}
 
@@ -192,26 +169,12 @@ public class StubDB extends DB {
 	 *                     null if not updating).
 	 */
 	public void updateItemFoodGroup(Container c, String itemName, FoodGroup newFoodGroup) {
-		List<String> setClauses = new ArrayList<>();
+
+		Item it = c.getItem(itemName);
 		if (newFoodGroup != null) {
-			setClauses.add("fg = '" + newFoodGroup.getDisplayName() + "'");
+			it.setFoodGroupTag(newFoodGroup);
 		}
 
-		if (setClauses.isEmpty()) {
-			// If there are no updates to make, simply return
-			return;
-		}
-
-		String setClause = String.join(", ", setClauses);
-		String sql = "UPDATE item SET " + setClause + " WHERE name = ? AND container = ?";
-
-		try (Connection conn = this.init(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setString(1, itemName);
-			pstmt.setString(2, c.getName());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -221,21 +184,8 @@ public class StubDB extends DB {
 	 * @return a list of Items belonging to a Container in the database
 	 */
 	public List<Item> retrieveItems(Container c) {
-		Connection conn = init();
-		try {
-			Statement s = conn.createStatement();
-			ResultSet result = s.executeQuery(String.format("SELECT * FROM item WHERE container='%s'", c.getName()));
-			List<Item> l = new ArrayList<Item>();
 
-			while (result.next()) {
-				l.add(this.getItem(new Container(result.getString("container")), result.getString("name")));
-			}
-			return l;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		return c.getItems();
 
 	}
 
@@ -250,38 +200,30 @@ public class StubDB extends DB {
 	 *                  updated.
 	 */
 	public void batchUpdateItemFreshness(Container container) {
-		// SQL query to update the freshness of items based on their expiry date
-		String sql = "UPDATE item SET fresh = CASE " + "WHEN expiry < CURRENT_DATE THEN 'Expired'::Freshness "
-				+ "WHEN expiry >= CURRENT_DATE AND expiry <= CURRENT_DATE + interval '7' day THEN 'Near_Expiry'::Freshness "
-				+ "ELSE 'Fresh'::Freshness END " + "WHERE container = ?";
 
-		try (Connection conn = this.init(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		List<Item> l = container.getItems();
+		Date curr = new Date();
 
-			pstmt.setString(1, container.getName());
-			pstmt.executeUpdate();
+		for (Item ite : l) {
+			Date d = ite.getExpiryDate();
+			long diff = curr.toInstant().until(d.toInstant(), ChronoUnit.DAYS);
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+			if (diff > 7) {
+				ite.setFoodFreshnessTag(new GenericTag<>(FoodFreshness.FRESH));
+			}
+			if (diff >= 0) {
+				ite.setFoodFreshnessTag(new GenericTag<>(FoodFreshness.NEAR_EXPIRY));
+			} else {
+				ite.setFoodFreshnessTag(new GenericTag<>(FoodFreshness.EXPIRED));
+			}
+
 		}
 	}
 
 	public String getStorageTip(String name) {
-		Connection conn = init();
-		String tip = null;
 
-		try {
-			Statement s = conn.createStatement();
-			ResultSet result = s.executeQuery(String.format("SELECT * FROM storage_tips WHERE name='%s'", name));
+		return storageTipMap.get(name);
 
-			while (result.next()) {
-				tip = result.getString("info");
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return tip;
 	}
 
 	/**
@@ -290,23 +232,9 @@ public class StubDB extends DB {
 	 * @param itemName The name of the item to add to the grocery list.
 	 */
 	public void addToGroceryList(String itemName) {
-		// Establish a connection to the database
-		Connection conn = init();
-		try {
-			// Prepare an SQL statement to insert an item into the grocery table
-			PreparedStatement statement = conn.prepareStatement("INSERT INTO grocery (name) VALUES (?)");
-			// Set the item name as a parameter in the SQL statement
-			statement.setString(1, itemName);
-			// Execute the SQL statement to insert the item into the grocery table
-			statement.executeUpdate();
-			// Close the prepared statement
-			statement.close();
-			// Close the database connection
-			conn.close();
-		} catch (SQLException e) {
-			// Handle any SQL exceptions by printing the stack trace
-			e.printStackTrace();
-		}
+
+		groceryList.add(itemName);
+
 	}
 
 	/**
@@ -315,24 +243,9 @@ public class StubDB extends DB {
 	 * @param itemName The name of the item to remove from the grocery list.
 	 */
 	public void removeFromGroceryList(String itemName) {
-		// Establish a connection to the database
-		Connection conn = init();
-		try {
-			// Prepare an SQL statement to delete an item from the grocery table based on
-			// its name
-			PreparedStatement statement = conn.prepareStatement("DELETE FROM grocery WHERE name = ?");
-			// Set the item name as a parameter in the SQL statement
-			statement.setString(1, itemName);
-			// Execute the SQL statement to delete the item from the grocery table
-			statement.executeUpdate();
-			// Close the prepared statement
-			statement.close();
-			// Close the database connection
-			conn.close();
-		} catch (SQLException e) {
-			// Handle any SQL exceptions by printing the stack trace
-			e.printStackTrace();
-		}
+
+		groceryList.remove(itemName);
+
 	}
 
 	/**
@@ -342,30 +255,12 @@ public class StubDB extends DB {
 	 *         item.
 	 */
 	public Object[][] getAllGroceryItems() {
-		Connection conn = init();
 		List<Object[]> itemList = new ArrayList<>();
 
-		if (conn != null) {
-			try {
-				PreparedStatement statement = conn.prepareStatement("SELECT * FROM grocery");
-				ResultSet resultSet = statement.executeQuery();
-
-				while (resultSet.next()) {
-					String itemName = resultSet.getString("name");
-
-					// Create an array representing the current item
-					Object[] itemData = { itemName };
-					itemList.add(itemData);
-				}
-
-				resultSet.close();
-				statement.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		for (String s : groceryList) {
+			Object[] itemData = { s };
+			itemList.add(itemData);
 		}
-
 		// Convert the list to a 2D array
 		Object[][] itemArray = new Object[itemList.size()][];
 		itemList.toArray(itemArray);
@@ -382,20 +277,7 @@ public class StubDB extends DB {
 	 */
 	public void updateQuantity(String item, int value, Container c) {
 
-		Connection conn = init();
-
-		try {
-			String query = "UPDATE item SET quantity = ? WHERE name = ? AND container = ?";
-			PreparedStatement p = conn.prepareStatement(query);
-			p.setInt(1, value);
-			p.setString(2, item);
-			p.setString(3, c.getName());
-			p.executeUpdate();
-
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
+		itemMap.get(item).setQuantity(value);
 
 	}
 

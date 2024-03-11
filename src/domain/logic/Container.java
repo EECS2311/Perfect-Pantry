@@ -132,6 +132,12 @@ public class Container {
 		return l;
 	}
 
+	public Item getItem(String s) {
+
+		return listOfItem.get(s);
+
+	}
+
 	/**
 	 * Initializes and shows the GUI view associated with this container.
 	 */
