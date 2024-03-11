@@ -134,6 +134,14 @@ public class ItemUtility {
 		HomeView.data.batchUpdateItemFreshness(container);
 	}
 
+	/**
+	 * Retrieves storage tips for a specific food item from the database.
+	 * This method queries the database through the {@code HomeView.data} interface to find storage tips
+	 * associated with the given food name. If a tip is found, it is returned as a string.
+	 *
+	 * @param foodName The name of the food item for which storage tips are being retrieved.
+	 * @return A string containing storage tips for the specified food item. Returns {@code null} if no tips are found or if there's an error in retrieving the data.
+	 */
 	public static String retrieveStorageTip(String foodName) {
 		return HomeView.data.getStorageTip(foodName);
 	}
