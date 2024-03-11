@@ -7,9 +7,7 @@ import java.util.function.Consumer;
 
 import javax.swing.table.DefaultTableModel;
 
-import database.DB;
 import gui.HomeView;
-import gui.ItemsListView;
 
 /**
  * Utility class for operations related to items in the inventory such as
@@ -18,23 +16,19 @@ import gui.ItemsListView;
  */
 public class ItemUtility {
 	/**
-	 * Verifies and deletes an item from the specified container and updates the
-	 * Itemslist panel.
+	 * Verifies the deletion of an item from the specified container
 	 *
 	 * @param itemName The name of the item to verify and delete.
-	 * @param con      The container from which to delete the item.
-	 * @param list     The Itemslist panel to update after deletion.
+	 * @param container      The container from which to delete the item.
 	 * @return Boolean indicating the success or failure of the item deletion.
 	 */
-	public static Boolean verifyDeleteItem(String itemName, Container con, ItemsListView list) {
+	public static Boolean verifyDeleteItem(String itemName, Container container) {
 
 		// Checking to see if item is in the database
-		if (HomeView.data.getItem(con, itemName) != null) {
+		if (HomeView.data.getItem(container, itemName) != null) {
 			// Remove the item if its present
-			HomeView.data.removeItem(con, itemName, null);
+			HomeView.data.removeItem(container, itemName, null);
 
-			// Remove the item from the datalist
-			list.removeItem(itemName);
 			return true;
 		} else
 			return false;
@@ -42,25 +36,22 @@ public class ItemUtility {
 	}
 
 	/**
-	 * Validates the input data for a new item and, if valid, adds it to the
-	 * ItemsListView panel. In case of validation errors, it utilizes a Consumer to
-	 * handle the error message.
+	 * Validates the input data for a new item and, if valid, returns true.
+	 * In case of validation errors, it utilizes a Consumer to
+	 * handle the error message and returns false.
 	 *
 	 * @param name            The name of the new item.
 	 * @param quantityStr     The quantity of the new item as a string.
 	 * @param expiryDate      The expiry date of the new item.
-	 * @param itemsListPanel  The ItemsListView panel to which the item will be
-	 *                        added.
 	 * @param errorHandler    A Consumer that handles error messages.
-	 * @param successCallback A Runnable that is executed upon successful addition.
 	 */
-	public static void verifyAddItem(String name, String quantityStr, String expiryDate, ItemsListView itemsListPanel,
-			Consumer<String> errorHandler, Runnable successCallback) {
+	public static boolean verifyAddItem(String name, String quantityStr, String expiryDate,
+										Consumer<String> errorHandler) {
 		try {
 			name = name.trim();
 			if (name.isEmpty()) {
 				errorHandler.accept("Item name cannot be empty.");
-				return;
+				return false;
 			}
 
 			int quantity;
@@ -68,25 +59,21 @@ public class ItemUtility {
 				quantity = Integer.parseInt(quantityStr);
 			} catch (NumberFormatException ex) {
 				errorHandler.accept("Please enter a valid number for quantity.");
-				return;
+				return false;
 			}
 
 			if (quantity <= 0) {
 				errorHandler.accept("Quantity must be greater than 0.");
-				return;
+				return false;
 			}
 
 			Item item = Item.getInstance(name, quantity, expiryDate);
 
-			Boolean valid = HomeView.data.addItem(itemsListPanel.getC(), item.getName(), item);
-			if (!valid) {
-				errorHandler.accept("No Duplicate Items!");
-				return;
-			}
-			itemsListPanel.addItem(item);
-			successCallback.run();
+			// Validation successful, return true
+			return true;
 		} catch (Exception ex) {
-			errorHandler.accept("Error adding item: " + ex.getMessage());
+			errorHandler.accept("Error validating item: " + ex.getMessage());
+			return false;
 		}
 	}
 
@@ -95,7 +82,6 @@ public class ItemUtility {
 	 * column index. The update is only performed if the item exists in the
 	 * container.
 	 *
-	 * @param data      The DB instance containing item data.
 	 * @param container The container where the item resides.
 	 * @param itemName  The name of the item to be updated.
 	 * @param newValue  The new value to be set for the item's property.
@@ -103,9 +89,9 @@ public class ItemUtility {
 	 *                  updated.
 	 * @return true if the item was successfully updated, false otherwise.
 	 */
-	public static void updateItem(DB data, Container container, String itemName, Object newValue, int column) {
+	public static void updateItem(Container container, String itemName, Object newValue, int column) {
 		if (column == 3 && newValue instanceof FoodGroup) {
-			data.updateItemFoodGroup(container, itemName, (FoodGroup) newValue);
+			HomeView.data.updateItemFoodGroup(container, itemName, (FoodGroup) newValue);
 		}
 	}
 
@@ -113,12 +99,11 @@ public class ItemUtility {
 	 * Retrieves and initializes the rows in ItemsListViews from the database for a
 	 * specified container.
 	 * 
-	 * @param data       access to the database
 	 * @param c          Container object to initialize the items for
 	 * @param tableModel the table object to initialize the rows for
 	 */
-	public static void initItems(DB data, Container c, DefaultTableModel tableModel) {
-		List<Item> items = data.retrieveItems(c);
+	public static void initItems(Container c, DefaultTableModel tableModel) {
+		List<Item> items = HomeView.data.retrieveItems(c);
 		tableModel.setRowCount(0);
 		for (Item item : items) {
 			tableModel.addRow(new Object[] { item.getName(), item.getQuantity(), dateFormat(item.getExpiryDate()),
@@ -133,7 +118,7 @@ public class ItemUtility {
 	 * @param expiryDate The date to be formatted.
 	 * @return A string representation of the date in "yyyy-MM-dd" format.
 	 */
-	public static String dateFormat(Date expiryDate) {
+	private static String dateFormat(Date expiryDate) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String format = formatter.format(expiryDate);
 		return format;
@@ -142,14 +127,21 @@ public class ItemUtility {
 	/**
 	 * Assigns FoodFreshness tags to items based on their expiry dates.
 	 * 
-	 * @param data      The database object to update item freshness.
 	 * @param container The container whose items' freshness will be updated.
 	 */
-	public static void assignFoodFreshness(DB data, Container container) {
-		data.batchUpdateItemFreshness(container);
+	public static void assignFoodFreshness(Container container) {
+		HomeView.data.batchUpdateItemFreshness(container);
 	}
 
-	public static String retrieveStorageTip(String foodName, DB data) {
-		return data.getStorageTip(foodName);
+	/**
+	 * Retrieves storage tips for a specific food item from the database.
+	 * This method queries the database through the {@code HomeView.data} interface to find storage tips
+	 * associated with the given food name. If a tip is found, it is returned as a string.
+	 *
+	 * @param foodName The name of the food item for which storage tips are being retrieved.
+	 * @return A string containing storage tips for the specified food item. Returns {@code null} if no tips are found or if there's an error in retrieving the data.
+	 */
+	public static String retrieveStorageTip(String foodName) {
+		return HomeView.data.getStorageTip(foodName);
 	}
 }

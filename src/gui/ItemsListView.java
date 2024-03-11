@@ -155,8 +155,8 @@ public class ItemsListView extends JPanel {
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
 		// Initialize items and assign food freshness
-		ItemUtility.assignFoodFreshness(data, this.getC());
-		ItemUtility.initItems(data, container, tableModel);
+		ItemUtility.assignFoodFreshness(this.getC());
+		ItemUtility.initItems(container, tableModel);
 
 		// Init the right click popup menu
 		popup = new JPopupMenu();
@@ -186,14 +186,16 @@ public class ItemsListView extends JPanel {
 		removeItem.addActionListener(e -> {
 			int row = table.getSelectedRow();
 			String name = tableModel.getValueAt(row, 0).toString();
-			ItemUtility.verifyDeleteItem(name, this.getC(), this);
+			if(ItemUtility.verifyDeleteItem(name, this.getC())){
+				this.removeItem(name);
+			}
 
 		});
 		generateTip.addActionListener(e -> {
 
 			int row = table.getSelectedRow();
 			String name = tableModel.getValueAt(row, 0).toString();
-			String sTip = ItemUtility.retrieveStorageTip(name, data);
+			String sTip = ItemUtility.retrieveStorageTip(name);
 
 			if (sTip != null) {
 				JOptionPane.showMessageDialog(this,
@@ -237,8 +239,8 @@ public class ItemsListView extends JPanel {
 	public void addItem(Item item) {
 		tableModel.addRow(
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
-		ItemUtility.assignFoodFreshness(data, this.getC());
-		ItemUtility.initItems(data, this.getC(), tableModel);
+		ItemUtility.assignFoodFreshness(this.getC());
+		ItemUtility.initItems(this.getC(), tableModel);
 
 	}
 
@@ -270,9 +272,9 @@ public class ItemsListView extends JPanel {
 		Object newValue = table.getModel().getValueAt(row, column);
 
 		// Call the new ItemUtility update method
-		ItemUtility.updateItem(data, getC(), itemName, newValue, column);
-		ItemUtility.assignFoodFreshness(data, this.getC());
-		ItemUtility.initItems(data, this.getC(), tableModel);
+		ItemUtility.updateItem(getC(), itemName, newValue, column);
+		ItemUtility.assignFoodFreshness(this.getC());
+		ItemUtility.initItems(this.getC(), tableModel);
 	}
 
 	/**
