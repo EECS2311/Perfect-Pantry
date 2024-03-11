@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import javax.swing.table.DefaultTableModel;
 
 import gui.HomeView;
-import gui.ItemsListView;
 
 /**
  * Utility class for operations related to items in the inventory such as
