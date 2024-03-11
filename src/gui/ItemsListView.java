@@ -195,7 +195,7 @@ public class ItemsListView extends JPanel {
 
 			int row = table.getSelectedRow();
 			String name = tableModel.getValueAt(row, 0).toString();
-			String sTip = ItemUtility.retrieveStorageTip(name);
+			String sTip = ItemUtility.retrieveStorageTip(name,data);
 
 			if (sTip != null) {
 				JOptionPane.showMessageDialog(this,
@@ -207,10 +207,22 @@ public class ItemsListView extends JPanel {
 			}
 
 		});
+		editQty.addActionListener(e -> {
+
+			String val = JOptionPane.showInputDialog(this, "Edit Quantity", "Enter a new Value", 3);
+			int row = table.getSelectedRow();
+			String name = tableModel.getValueAt(row, 0).toString();
+			ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
+					.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
+						tableModel.setValueAt(val, row, 1);
+					});
+
+		});
+
 		
 		sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
-		
+
 	}
 	
 	// Code adapted from docs.oracle.com for SwingUI table component
@@ -256,6 +268,7 @@ public class ItemsListView extends JPanel {
 
 				// Remove the row from the table model
 				tableModel.removeRow(i);
+
 				break;
 			}
 		}

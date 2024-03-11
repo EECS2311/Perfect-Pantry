@@ -142,6 +142,45 @@ public class ItemUtility {
 	 * @return A string containing storage tips for the specified food item. Returns {@code null} if no tips are found or if there's an error in retrieving the data.
 	 */
 	public static String retrieveStorageTip(String foodName) {
-		return HomeView.data.getStorageTip(foodName);
+		return data.getStorageTip(foodName);
+
+	}
+
+	/**
+	 * Verifies and updates the quantity of an item in the list.
+	 * 
+	 * @param val             The user inputed value.
+	 * @param data            The database object
+	 * @param c               The container that belongs to the item
+	 * @param item            The name of the item which needs the quantity edited
+	 * @param errorHandler    A Consumer that handles error messages.
+	 * @param successCallback A Runnable that is executed upon successful addition.
+	 */
+	public static void verifyEditQuantity(String val, DB data, Container c, String item, Consumer<String> errorHandler,
+			Runnable successCallback) {
+		try {
+			if (val == null) {
+				return;
+			}
+			val = val.trim();
+			if (val.isEmpty()) {
+				errorHandler.accept("Quantity cannot be empty!");
+				return;
+			}
+			int o = Integer.parseInt(val);
+
+			if (o < 0) {
+				errorHandler.accept("You can't have a negative quantity!");
+				return;
+			}
+
+			data.updateQuantity(item, o, c);
+			successCallback.run();
+
+		} catch (NumberFormatException e) {
+			errorHandler.accept("Not a valid number!");
+			return;
+		}
+
 	}
 }

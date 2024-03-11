@@ -373,58 +373,61 @@ public class DB {
 
 		return tip;
 	}
-	
+
 	/**
 	 * Adds an item to the grocery list in the database.
 	 *
 	 * @param itemName The name of the item to add to the grocery list.
 	 */
 	public void addToGroceryList(String itemName) {
-	    // Establish a connection to the database
-	    Connection conn = init();
-	    try {
-	        // Prepare an SQL statement to insert an item into the grocery table
-	        PreparedStatement statement = conn.prepareStatement("INSERT INTO grocery (name) VALUES (?)");
-	        // Set the item name as a parameter in the SQL statement
-	        statement.setString(1, itemName);
-	        // Execute the SQL statement to insert the item into the grocery table
-	        statement.executeUpdate();
-	        // Close the prepared statement
-	        statement.close();
-	        // Close the database connection
-	        conn.close();
-	    } catch (SQLException e) {
-	        // Handle any SQL exceptions by printing the stack trace
-	        e.printStackTrace();
-	    }
+		// Establish a connection to the database
+		Connection conn = init();
+		try {
+			// Prepare an SQL statement to insert an item into the grocery table
+			PreparedStatement statement = conn.prepareStatement("INSERT INTO grocery (name) VALUES (?)");
+			// Set the item name as a parameter in the SQL statement
+			statement.setString(1, itemName);
+			// Execute the SQL statement to insert the item into the grocery table
+			statement.executeUpdate();
+			// Close the prepared statement
+			statement.close();
+			// Close the database connection
+			conn.close();
+		} catch (SQLException e) {
+			// Handle any SQL exceptions by printing the stack trace
+			e.printStackTrace();
+		}
 	}
-	
+
 	/**
 	 * Removes an item from the grocery list in the database.
 	 *
 	 * @param itemName The name of the item to remove from the grocery list.
 	 */
 	public void removeFromGroceryList(String itemName) {
-	    // Establish a connection to the database
-	    Connection conn = init();
-	    try {
-	        // Prepare an SQL statement to delete an item from the grocery table based on its name
-	        PreparedStatement statement = conn.prepareStatement("DELETE FROM grocery WHERE name = ?");
-	        // Set the item name as a parameter in the SQL statement
-	        statement.setString(1, itemName);
-	        // Execute the SQL statement to delete the item from the grocery table
-	        statement.executeUpdate();
-	        // Close the prepared statement
-	        statement.close();
-	        // Close the database connection
-	        conn.close();
-	    } catch (SQLException e) {
-	        // Handle any SQL exceptions by printing the stack trace
-	        e.printStackTrace();
-	    }
+		// Establish a connection to the database
+		Connection conn = init();
+		try {
+			// Prepare an SQL statement to delete an item from the grocery table based on
+			// its name
+			PreparedStatement statement = conn.prepareStatement("DELETE FROM grocery WHERE name = ?");
+			// Set the item name as a parameter in the SQL statement
+			statement.setString(1, itemName);
+			// Execute the SQL statement to delete the item from the grocery table
+			statement.executeUpdate();
+			// Close the prepared statement
+			statement.close();
+			// Close the database connection
+			conn.close();
+		} catch (SQLException e) {
+			// Handle any SQL exceptions by printing the stack trace
+			e.printStackTrace();
+		}
 	}
 
-	/**
+
+
+    /**
      * Retrieves all grocery items from the database.
      *
      * @return A 2D array containing all grocery items, where each row represents an item.
@@ -460,5 +463,31 @@ public class DB {
 
         return itemArray;
     }
+  
+  	/**
+	 * Updates the quantity of an item in the database
+	 * 
+	 * @param item  The name of the item
+	 * @param value The quantity to be updated
+	 * @param c     The container in which the item belongs to
+	 */
+	public void updateQuantity(String item, int value, Container c) {
+
+		Connection conn = init();
+
+		try {
+			String query = "UPDATE item SET quantity = ? WHERE name = ? AND container = ?";
+			PreparedStatement p = conn.prepareStatement(query);
+			p.setInt(1, value);
+			p.setString(2, item);
+			p.setString(3, c.getName());
+			p.executeUpdate();
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+	}
 
 }
