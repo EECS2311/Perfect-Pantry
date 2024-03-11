@@ -183,39 +183,49 @@ public class ItemsListView extends JPanel {
 		});
 
 		removeItem.addActionListener(e -> {
+
 			int row = table.getSelectedRow();
-			String name = tableModel.getValueAt(row, 0).toString();
-			if (ItemUtility.verifyDeleteItem(name, this.getC())) {
-				this.removeItem(name);
+
+			if (row != -1) {
+				String name = tableModel.getValueAt(row, 0).toString();
+				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
+					this.removeItem(name);
+				}
+
 			}
 
 		});
 		generateTip.addActionListener(e -> {
 
 			int row = table.getSelectedRow();
-			String name = tableModel.getValueAt(row, 0).toString();
-			String sTip = ItemUtility.retrieveStorageTip(name);
 
-			if (sTip != null) {
-				JOptionPane.showMessageDialog(this,
-						"<html><body><p style='width:300px;'>" + sTip + "</p></body></html>", name + " - Storage Tip",
-						JOptionPane.PLAIN_MESSAGE);
-			} else {
-				JOptionPane.showMessageDialog(this, "No Storage Tips Available", "NoStorageTipsError",
-						JOptionPane.ERROR_MESSAGE);
+			if (row != -1) {
+				String name = tableModel.getValueAt(row, 0).toString();
+				String sTip = ItemUtility.retrieveStorageTip(name);
+
+				if (sTip != null) {
+					JOptionPane.showMessageDialog(HomeView.getFrame(),
+							"<html><body><p style='width:300px;'>" + sTip + "</p></body></html>",
+							name + " - Storage Tip", JOptionPane.PLAIN_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(HomeView.getFrame(), "No Storage Tips Available",
+							"NoStorageTipsError", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 
 		});
 		editQty.addActionListener(e -> {
 
-			String val = JOptionPane.showInputDialog(this, "Edit Quantity", "Enter a new Value", 3);
-			int row = table.getSelectedRow();
-			String name = tableModel.getValueAt(row, 0).toString();
-			ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
-					.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-						tableModel.setValueAt(val, row, 1);
-					});
+			String val = JOptionPane.showInputDialog(HomeView.getFrame(), "Edit Quantity", "Enter a new Value", 3);
 
+			int row = table.getSelectedRow();
+			if (row != -1) {
+				String name = tableModel.getValueAt(row, 0).toString();
+				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
+						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
+							tableModel.setValueAt(val, row, 1);
+						});
+			}
 		});
 
 		sorter = new TableRowSorter<TableModel>(table.getModel());
