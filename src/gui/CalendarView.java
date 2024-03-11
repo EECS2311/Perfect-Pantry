@@ -46,7 +46,6 @@ public class CalendarView {
 	 */
 	private static Calendar actualCurrentDate;
 
-
 	/**
 	 * Holds JLabel Month, JButton Previous, JButton Current, JButton Next, JButton Exit
 	 */
@@ -129,6 +128,7 @@ public class CalendarView {
 
 		topBar.setLayout(new FlowLayout());
 		topBar.setBounds(0, 0, frame.getWidth(), 50);
+		topBar.setBackground(new Color(253, 241, 203));
 		mainPanel.add(topBar);
 
 		month.setFont(monthFont);
@@ -141,6 +141,7 @@ public class CalendarView {
 
 		weekdayBar.setBounds(0, 50, frame.getWidth(), 30);
 		weekdayBar.setLayout(new GridLayout(0, 7));
+		weekdayBar.setBackground(new Color(253, 241, 203));
 		mainPanel.add(weekdayBar);
 		addWeekdaysToPanel(weekdayBar);
 
@@ -240,12 +241,14 @@ public class CalendarView {
 			JPanel panel = new JPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 			panel.setBorder(BorderFactory.createLineBorder(Color.black));
+			panel.setBackground(Color.white);
 
 			if(emptyBox) {
 				panel.setBackground(new Color(253, 241, 203));
 			}
 			else {
 				date = new JLabel("" + day);
+				date.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 				panel.add(date);
 				if(itemDate.containsKey(day)) {
 					for (Item item : itemDate.get(day)) {
