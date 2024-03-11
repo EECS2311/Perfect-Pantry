@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import javax.swing.table.DefaultTableModel;
 
+import database.DB;
 import gui.HomeView;
 
 /**
@@ -18,8 +19,8 @@ public class ItemUtility {
 	/**
 	 * Verifies the deletion of an item from the specified container
 	 *
-	 * @param itemName The name of the item to verify and delete.
-	 * @param container      The container from which to delete the item.
+	 * @param itemName  The name of the item to verify and delete.
+	 * @param container The container from which to delete the item.
 	 * @return Boolean indicating the success or failure of the item deletion.
 	 */
 	public static Boolean verifyDeleteItem(String itemName, Container container) {
@@ -36,17 +37,17 @@ public class ItemUtility {
 	}
 
 	/**
-	 * Validates the input data for a new item and, if valid, returns true.
-	 * In case of validation errors, it utilizes a Consumer to
-	 * handle the error message and returns false.
+	 * Validates the input data for a new item and, if valid, returns true. In case
+	 * of validation errors, it utilizes a Consumer to handle the error message and
+	 * returns false.
 	 *
-	 * @param name            The name of the new item.
-	 * @param quantityStr     The quantity of the new item as a string.
-	 * @param expiryDate      The expiry date of the new item.
-	 * @param errorHandler    A Consumer that handles error messages.
+	 * @param name         The name of the new item.
+	 * @param quantityStr  The quantity of the new item as a string.
+	 * @param expiryDate   The expiry date of the new item.
+	 * @param errorHandler A Consumer that handles error messages.
 	 */
 	public static boolean verifyAddItem(String name, String quantityStr, String expiryDate,
-										Consumer<String> errorHandler) {
+			Consumer<String> errorHandler) {
 		try {
 			name = name.trim();
 			if (name.isEmpty()) {
@@ -134,15 +135,19 @@ public class ItemUtility {
 	}
 
 	/**
-	 * Retrieves storage tips for a specific food item from the database.
-	 * This method queries the database through the {@code HomeView.data} interface to find storage tips
-	 * associated with the given food name. If a tip is found, it is returned as a string.
+	 * Retrieves storage tips for a specific food item from the database. This
+	 * method queries the database through the {@code HomeView.data} interface to
+	 * find storage tips associated with the given food name. If a tip is found, it
+	 * is returned as a string.
 	 *
-	 * @param foodName The name of the food item for which storage tips are being retrieved.
-	 * @return A string containing storage tips for the specified food item. Returns {@code null} if no tips are found or if there's an error in retrieving the data.
+	 * @param foodName The name of the food item for which storage tips are being
+	 *                 retrieved.
+	 * @return A string containing storage tips for the specified food item. Returns
+	 *         {@code null} if no tips are found or if there's an error in
+	 *         retrieving the data.
 	 */
 	public static String retrieveStorageTip(String foodName) {
-		return data.getStorageTip(foodName);
+		return HomeView.data.getStorageTip(foodName);
 
 	}
 
@@ -153,7 +158,7 @@ public class ItemUtility {
 	 * @param data            The database object
 	 * @param c               The container that belongs to the item
 	 * @param item            The name of the item which needs the quantity edited
-	 * @param errorHandler    A Consumer that handles error messages.
+	 * @param errorHandler    A Consumer thsat handles error messages.
 	 * @param successCallback A Runnable that is executed upon successful addition.
 	 */
 	public static void verifyEditQuantity(String val, DB data, Container c, String item, Consumer<String> errorHandler,
