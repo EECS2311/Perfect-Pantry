@@ -17,8 +17,7 @@ import gui.ItemsListView;
  */
 public class ItemUtility {
 	/**
-	 * Verifies and deletes an item from the specified container and updates the
-	 * Itemslist panel.
+	 * Verifies the deletion of an item from the specified container
 	 *
 	 * @param itemName The name of the item to verify and delete.
 	 * @param container      The container from which to delete the item.
@@ -38,9 +37,9 @@ public class ItemUtility {
 	}
 
 	/**
-	 * Validates the input data for a new item and, if valid, adds it to the
-	 * ItemsListView panel. In case of validation errors, it utilizes a Consumer to
-	 * handle the error message.
+	 * Validates the input data for a new item and, if valid, returns true.
+	 * In case of validation errors, it utilizes a Consumer to
+	 * handle the error message and returns false.
 	 *
 	 * @param name            The name of the new item.
 	 * @param quantityStr     The quantity of the new item as a string.
