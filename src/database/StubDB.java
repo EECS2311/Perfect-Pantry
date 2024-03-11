@@ -120,8 +120,6 @@ public class StubDB extends DB {
 	 */
 	public Boolean addItem(Container c, String name, Item ite) {
 
-		c.addNewItem(ite);
-
 		Item it = itemMap.get(name);
 
 		if (it != null) {
@@ -156,6 +154,7 @@ public class StubDB extends DB {
 	 * @return The {@link Item} object if found, {@code null} otherwise.
 	 */
 	public Item getItem(Container c, String itemName) {
+
 		Connection conn = init();
 
 		try {
