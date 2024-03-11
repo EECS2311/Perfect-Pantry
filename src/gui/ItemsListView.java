@@ -242,7 +242,7 @@ public class ItemsListView extends JPanel {
 	public void filterTable(String str) {
 		RowFilter<TableModel, Object> rf = null;
 		try {
-			rf = RowFilter.regexFilter(str);
+			rf = RowFilter.regexFilter("(?i)" + str);
 		} catch (java.util.regex.PatternSyntaxException e) {
 			return;
 		}

@@ -114,7 +114,6 @@ public class ContainerView implements ActionListener {
 	}
 	
 	private String getItemFilterText() {
-		System.out.println(itemFilterText.getText());
 		return itemFilterText.getText();
 	}
 }
