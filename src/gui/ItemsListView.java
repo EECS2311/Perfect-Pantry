@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
@@ -42,7 +41,7 @@ public class ItemsListView extends JPanel {
 	private JMenuItem removeItem;
 	private JMenuItem editQty;
 	private JMenuItem generateTip;
-	
+
 	private TableRowSorter<TableModel> sorter;
 
 	private boolean colourCodingEnabled = true;
@@ -186,7 +185,7 @@ public class ItemsListView extends JPanel {
 		removeItem.addActionListener(e -> {
 			int row = table.getSelectedRow();
 			String name = tableModel.getValueAt(row, 0).toString();
-			if(ItemUtility.verifyDeleteItem(name, this.getC())){
+			if (ItemUtility.verifyDeleteItem(name, this.getC())) {
 				this.removeItem(name);
 			}
 
@@ -195,7 +194,7 @@ public class ItemsListView extends JPanel {
 
 			int row = table.getSelectedRow();
 			String name = tableModel.getValueAt(row, 0).toString();
-			String sTip = ItemUtility.retrieveStorageTip(name,data);
+			String sTip = ItemUtility.retrieveStorageTip(name);
 
 			if (sTip != null) {
 				JOptionPane.showMessageDialog(this,
@@ -219,15 +218,15 @@ public class ItemsListView extends JPanel {
 
 		});
 
-		
 		sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
 
 	}
-	
+
 	// Code adapted from docs.oracle.com for SwingUI table component
 	/**
 	 * Updates the table sorter with the string provided from the filter text box
+	 * 
 	 * @param str The string from the filter text box to filter the items by.
 	 */
 	public void filterTable(String str) {
@@ -237,12 +236,11 @@ public class ItemsListView extends JPanel {
 		} catch (java.util.regex.PatternSyntaxException e) {
 			return;
 		}
-		
+
 		sorter.setRowFilter(rf);
-		
+
 	}
-	
-	
+
 	/**
 	 * Adds an item to the table and updates the underlying container.
 	 * 
