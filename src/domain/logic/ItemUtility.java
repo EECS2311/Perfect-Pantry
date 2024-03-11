@@ -22,18 +22,15 @@ public class ItemUtility {
 	 *
 	 * @param itemName The name of the item to verify and delete.
 	 * @param container      The container from which to delete the item.
-	 * @param list     The Itemslist panel to update after deletion.
 	 * @return Boolean indicating the success or failure of the item deletion.
 	 */
-	public static Boolean verifyDeleteItem(String itemName, Container container, ItemsListView list) {
+	public static Boolean verifyDeleteItem(String itemName, Container container) {
 
 		// Checking to see if item is in the database
 		if (HomeView.data.getItem(container, itemName) != null) {
 			// Remove the item if its present
 			HomeView.data.removeItem(container, itemName, null);
 
-			// Remove the item from the datalist
-			list.removeItem(itemName);
 			return true;
 		} else
 			return false;
@@ -48,18 +45,15 @@ public class ItemUtility {
 	 * @param name            The name of the new item.
 	 * @param quantityStr     The quantity of the new item as a string.
 	 * @param expiryDate      The expiry date of the new item.
-	 * @param itemsListPanel  The ItemsListView panel to which the item will be
-	 *                        added.
 	 * @param errorHandler    A Consumer that handles error messages.
-	 * @param successCallback A Runnable that is executed upon successful addition.
 	 */
-	public static void verifyAddItem(String name, String quantityStr, String expiryDate, ItemsListView itemsListPanel,
-			Consumer<String> errorHandler, Runnable successCallback) {
+	public static boolean verifyAddItem(String name, String quantityStr, String expiryDate,
+										Consumer<String> errorHandler) {
 		try {
 			name = name.trim();
 			if (name.isEmpty()) {
 				errorHandler.accept("Item name cannot be empty.");
-				return;
+				return false;
 			}
 
 			int quantity;
@@ -67,25 +61,21 @@ public class ItemUtility {
 				quantity = Integer.parseInt(quantityStr);
 			} catch (NumberFormatException ex) {
 				errorHandler.accept("Please enter a valid number for quantity.");
-				return;
+				return false;
 			}
 
 			if (quantity <= 0) {
 				errorHandler.accept("Quantity must be greater than 0.");
-				return;
+				return false;
 			}
 
 			Item item = Item.getInstance(name, quantity, expiryDate);
 
-			Boolean valid = HomeView.data.addItem(itemsListPanel.getC(), item.getName(), item);
-			if (!valid) {
-				errorHandler.accept("No Duplicate Items!");
-				return;
-			}
-			itemsListPanel.addItem(item);
-			successCallback.run();
+			// Validation successful, return true
+			return true;
 		} catch (Exception ex) {
-			errorHandler.accept("Error adding item: " + ex.getMessage());
+			errorHandler.accept("Error validating item: " + ex.getMessage());
+			return false;
 		}
 	}
 

@@ -186,7 +186,9 @@ public class ItemsListView extends JPanel {
 		removeItem.addActionListener(e -> {
 			int row = table.getSelectedRow();
 			String name = tableModel.getValueAt(row, 0).toString();
-			ItemUtility.verifyDeleteItem(name, this.getC(), this);
+			if(ItemUtility.verifyDeleteItem(name, this.getC())){
+				this.removeItem(name);
+			}
 
 		});
 		generateTip.addActionListener(e -> {
