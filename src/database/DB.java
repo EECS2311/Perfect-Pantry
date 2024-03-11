@@ -489,5 +489,55 @@ public class DB {
 		}
 
 	}
+/**
+     * Retrieves items that are close to expiring.
+     *
+     * @return A list of item names that are expiring soon.
+     */
+    public List<String> getExpiringItems() {
+        List<String> expiringItems = new ArrayList<>();
+        Connection conn = init();
+
+        try {
+            //  select items whose expiry date is within the next 7 days
+            String sql = "SELECT name FROM item WHERE expiry <= ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            // Calculate the date 7 days from now
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, 7);
+            Date sevenDaysFromNow = new Date(calendar.getTimeInMillis());
+
+            // Set the parameter in the prepared statement
+            pstmt.setDate(1, sevenDaysFromNow);
+
+            // Execute the query
+            ResultSet rs = pstmt.executeQuery();
+//
+             //Process the result set
+            while (rs.next()) {
+                String itemName = rs.getString("name");
+                expiringItems.add(itemName);
+            }
+//            while (rs.next()) {
+//                String itemName = rs.getString("name");
+//                String containerName = rs.getString("container");
+//                Date expiryDate = rs.getDate("expiry");
+//                expiringItems.add(itemName + " in " + containerName + " (Expiry: " + expiryDate + ")");
+//            }
+//
+            // Close resources
+            rs.close();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return expiringItems;
+    }
+
 
 }
+
+
