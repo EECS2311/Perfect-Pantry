@@ -4,8 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -23,6 +26,8 @@ public class ContainerView implements ActionListener {
 	private JButton back;
 	private JButton filter = new JButton("Find");
 	private JTextField itemFilterText;
+	private JComboBox<String> foodGroupFilter;
+	private JComboBox<String> foodFreshnessFilter;
 
 	private HomeView home;
 	private ItemsListView itemsListPanel;
@@ -30,6 +35,9 @@ public class ContainerView implements ActionListener {
 	private Container container;
 	
 	private JButton viewCalendar = new JButton ("View Calendar");
+	
+	private final String[] FOODGROUPSTRINGS = {"", "Grain", "Protein", "Fruit", "Vegetable", "Dairy"};
+	private final String[] FRESHNESSSTRINGS = {"", "Fresh", "Near_Expiry", "Expired"};
 
 	DB data = home.data;
 
@@ -46,6 +54,10 @@ public class ContainerView implements ActionListener {
 		back = new JButton("Back");
 
 		itemFilterText = new JTextField(10);
+		foodGroupFilter = new JComboBox<String>(FOODGROUPSTRINGS);
+		foodGroupFilter.setSelectedItem("Food Groups");
+		foodFreshnessFilter = new JComboBox<String>(FRESHNESSSTRINGS);
+		foodFreshnessFilter.setSelectedItem("Freshness");
 		
 		itemsListPanel = new ItemsListView(home, container);
 		addItemPanel = new AddItemView(itemsListPanel);
@@ -55,9 +67,12 @@ public class ContainerView implements ActionListener {
 		back.addActionListener(this);
 		filter.addActionListener(this);
 
+
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Create a panel for buttons with FlowLayout
 		buttonPanel.add(back); // Add back button to the button panel
 		buttonPanel.add(itemFilterText);
+		buttonPanel.add(foodGroupFilter);
+		buttonPanel.add(foodFreshnessFilter);
 		buttonPanel.add(filter);
 
 		containerView.add(buttonPanel, BorderLayout.NORTH); // Add the button panel to the top of the main panel
@@ -102,15 +117,22 @@ public class ContainerView implements ActionListener {
 		}
 
 		if (e.getSource() == filter) {
-			itemsListPanel.filterTable(getItemFilterText());
-    }
+			
+			List<String> filters = new ArrayList<String>();
+			filters.add(getItemFilterText());
+			filters.add(foodGroupFilter.getSelectedItem().toString());
+			filters.add(foodFreshnessFilter.getSelectedItem().toString());
+			
+			itemsListPanel.filterTable(filters);
+
+		}
     
 		if(e.getSource() == viewCalendar) {
 			setupContainerViewGUI(false); //hide this view
 			home.setHomeViewVisibility(false); //hides the view setup displays
 			new CalendarView(container, this, home); //initialises Calendar
 		}
-
+		
 	}
 	
 	private String getItemFilterText() {
