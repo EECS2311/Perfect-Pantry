@@ -10,8 +10,6 @@ import java.util.Map;
  * A custom cell editor for editing enum values within a JComboBox in a JTable cell.
  * It maps the display names of enum values to their corresponding enum constants,
  * allowing the combo box to show human-readable names instead of the enum constant names.
- *
- * @param <E> The enum type that implements the Tag interface, which provides a getDisplayName method.
  */
 public class EnumComboBoxEditor extends DefaultCellEditor {
     private Map<String, Object> displayNameToEnumMap = new HashMap<>();
