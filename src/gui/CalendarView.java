@@ -230,7 +230,6 @@ public class CalendarView {
 		int numofPanels = setupGridLayout(current, dayOfWeekStart, maxDaysInMonth);
 		HashMap<Integer, ArrayList<Item>> itemDate = getItemThatExpireInMonth(current);
 
-
 		boolean emptyBox;
 		JLabel date;
 		int day = 1;
@@ -249,6 +248,12 @@ public class CalendarView {
 			else {
 				date = new JLabel("" + day);
 				date.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+				if(todayDate(current, day)) {
+					date.setForeground(Color.RED);
+				}
+				else {
+					date.setForeground(Color.black);
+				}
 				panel.add(date);
 				if(itemDate.containsKey(day)) {
 					for (Item item : itemDate.get(day)) {
@@ -328,6 +333,22 @@ public class CalendarView {
 		else {
 			return false;
 		}
+	}
+	
+	/**
+	 * Checks if the day given and the calendar is the same as the actual current date
+	 * @param current the month and year of a calendar to check
+	 * @param day the day to check
+	 * @return If what is given would be the actual current date
+	 */
+	public boolean todayDate(Calendar current, int day) {
+		if (current.get(Calendar.MONTH) == actualCurrentDate.get(Calendar.MONTH) &&
+				current.get(Calendar.YEAR) == actualCurrentDate.get(Calendar.YEAR) && 
+				day == actualCurrentDate.get(Calendar.DATE)) {
+			return true;
+			
+		}
+		else return false;
 	}
 
 
