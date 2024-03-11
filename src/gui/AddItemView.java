@@ -17,6 +17,7 @@ public class AddItemView extends JPanel {
     private JTextField itemQuantityField = new JTextField(5);
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
+    private JButton viewCalendar = new JButton("View Calendar");
 
     private ItemsListView itemsListPanel;
 
@@ -36,8 +37,10 @@ public class AddItemView extends JPanel {
         add(new JLabel("Expiration Date (dd-MMM-yyyy):"));
         add(itemExpiryField);
         add(addButton);
+//        add(viewCalendar);
 
         addButton.addActionListener(e -> addItem());
+//        viewCalendar.addActionListener(e -> new CalendarView());
     }
 
     /**
@@ -47,20 +50,32 @@ public class AddItemView extends JPanel {
      * and clears the input fields for the next entry.
      */
     private void addItem() {
-        ItemUtility.verifyAddItem(
-                itemNameField.getText(),
-                itemQuantityField.getText(),
-                itemExpiryField.getText(),
-                itemsListPanel,
-                (errorMsg) -> JOptionPane.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
-                () -> {
-                    itemNameField.setText("");
-                    itemQuantityField.setText("");
-                    itemExpiryField.setText("");
-                }
-        );
-    }
+        String name = itemNameField.getText();
+        String quantityStr = itemQuantityField.getText();
+        String expiryDate = itemExpiryField.getText();
 
+        boolean isValid = ItemUtility.verifyAddItem(name, quantityStr, expiryDate,
+                (errorMsg) -> JOptionPane.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE));
+
+        if (isValid) {
+            Item item = Item.getInstance(name, Integer.parseInt(quantityStr), expiryDate);
+
+            // Assume itemsListPanel.getC() gets a context or container where items are to be added
+            boolean addedToData = HomeView.data.addItem(itemsListPanel.getC(), item.getName(), item);
+
+            if (!addedToData) {
+                JOptionPane.showMessageDialog(this, "No Duplicate Items!", "Add Item Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            itemsListPanel.addItem(item);
+
+            // Clear the input fields and run the success callback logic
+            itemNameField.setText("");
+            itemQuantityField.setText("");
+            itemExpiryField.setText("");
+        }
+    }
 
     /**
      * Specifies the preferred size of the component, which in this case is adjusted to accommodate the layout.

@@ -425,47 +425,46 @@ public class DB {
 		}
 	}
 
-	/**
-	 * Retrieves all grocery items from the database.
-	 *
-	 * @return A 2D array containing all grocery items, where each row represents an
-	 *         item.
-	 */
-	public Object[][] getAllGroceryItems() {
-		Connection conn = init();
-		List<Object[]> itemList = new ArrayList<>();
 
-		if (conn != null) {
-			try {
-				PreparedStatement statement = conn.prepareStatement("SELECT * FROM grocery");
-				ResultSet resultSet = statement.executeQuery();
 
-				while (resultSet.next()) {
-					String itemName = resultSet.getString("name");
-					// You can add more columns as needed, such as ID, quantity, etc.
-					// For simplicity, this example assumes only the item name is retrieved.
+    /**
+     * Retrieves all grocery items from the database.
+     *
+     * @return A 2D array containing all grocery items, where each row represents an item.
+     */
+    public Object[][] getAllGroceryItems() {
+        Connection conn = init();
+        List<Object[]> itemList = new ArrayList<>();
 
-					// Create an array representing the current item
-					Object[] itemData = { itemName };
-					itemList.add(itemData);
-				}
+        if (conn != null) {
+            try {
+                PreparedStatement statement = conn.prepareStatement("SELECT * FROM grocery");
+                ResultSet resultSet = statement.executeQuery();
 
-				resultSet.close();
-				statement.close();
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+                while (resultSet.next()) {
+                    String itemName = resultSet.getString("name");
 
-		// Convert the list to a 2D array
-		Object[][] itemArray = new Object[itemList.size()][];
-		itemList.toArray(itemArray);
+                    // Create an array representing the current item
+                    Object[] itemData = { itemName };
+                    itemList.add(itemData);
+                }
 
-		return itemArray;
-	}
+                resultSet.close();
+                statement.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
-	/**
+        // Convert the list to a 2D array
+        Object[][] itemArray = new Object[itemList.size()][];
+        itemList.toArray(itemArray);
+
+        return itemArray;
+    }
+  
+  	/**
 	 * Updates the quantity of an item in the database
 	 * 
 	 * @param item  The name of the item
