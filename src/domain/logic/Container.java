@@ -69,7 +69,6 @@ public class Container {
 		this.listOfItem = new HashMap<String, Item>();
 		for (Item item : items) {
 			this.listOfItem.put(item.getName(), item);
-
 		}
 	}
 
