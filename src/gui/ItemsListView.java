@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -239,14 +241,19 @@ public class ItemsListView extends JPanel {
 	 * 
 	 * @param str The string from the filter text box to filter the items by.
 	 */
-	public void filterTable(String str) {
-		RowFilter<TableModel, Object> rf = null;
+	public void filterTable(List<String> filter) {
+		RowFilter<TableModel, Object> rf;
+		List<RowFilter<TableModel, Object>> filters = new ArrayList<RowFilter<TableModel, Object>>();
 		try {
-			rf = RowFilter.regexFilter(str);
+			filters.add(RowFilter.regexFilter("(?i)" + filter.get(0), 0));
+			filters.add(RowFilter.regexFilter("(?i)" + filter.get(1), 3));
+			filters.add(RowFilter.regexFilter("(?i)" + filter.get(2), 4));
+
 		} catch (java.util.regex.PatternSyntaxException e) {
 			return;
 		}
-
+		
+		rf = RowFilter.andFilter(filters);
 		sorter.setRowFilter(rf);
 
 	}
