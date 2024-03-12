@@ -97,8 +97,8 @@ public class Container {
 	 * 
 	 * @param item The item to remove.
 	 */
-	public void removeItem(Item item) {
-		listOfItem.remove(item.getName());
+	public void removeItem(String itemName) {
+		listOfItem.remove(itemName);
 	}
 
 	/**

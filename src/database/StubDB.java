@@ -14,10 +14,10 @@ import domain.logic.Item;
 
 public class StubDB extends DB {
 
-	HashMap<String, Container> containerMap = new HashMap<String, Container>();
-	HashMap<String, Item> itemMap = new HashMap<String, Item>();
-	HashMap<String, String> storageTipMap = new HashMap<String, String>();
-	ArrayList<String> groceryList = new ArrayList<String>();
+	public HashMap<String, Container> containerMap = new HashMap<String, Container>();
+	public HashMap<String, Item> itemMap = new HashMap<String, Item>();
+	public HashMap<String, String> storageTipMap = new HashMap<String, String>();
+	public ArrayList<String> groceryList = new ArrayList<String>();
 
 	/**
 	 * Inserts a new container into the database
@@ -138,10 +138,10 @@ public class StubDB extends DB {
 	 * @param c    The container from which the item will be removed.
 	 * @param name The name of the item to be removed.
 	 */
-	public void removeItem(Container c, String name, Item ite) {
+	public void removeItem(Container c, String name) {
 
 		itemMap.remove(name);
-		c.removeItem(ite);
+		c.removeItem(name);
 
 	}
 
