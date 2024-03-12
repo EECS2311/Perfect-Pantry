@@ -1,4 +1,4 @@
-package test;
+package test.unit;
 
 import domain.logic.Container;
 import domain.logic.Item;
