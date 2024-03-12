@@ -106,9 +106,24 @@ class StubDBTest {
 	}
 
 	@Test
-	void getGroceryTip() {
+	void getStorageTip_DoesntExist() {
 		StubDB db = new StubDB();
 		assertNull(db.getStorageTip("Cheese"));
+
+	}
+
+	@Test
+	void testGroceryList() {
+
+		StubDB db = new StubDB();
+		db.addToGroceryList("Cheese");
+		assertEquals(db.groceryList.size(), 1);
+
+		db.removeFromGroceryList("Grapes");
+		assertEquals(db.groceryList.size(), 1);
+
+		db.removeFromGroceryList("Cheese");
+		assertEquals(db.groceryList.size(), 0);
 
 	}
 
