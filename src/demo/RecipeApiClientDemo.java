@@ -1,0 +1,35 @@
+package demo;
+
+import domain.logic.recipe.Ingredient;
+import domain.logic.recipe.Recipe;
+import domain.logic.recipe.RecipeApiClient;
+import domain.logic.recipe.SpoonacularApi;
+
+import java.util.List;
+
+public class RecipeApiClientDemo {
+    public static void main(String[] args) {
+        String apiKey = SpoonacularApi.SpoonacularApiKey;
+        RecipeApiClient apiClient = new RecipeApiClient(apiKey);
+
+        // Example: Searching for recipes with apples,sugar,flour
+        String ingredients = "apples,sugar,flour";
+        int numberOfRecipes = 5; // Number of recipes you want to retrieve
+
+        List<Recipe> recipes = apiClient.findRecipesByIngredients(ingredients, numberOfRecipes);
+
+        // Displaying the recipes and their ingredients
+        for (Recipe recipe : recipes) {
+            System.out.println("Recipe ID: " + recipe.getId() + ", Title: " + recipe.getTitle() + ", Image: " + recipe.getImage());
+            System.out.println("Used Ingredients:");
+            for (Ingredient ingredient : recipe.getUsedIngredients()) {
+                System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit() + " " + ingredient.getOriginal());
+            }
+            System.out.println("Missed Ingredients:");
+            for (Ingredient ingredient : recipe.getUsedIngredients()) {
+                System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit() + " " + ingredient.getOriginal());
+            }
+            System.out.println("--------------------------------");
+        }
+    }
+}
