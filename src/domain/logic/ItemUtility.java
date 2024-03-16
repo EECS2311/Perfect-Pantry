@@ -177,10 +177,14 @@ public class ItemUtility {
 			if (o < 0) {
 				errorHandler.accept("You can't have a negative quantity!");
 				return;
-			}
+			} else if (o == 0) {
+				verifyDeleteItem(item, c);
+				successCallback.run();
 
-			data.updateQuantity(item, o, c);
-			successCallback.run();
+			} else {
+				data.updateQuantity(item, o, c);
+				successCallback.run();
+			}
 
 		} catch (NumberFormatException e) {
 			errorHandler.accept("Not a valid number!");
