@@ -23,11 +23,11 @@ public class RecipeApiClientDemo {
             System.out.println("Recipe ID: " + recipe.getId() + ", Title: " + recipe.getTitle() + ", Image: " + recipe.getImage());
             System.out.println("Used Ingredients:");
             for (Ingredient ingredient : recipe.getUsedIngredients()) {
-                System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit() + " " + ingredient.getOriginal());
+                System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit());
             }
             System.out.println("Missed Ingredients:");
             for (Ingredient ingredient : recipe.getMissedIngredients()) {
-                System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit() + " " + ingredient.getOriginal());
+                System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit());
             }
             System.out.println("--------------------------------");
         }
