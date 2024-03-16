@@ -233,6 +233,7 @@ public class ItemsListView extends JPanel {
 						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
 							tableModel.setValueAt(val, row, 1);
 						});
+				ItemUtility.initItems(this.getC(), tableModel);
 			}
 		});
 
