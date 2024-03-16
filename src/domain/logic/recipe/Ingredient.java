@@ -34,50 +34,110 @@ public class Ingredient {
         this.original = original;
     }
 
+    /**
+     * Gets the unique identifier of the ingredient.
+     *
+     * @return the ingredient ID
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets the unique identifier of the ingredient.
+     *
+     * @param id the ingredient ID to set
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets the name of the ingredient.
+     *
+     * @return the ingredient name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the ingredient.
+     *
+     * @param name the ingredient name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets the amount of the ingredient.
+     *
+     * @return the ingredient amount
+     */
     public double getAmount() {
         return amount;
     }
 
+    /**
+     * Sets the amount of the ingredient.
+     *
+     * @param amount the ingredient amount to set
+     */
     public void setAmount(double amount) {
         this.amount = amount;
     }
 
+    /**
+     * Gets the unit of measurement for the ingredient's amount.
+     *
+     * @return the unit of measurement
+     */
     public String getUnit() {
         return unit;
     }
 
+    /**
+     * Sets the unit of measurement for the ingredient's amount.
+     *
+     * @param unit the unit of measurement to set
+     */
     public void setUnit(String unit) {
         this.unit = unit;
     }
 
+    /**
+     * Gets the URL to the image of the ingredient.
+     *
+     * @return the URL of the ingredient's image
+     */
     public String getImage() {
         return image;
     }
 
+    /**
+     * Sets the URL to the image of the ingredient.
+     *
+     * @param image the URL of the ingredient's image to set
+     */
     public void setImage(String image) {
         this.image = image;
     }
 
+    /**
+     * Gets the original string of the ingredient details.
+     *
+     * @return the original string
+     */
     public String getOriginal() {
         return original;
     }
 
+    /**
+     * Sets the original string of the ingredient details.
+     *
+     * @param original the original string to set
+     */
     public void setOriginal(String fullName) {
         this.original = fullName;
     }

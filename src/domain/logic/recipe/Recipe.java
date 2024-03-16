@@ -32,50 +32,110 @@ public class Recipe {
         this.missedIngredients = new ArrayList<>();
     }
 
+    /**
+     * Adds an ingredient to the list of used ingredients in the recipe.
+     *
+     * @param ingredient the ingredient to add
+     */
     public void addUsedIngredient(Ingredient ingredient) {
         this.usedIngredients.add(ingredient);
     }
 
+    /**
+     * Adds an ingredient to the list of missed ingredients in the recipe.
+     *
+     * @param ingredient the ingredient to add
+     */
     public void addMissedIngredient(Ingredient ingredient) {
         this.missedIngredients.add(ingredient);
     }
 
+    /**
+     * Gets the unique identifier of the recipe.
+     *
+     * @return the recipe ID
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets the unique identifier of the recipe.
+     *
+     * @param id the recipe ID to set
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets the title of the recipe.
+     *
+     * @return the recipe title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets the title of the recipe.
+     *
+     * @param title the recipe title to set
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Gets the URL to the image of the recipe.
+     *
+     * @return the URL of the recipe's image
+     */
     public String getImage() {
         return image;
     }
 
+    /**
+     * Sets the URL to the image of the recipe.
+     *
+     * @param image the URL of the recipe's image to set
+     */
     public void setImage(String image) {
         this.image = image;
     }
 
+    /**
+     * Gets the list of used ingredients in the recipe.
+     *
+     * @return the list of used ingredients
+     */
     public List<Ingredient> getUsedIngredients() {
         return usedIngredients;
     }
 
+    /**
+     * Sets the list of used ingredients in the recipe.
+     *
+     * @param usedIngredients the list of used ingredients to set
+     */
     public void setUsedIngredients(List<Ingredient> usedIngredients) {
         this.usedIngredients = usedIngredients;
     }
 
+    /**
+     * Gets the list of missed ingredients in the recipe.
+     *
+     * @return the list of missed ingredients
+     */
     public List<Ingredient> getMissedIngredients() {
         return missedIngredients;
     }
 
+    /**
+     * Sets the list of missed ingredients in the recipe.
+     *
+     * @param missedIngredients the list of missed ingredients to set
+     */
     public void setMissedIngredients(List<Ingredient> missedIngredients) {
         this.missedIngredients = missedIngredients;
     }
