@@ -26,7 +26,7 @@ public class RecipeApiClientDemo {
                 System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit() + " " + ingredient.getOriginal());
             }
             System.out.println("Missed Ingredients:");
-            for (Ingredient ingredient : recipe.getUsedIngredients()) {
+            for (Ingredient ingredient : recipe.getMissedIngredients()) {
                 System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit() + " " + ingredient.getOriginal());
             }
             System.out.println("--------------------------------");
