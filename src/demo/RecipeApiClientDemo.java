@@ -9,14 +9,11 @@ import java.util.List;
 
 public class RecipeApiClientDemo {
     public static void main(String[] args) {
-        String apiKey = SpoonacularApi.SpoonacularApiKey;
-        RecipeApiClient apiClient = new RecipeApiClient(apiKey);
-
         // Example: Searching for recipes with apples,sugar,flour
         String ingredients = "apples,sugar,flour";
         int numberOfRecipes = 5; // Number of recipes you want to retrieve
 
-        List<Recipe> recipes = apiClient.findRecipesByIngredients(ingredients, numberOfRecipes);
+        List<Recipe> recipes = RecipeApiClient.findRecipesByIngredients(ingredients, numberOfRecipes);
 
         // Displaying the recipes and their ingredients
         for (Recipe recipe : recipes) {

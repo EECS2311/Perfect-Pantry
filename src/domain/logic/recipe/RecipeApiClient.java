@@ -14,17 +14,16 @@ import java.util.List;
  * The client for accessing the recipe API using Spoonacular's API.
  */
 public class RecipeApiClient {
-    private String apiKey;
-    private Gson gson;
+    private static String apiKey = SpoonacularApi.SpoonacularApiKey;
+    private static Gson gson = new Gson();
 
     /**
-     * Constructs a RecipeApiClient instance with the provided API key.
+     * Sets the API key for all Spoonacular API requests.
      *
-     * @param apiKey the API key for Spoonacular's API
+     * @param newApiKey the API key to set
      */
-    public RecipeApiClient(String apiKey) {
-        this.apiKey = apiKey;
-        this.gson = new Gson();
+    public static void setApiKey(String newApiKey) {
+        apiKey = newApiKey;
     }
 
     /**
@@ -34,7 +33,7 @@ public class RecipeApiClient {
      * @param numberOfRecipes  the number of recipes to return
      * @return a list of Recipe objects
      */
-    public List<Recipe> findRecipesByIngredients(String ingredients, int numberOfRecipes) {
+    public static List<Recipe> findRecipesByIngredients(String ingredients, int numberOfRecipes) {
         String urlString = String.format(
                 "https://api.spoonacular.com/recipes/findByIngredients?ingredients=%s&number=%d&apiKey=%s",
                 ingredients, numberOfRecipes, apiKey
@@ -59,6 +58,41 @@ public class RecipeApiClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null; // Return null in case of failure
+        return null;
+    }
+
+    /**
+     * Retrieves the analyzed recipe instructions from Spoonacular API.
+     * This is a static method because it does not require any instance-specific data.
+     *
+     * @param recipeId the unique identifier of the recipe
+     * @return a list of steps for the recipe or null if an error occurs
+     */
+    public static List<InstructionStep> getRecipeInstructions(int recipeId) {
+        String urlString = String.format(
+                "https://api.spoonacular.com/recipes/%d/analyzedInstructions?stepBreakdown=true&apiKey=%s",
+                recipeId, apiKey
+        );
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            Type listType = new TypeToken<List<InstructionStep>>(){}.getType();
+            return gson.fromJson(response.toString(), listType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
