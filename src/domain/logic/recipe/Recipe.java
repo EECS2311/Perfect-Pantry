@@ -8,14 +8,13 @@ import java.util.Objects;
  * Represents a recipe with an ID, title, image URL, and lists of used and missed ingredients.
  */
 public class Recipe {
-
     private int id;
-
     private String title;
-
     private String image;
     private List<Ingredient> usedIngredients;
     private List<Ingredient> missedIngredients;
+    private List<InstructionStep> detailedInstructions;
+    private boolean fetchedStep = false;
 
     /**
      * Constructs a Recipe instance with specified details.
@@ -30,6 +29,20 @@ public class Recipe {
         this.image = image;
         this.usedIngredients = new ArrayList<>();
         this.missedIngredients = new ArrayList<>();
+    }
+
+    /**
+     * Gets the detailed instructions for the recipe. If they haven't been fetched already,
+     * it fetches them from the API.
+     *
+     * @return the detailed instructions for the recipe
+     */
+    public List<InstructionStep> getDetailedInstructions() {
+        if (fetchedStep == false) {
+            detailedInstructions = RecipeApiClient.getRecipeInstructions(this.id);
+            fetchedStep = true;
+        }
+        return detailedInstructions;
     }
 
     /**
