@@ -1,6 +1,6 @@
 package domain.logic.recipe;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
@@ -8,7 +8,10 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The client for accessing the recipe API using Spoonacular's API.
@@ -63,16 +66,17 @@ public class RecipeApiClient {
 
     /**
      * Retrieves the analyzed recipe instructions from Spoonacular API.
-     * This is a static method because it does not require any instance-specific data.
      *
      * @param recipeId the unique identifier of the recipe
-     * @return a list of steps for the recipe or null if an error occurs
+     * @return a map of steps for the recipe
      */
-    public static List<InstructionStep> getRecipeInstructions(int recipeId) {
+    public static Map<Integer, String> getRecipeInstructions(int recipeId) {
         String urlString = String.format(
                 "https://api.spoonacular.com/recipes/%d/analyzedInstructions?stepBreakdown=true&apiKey=%s",
                 recipeId, apiKey
         );
+
+        Map<Integer, String> stepsMap = new HashMap<>();
 
         try {
             URL url = new URL(urlString);
@@ -88,11 +92,27 @@ public class RecipeApiClient {
             }
             in.close();
 
-            Type listType = new TypeToken<List<InstructionStep>>(){}.getType();
-            return gson.fromJson(response.toString(), listType);
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(response.toString());
+            if (element.isJsonArray()) {
+                JsonArray instructionsArray = element.getAsJsonArray();
+                for (JsonElement instructionElement : instructionsArray) {
+                    JsonObject instructionObject = instructionElement.getAsJsonObject();
+                    if (instructionObject.has("steps") && instructionObject.get("steps").isJsonArray()) {
+                        JsonArray stepsArray = instructionObject.get("steps").getAsJsonArray();
+                        for (JsonElement stepElement : stepsArray) {
+                            JsonObject stepObject = stepElement.getAsJsonObject();
+                            int number = stepObject.get("number").getAsInt();
+                            String step = stepObject.get("step").getAsString();
+                            stepsMap.put(number, step);
+                        }
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+
+        return stepsMap;
     }
 }

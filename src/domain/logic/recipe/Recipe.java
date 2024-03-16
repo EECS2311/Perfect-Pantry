@@ -1,8 +1,6 @@
 package domain.logic.recipe;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Represents a recipe with an ID, title, image URL, and lists of used and missed ingredients.
@@ -13,7 +11,7 @@ public class Recipe {
     private String image;
     private List<Ingredient> usedIngredients;
     private List<Ingredient> missedIngredients;
-    private List<InstructionStep> detailedInstructions;
+    private Map<Integer, String> detailedInstructions;
     private boolean fetchedStep = false;
 
     /**
@@ -29,16 +27,17 @@ public class Recipe {
         this.image = image;
         this.usedIngredients = new ArrayList<>();
         this.missedIngredients = new ArrayList<>();
+        this.detailedInstructions = new HashMap<>();
     }
 
     /**
-     * Gets the detailed instructions for the recipe. If they haven't been fetched already,
-     * it fetches them from the API.
+     * Lazily retrieves the analyzed recipe instructions when requested by the user.
+     * The method does not fetch the instructions until this method is called, to respect API rate limits.
      *
-     * @return the detailed instructions for the recipe
+     * @return a map of step numbers to instruction descriptions
      */
-    public List<InstructionStep> getDetailedInstructions() {
-        if (fetchedStep == false) {
+    public Map<Integer, String> getDetailedInstructions() {
+        if (!fetchedStep) {
             detailedInstructions = RecipeApiClient.getRecipeInstructions(this.id);
             fetchedStep = true;
         }

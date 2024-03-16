@@ -16,17 +16,21 @@ public class RecipeApiClientDemo {
         List<Recipe> recipes = RecipeApiClient.findRecipesByIngredients(ingredients, numberOfRecipes);
 
         // Displaying the recipes and their ingredients
-        for (Recipe recipe : recipes) {
-            System.out.println("Recipe ID: " + recipe.getId() + ", Title: " + recipe.getTitle() + ", Image: " + recipe.getImage());
-            System.out.println("Used Ingredients:");
-            for (Ingredient ingredient : recipe.getUsedIngredients()) {
-                System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit());
+        if(recipes != null){
+            for (Recipe recipe : recipes) {
+                System.out.println("Recipe ID: " + recipe.getId() + ", Title: " + recipe.getTitle() + ", Image: " + recipe.getImage());
+                System.out.println("Used Ingredients:");
+                for (Ingredient ingredient : recipe.getUsedIngredients()) {
+                    System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit());
+                }
+                System.out.println("Missed Ingredients:");
+                for (Ingredient ingredient : recipe.getMissedIngredients()) {
+                    System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit());
+                }
+                System.out.println("--------------------------------");
             }
-            System.out.println("Missed Ingredients:");
-            for (Ingredient ingredient : recipe.getMissedIngredients()) {
-                System.out.println(" - " + ingredient.getName() + ": " + ingredient.getAmount() + " " + ingredient.getUnit());
-            }
-            System.out.println("--------------------------------");
+
+            System.out.println(recipes.get(0).getDetailedInstructions());
         }
     }
 }
