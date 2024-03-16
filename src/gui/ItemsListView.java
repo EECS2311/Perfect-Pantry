@@ -239,7 +239,7 @@ public class ItemsListView extends JPanel {
 	/**
 	 * Updates the table sorter with the string provided from the filter text box
 	 * 
-	 * @param str The string from the filter text box to filter the items by.
+	 * @param filter The string from the filter text box to filter the items by.
 	 */
 	public void filterTable(List<String> filter) {
 		RowFilter<TableModel, Object> rf;
