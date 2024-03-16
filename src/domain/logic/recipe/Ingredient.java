@@ -138,8 +138,8 @@ public class Ingredient {
      *
      * @param original the original string to set
      */
-    public void setOriginal(String fullName) {
-        this.original = fullName;
+    public void setOriginal(String original) {
+        this.original = original;
     }
 
     @Override
