@@ -41,6 +41,9 @@ public class ContainerView implements ActionListener {
 
 	DB data = home.data;
 
+	private JButton toggleColorCodingButton = new JButton("Toggle Colour Coding");
+
+
 	/**
 	 * Constructs a new ContainerView associated with a specific container and home.
 	 * 
@@ -67,6 +70,7 @@ public class ContainerView implements ActionListener {
 		back.addActionListener(this);
 		filter.addActionListener(this);
 
+		toggleColorCodingButton.addActionListener(this);
 
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Create a panel for buttons with FlowLayout
 		buttonPanel.add(back); // Add back button to the button panel
@@ -74,6 +78,8 @@ public class ContainerView implements ActionListener {
 		buttonPanel.add(foodGroupFilter);
 		buttonPanel.add(foodFreshnessFilter);
 		buttonPanel.add(filter);
+		buttonPanel.add(toggleColorCodingButton);
+
 
 		containerView.add(buttonPanel, BorderLayout.NORTH); // Add the button panel to the top of the main panel
 		containerView.add(itemsListPanel, BorderLayout.CENTER); // Add the items list panel to the center
@@ -131,6 +137,10 @@ public class ContainerView implements ActionListener {
 			setupContainerViewGUI(false); //hide this view
 			home.setHomeViewVisibility(false); //hides the view setup displays
 			new CalendarView(container, this, home); //initialises Calendar
+		}
+
+		if (e.getSource() == toggleColorCodingButton) {
+			itemsListPanel.toggleColourCoding();
 		}
 		
 	}
