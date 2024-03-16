@@ -300,7 +300,7 @@ public class ItemsListView extends JPanel {
 		Object newValue = table.getModel().getValueAt(row, column);
 
 		// Call the new ItemUtility update method
-		ItemUtility.updateItem(getC(), itemName, newValue, column);
+		ItemUtility.updateItemFoodGroupTag(getC(), itemName, newValue, column);
 		ItemUtility.assignFoodFreshness(this.getC());
 		ItemUtility.initItems(this.getC(), tableModel);
 	}
