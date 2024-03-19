@@ -101,6 +101,7 @@ public class HomeView implements ActionListener {
 		ContainerUtility.initContainers(containerMap, data, this);
 
 		setHomeViewVisibility(true);
+                 new Notification();
 	}
 
 	/**
