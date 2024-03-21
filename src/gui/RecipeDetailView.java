@@ -11,95 +11,104 @@ public class RecipeDetailView extends JPanel implements ActionListener {
     private Recipe recipe;
     private JButton backButton = new JButton("Back");
 
-    JTextArea instructionsArea = new JTextArea();
-    StringBuilder instructionsText;
+    JEditorPane detailsArea = new JEditorPane();
+    JScrollPane scrollPane;
 
+    private static RecipeDetailView instance;
 
-    public RecipeDetailView(Recipe recipe) {
-        System.out.println("Text Area Size: " + instructionsArea.getSize());
-
-        Component parent = this.getParent();
-        while (parent != null) {
-            System.out.println(parent.getClass().getName());
-            parent = parent.getParent();
-        }
-
+    private RecipeDetailView(Recipe recipe) {
         this.recipe = recipe;
         setLayout(new BorderLayout());
         backButton.addActionListener(this);
         add(backButton, BorderLayout.NORTH);
-        instructionsArea.setVisible(true);
+        detailsArea.setEditable(false);
+        detailsArea.setBackground(new Color(253, 241, 203));
+        detailsArea.setContentType("text/html"); // Set content type to HTML
 
-        if(recipe != null){
-            instructionsText = new StringBuilder();
-            recipe.getDetailedInstructions().forEach((stepNumber, instruction) -> instructionsText.append(stepNumber).append(". ").append(instruction).append("\n"));
-            instructionsArea.setText(instructionsText.toString());
-            instructionsArea.setEditable(false);
+        scrollPane = new JScrollPane(detailsArea);
+        add(scrollPane, BorderLayout.CENTER);
+    }
 
+    private void updateDetailsArea() {
+        if (recipe != null) {
+            StringBuilder htmlContent = new StringBuilder("<html><head><style>body { font-family: Arial, sans-serif; }</style></head><body>");
 
-            JScrollPane scrollPane = new JScrollPane(instructionsArea);
-            add(scrollPane, BorderLayout.CENTER);
+            // Title
+            htmlContent.append("<h1>").append(recipe.getTitle()).append("</h1>");
+
+            // Image
+            htmlContent.append("<img src='").append(recipe.getImage()).append("' style='width: 200px; height: auto;'><br>");
+
+            // Ingredients
+//            htmlContent.append("<h2>Ingredients:</h2><ul>");
+            htmlContent.append("<h3>Available Ingredients:</h3><ul>");
+            recipe.getUsedIngredients().forEach(ingredient ->
+                    htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>")
+            );
+            if (!recipe.getMissedIngredients().isEmpty()) {
+                htmlContent.append("<h3>Missing Ingredients:</h3><ul>");
+                recipe.getMissedIngredients().forEach(ingredient ->
+                        htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>")
+                );
+            }
+
+            // Instructions
+            htmlContent.append("<h2>Instructions:</h2><ol>");
+            recipe.getDetailedInstructions().forEach((step, instruction) ->
+                    htmlContent.append("<li>").append(instruction).append("</li>")
+            );
+            htmlContent.append("</ol></body></html>");
+
+            detailsArea.setText(htmlContent.toString());
         }
+    }
 
+
+    public static RecipeDetailView getInstance(Recipe recipe) {
+        if (instance == null) {
+            instance = new RecipeDetailView(recipe);
+        }
+        return instance;
+    }
+
+    public static RecipeDetailView getInstance() {
+        return instance;
     }
 
     public void setTextArea(Recipe recipe) {
         System.out.println("Updating RecipeDetailView with new recipe");
         this.recipe = recipe; // Update the recipe instance
 
-        // Clear existing text
-        instructionsArea.setText("");
-        instructionsArea.setPreferredSize(new Dimension(500, 300)); // Adjust the dimensions as needed
-
-        if (recipe != null) {
-            System.out.println("Recipe is not null");
-            instructionsText = new StringBuilder();
-            recipe.getDetailedInstructions().forEach((stepNumber, instruction) -> {
-                System.out.println("Instruction step: " + stepNumber + " - " + instruction);
-                instructionsText.append(stepNumber).append(". ").append(instruction).append("\n");
-            });
-            instructionsArea.setText(instructionsText.toString());
-
-            instructionsArea.revalidate();
-            instructionsArea.repaint();
-            System.out.println(instructionsArea.getText());
-
-
-        } else {
-            System.out.println("Recipe is null");
-        }
-        this.revalidate(); // Ensure the RecipeDetailView layout is refreshed
-        this.repaint(); // Ensure the RecipeDetailView is repainted
+        updateDetailsArea();
+        this.revalidate();
+        this.repaint();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == backButton) {
+//            RecipeListView.showListView();
+            HomeView.getHomeView().setHomeViewVisibility(true);
             setRecipeDetailViewVisibility(false);
-            RecipeListView.showListView();
+            HomeView.getFrame().remove(this);
         }
     }
 
 
     public void setRecipeDetailViewVisibility(boolean visible) {
-        backButton.addActionListener(this);
-        this.setVisible(visible);
-        instructionsArea.setVisible(visible);
-        instructionsArea.revalidate();
-        instructionsArea.repaint();
-
+        JFrame frame = HomeView.getFrame(); // Get the main frame
         if (visible) {
-            // Add the RecipeDetailView to the main application frame
-            JFrame mainFrame = HomeView.getFrame();
-            mainFrame.getContentPane().removeAll();
-            mainFrame.getContentPane().add(this);
-            mainFrame.getContentPane().revalidate();
-            mainFrame.getContentPane().repaint();
-            mainFrame.pack(); // Adjust the frame size to fit the content
+            frame.getContentPane().removeAll(); // Clear the frame's content pane
+            RecipeDetailView recipeDetailView = RecipeDetailView.getInstance();
 
-            // Revalidate and repaint the RecipeDetailView
-            this.revalidate();
-            this.repaint();
+            HomeView.getFrame().add(recipeDetailView);
+        } else {
+            frame.getContentPane().removeAll();
+            HomeView.getHomeView().setHomeViewVisibility(true);
         }
+        frame.revalidate();
+        frame.repaint();
+
     }
+
 }

@@ -31,7 +31,7 @@ public class RecipeListView extends JPanel implements ActionListener {
 
     JScrollPane scrollPane;
 
-    private static RecipeDetailView recipeDetailView = new RecipeDetailView(wow);
+    private static RecipeDetailView recipeDetailView = RecipeDetailView.getInstance(wow);
 
 
     private RecipeListView() {
@@ -104,8 +104,8 @@ public class RecipeListView extends JPanel implements ActionListener {
             // use HTML for list formatting
             JButton recipeButton = new JButton("<html><body style='text-align:left;'>"
                     + "<h3>" + recipe.getTitle()+ "</h3>"
-                    + "<br><b>Used Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
-                    + "<br><b>Missed Ingredients:</b> <ul>" + missedIngredientsList + "</ul>"
+                    + "<br><b>Available Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
+                    + "<br><b>Missing Ingredients:</b> <ul>" + missedIngredientsList + "</ul>"
                     + "</body></html>");
             recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
             recipeButton.setFocusable(false);
