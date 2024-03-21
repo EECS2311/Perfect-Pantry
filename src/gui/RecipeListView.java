@@ -150,13 +150,9 @@ public class RecipeListView extends JPanel implements ActionListener {
         }
     }
     public void setRecipeListViewVisibility(boolean visible) {
+        JFrame frame = HomeView.getFrame(); // Get the main frame
         if (visible) {
-            HomeView.getHomeView().setHomeViewVisibility(false);
-
-            // Attach action listeners to buttons
-            backButton.addActionListener(this);
-            recipesPanel.setVisible(true);
-
+            frame.getContentPane().removeAll(); // Clear the frame's content pane
             RecipeListView recipeListView = RecipeListView.getInstance();
 
             //Add all panels
@@ -166,11 +162,11 @@ public class RecipeListView extends JPanel implements ActionListener {
             RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
             recipeListView.displayRecipes();
 
-            RecipeListView.getInstance().setVisible(true);
         } else {
-            RecipeListView.getInstance().setVisible(false);
-
+            frame.getContentPane().removeAll();
+            HomeView.getHomeView().setHomeViewVisibility(true);
         }
-        recipeDetailView.setRecipeDetailViewVisibility(false);
+        frame.revalidate();
+        frame.repaint();
     }
 }
