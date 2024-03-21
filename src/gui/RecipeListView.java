@@ -5,17 +5,17 @@ import domain.logic.recipe.RecipeUtility;
 
 import javax.imageio.ImageIO;
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.util.List;
 
 /**
  * A panel that displays a list of recipes, allowing users to browse through them.
