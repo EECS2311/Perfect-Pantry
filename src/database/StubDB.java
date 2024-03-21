@@ -1,10 +1,7 @@
 package database;
 
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import domain.logic.Container;
 import domain.logic.FoodFreshness;
@@ -281,4 +278,24 @@ public class StubDB extends DB {
 
 	}
 
+	/**
+	 * Retrieves the names of all items that are either Near Expiry or Fresh.
+	 *
+	 * @return A Set of Strings representing the names of items that are either near expiry or fresh.
+	 */
+	@Override
+	public Set<String> getNearExpiryOrFreshItemNames() {
+		Set<String> nearExpiryOrFreshItems = new HashSet<>();
+
+		for (Map.Entry<String, Item> entry : itemMap.entrySet()) {
+			Item item = entry.getValue();
+			// Check if the item's freshness is either NEAR_EXPIRY or FRESH
+			if (item.getFoodFreshnessTag() != null &&
+					(item.getFoodFreshnessTag().getTag() == FoodFreshness.NEAR_EXPIRY ||
+							item.getFoodFreshnessTag().getTag()== FoodFreshness.FRESH)) {
+				nearExpiryOrFreshItems.add(entry.getKey());
+			}
+		}
+		return nearExpiryOrFreshItems;
+	}
 }
