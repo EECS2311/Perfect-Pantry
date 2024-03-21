@@ -3,10 +3,14 @@ package gui;
 import domain.logic.recipe.Ingredient;
 import domain.logic.recipe.Recipe;
 import domain.logic.recipe.RecipeApiClient;
+import domain.logic.recipe.RecipeUtility;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
@@ -20,11 +24,14 @@ public class RecipeListView extends JPanel implements ActionListener {
     private static RecipeListView instance;
     private JButton backButton = new JButton("Back to Home");
     private JPanel recipesPanel = new JPanel();
-    private List<Recipe> recipes;
+
+    private static Recipe wow = new Recipe(640352, "Cranberry Apple Crisp", "https://spoonacular.com/recipeImages/640352-312x231.jpg");
+    private static Set<String> ingredients = new HashSet<>();
+    private static List<Recipe> recipes = new ArrayList<>();
 
     JScrollPane scrollPane;
 
-    private static RecipeDetailView recipeDetailView = new RecipeDetailView(null);
+    private static RecipeDetailView recipeDetailView = new RecipeDetailView(wow);
 
 
     private RecipeListView() {
@@ -34,9 +41,9 @@ public class RecipeListView extends JPanel implements ActionListener {
         recipesPanel.setLayout(new GridLayout(0, 1)); // Dynamic grid layout, 1 column
         scrollPane = new JScrollPane(recipesPanel);
         add(scrollPane, BorderLayout.CENTER);
+        recipeDetailView.setPreferredSize(new Dimension(600, 400)); // Example size, adjust as needed
 
-        // Assume RecipeApiClient is ready to use and replace with actual call
-        recipes = RecipeApiClient.findRecipesByIngredients("chicken, rice", 2);
+        RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
         displayRecipes();
     }
 
@@ -119,18 +126,10 @@ public class RecipeListView extends JPanel implements ActionListener {
     }
 
     private void showRecipeDetails(Recipe recipe) {
-        recipeDetailView.setTextArea(recipe);
-
-        // Add recipeDetailView to the main application window or panel
-        // This might involve removing the current view and adding the new one
-        JPanel mainPanel = (JPanel) HomeView.getFrame().getContentPane();
-        mainPanel.removeAll();
-        mainPanel.add(recipeDetailView);
-        mainPanel.revalidate();
-        mainPanel.repaint();
-
-        recipeDetailView.setRecipeDetailViewVisibility(true);
-        setRecipeListViewVisibility(false); // Might not be necessary if views are swapped correctly
+        SwingUtilities.invokeLater(() -> {
+            recipeDetailView.setRecipeDetailViewVisibility(true); // Show the RecipeDetailView first
+            recipeDetailView.setTextArea(recipe);
+        });
     }
     public static void showListView() {
         // Show the list view and hide the RecipeDetailView
@@ -147,9 +146,9 @@ public class RecipeListView extends JPanel implements ActionListener {
         if (e.getSource() == backButton) {
             HomeView.getHomeView().setHomeViewVisibility(true);
             setRecipeListViewVisibility(false);
+            HomeView.getFrame().remove(this); // Remove RecipeListView from the frame
         }
     }
-
     public void setRecipeListViewVisibility(boolean visible) {
         if (visible) {
             HomeView.getHomeView().setHomeViewVisibility(false);
@@ -159,15 +158,19 @@ public class RecipeListView extends JPanel implements ActionListener {
             recipesPanel.setVisible(true);
 
             RecipeListView recipeListView = RecipeListView.getInstance();
+
             //Add all panels
             HomeView.getFrame().add(recipeListView);
 
-            recipeListView.displayRecipes(); // Refresh
+            // Refresh
+            RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
+            recipeListView.displayRecipes();
 
             RecipeListView.getInstance().setVisible(true);
         } else {
             RecipeListView.getInstance().setVisible(false);
 
         }
+        recipeDetailView.setRecipeDetailViewVisibility(false);
     }
 }

@@ -162,7 +162,7 @@ public class HomeView implements ActionListener {
 
 			homePanel.add(recipeListButton);
 			recipeListButton.setBackground(new Color(76, 183, 242));
-			recipeListButton.setBounds(240, 350, 250, 40); // Adjust the positioning as needed
+			recipeListButton.setBounds(500, 60, 200, 40); // Adjust the positioning as needed
 			recipeListButton.addActionListener(this);
 
 			homePanel.setVisible(true);
