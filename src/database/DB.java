@@ -540,23 +540,17 @@ public class DB {
 	public Set<String> getNearExpiryOrFreshItemNames() {
 		Set<String> itemNames = new HashSet<>();
 		Connection conn = init();
-
 		if (conn != null) {
 			try {
-				// Prepare the SQL query to select items where freshness is either 'Near_Expiry' or 'Fresh'
 				String sql = "SELECT name FROM item WHERE fresh IN ('Near_Expiry', 'Fresh')";
 				PreparedStatement pstmt = conn.prepareStatement(sql);
-
-				// Execute the query
 				ResultSet rs = pstmt.executeQuery();
 
 				while (rs.next()) {
 					String name = rs.getString("name").toLowerCase();
-
 					itemNames.add(name);
 				}
 
-				// Clean up
 				rs.close();
 				pstmt.close();
 				conn.close();
@@ -564,7 +558,6 @@ public class DB {
 				e.printStackTrace();
 			}
 		}
-
 		return itemNames;
 	}
 }

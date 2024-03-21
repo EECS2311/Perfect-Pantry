@@ -5,7 +5,18 @@ import gui.HomeView;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Utility class for managing recipes, including checking for ingredient updates and finding recipes lazily.
+ */
 public class RecipeUtility {
+
+    /**
+     * Checks if the set of near expiry ingredients has changed compared to the current ingredients
+     * and updates the ingredient set if there are changes.
+     *
+     * @param ingredients The set of ingredients to check and update.
+     * @return true if the ingredients set was updated with new items, false if no changes were made.
+     */
     public static boolean isNearExpiryItemsChanged(Set<String> ingredients) {
         Set<String> currentIngredients = HomeView.data.getNearExpiryOrFreshItemNames();
         if (!currentIngredients.equals(ingredients)) {
@@ -18,7 +29,7 @@ public class RecipeUtility {
     }
 
     /**
-     * Finds recipes lazily based on a set of ingredients. If the near expiry items have changed,
+     * Finds recipes lazily based on a set of ingredients. If the non-expired items have changed,
      * it queries for new recipes based on these ingredients; otherwise, it retains the cached recipes.
      *
      * @param ingredients A set of ingredient names.
@@ -29,9 +40,8 @@ public class RecipeUtility {
             String ingredientsString = String.join(", ", ingredients);
             System.out.println(ingredientsString);
             // Retrieve new recipes based on the updated ingredients
-            List<Recipe> newRecipes = RecipeApiClient.findRecipesByIngredients(ingredientsString, 2);
+            List<Recipe> newRecipes = RecipeApiClient.findRecipesByIngredients(ingredientsString, 5);
 
-            // Clear the original list and add all the new recipes to it
             recipes.clear();
             recipes.addAll(newRecipes);
         }

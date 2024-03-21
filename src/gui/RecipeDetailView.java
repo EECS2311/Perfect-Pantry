@@ -7,15 +7,22 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * A GUI component that displays detailed view of a recipe, including ingredients, instructions, and an image.
+ */
 public class RecipeDetailView extends JPanel implements ActionListener {
     private Recipe recipe;
     private JButton backButton = new JButton("Back");
 
-    JEditorPane detailsArea = new JEditorPane();
-    JScrollPane scrollPane;
+    private JEditorPane detailsArea = new JEditorPane();
+    private JScrollPane scrollPane;
 
     private static RecipeDetailView instance;
 
+    /**
+     * Private constructor to initialize the detail view with a recipe.
+     * @param recipe The recipe to display.
+     */
     private RecipeDetailView(Recipe recipe) {
         this.recipe = recipe;
         setLayout(new BorderLayout());
@@ -29,6 +36,29 @@ public class RecipeDetailView extends JPanel implements ActionListener {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Returns an instance of RecipeDetailView, creating it if necessary.
+     * @param recipe The recipe to display in the detail view.
+     * @return The singleton instance of RecipeDetailView.
+     */
+    public static RecipeDetailView getInstance(Recipe recipe) {
+        if (instance == null) {
+            instance = new RecipeDetailView(recipe);
+        }
+        return instance;
+    }
+
+    /**
+     * Returns the instance of RecipeDetailView.
+     * @return The instance of RecipeDetailView.
+     */
+    public static RecipeDetailView getInstance() {
+        return instance;
+    }
+
+    /**
+     * Updates the detail area with the recipe information.
+     */
     private void updateDetailsArea() {
         if (recipe != null) {
             StringBuilder htmlContent = new StringBuilder("<html><head><style>body { font-family: Arial, sans-serif; }</style></head><body>");
@@ -40,65 +70,55 @@ public class RecipeDetailView extends JPanel implements ActionListener {
             htmlContent.append("<img src='").append(recipe.getImage()).append("' style='width: 200px; height: auto;'><br>");
 
             // Ingredients
-//            htmlContent.append("<h2>Ingredients:</h2><ul>");
             htmlContent.append("<h3>Available Ingredients:</h3><ul>");
-            recipe.getUsedIngredients().forEach(ingredient ->
-                    htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>")
-            );
+            recipe.getUsedIngredients().forEach(ingredient -> htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>"));
             if (!recipe.getMissedIngredients().isEmpty()) {
                 htmlContent.append("<h3>Missing Ingredients:</h3><ul>");
-                recipe.getMissedIngredients().forEach(ingredient ->
-                        htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>")
-                );
+                recipe.getMissedIngredients().forEach(ingredient -> htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>"));
             }
 
             // Instructions
             htmlContent.append("<h2>Instructions:</h2><ol>");
-            recipe.getDetailedInstructions().forEach((step, instruction) ->
-                    htmlContent.append("<li>").append(instruction).append("</li>")
-            );
+            recipe.getDetailedInstructions().forEach((step, instruction) -> htmlContent.append("<li>").append(instruction).append("</li>"));
             htmlContent.append("</ol></body></html>");
 
             detailsArea.setText(htmlContent.toString());
         }
     }
 
-
-    public static RecipeDetailView getInstance(Recipe recipe) {
-        if (instance == null) {
-            instance = new RecipeDetailView(recipe);
-        }
-        return instance;
-    }
-
-    public static RecipeDetailView getInstance() {
-        return instance;
-    }
-
+    /**
+     * Sets the recipe to be displayed in the text area and updates the view.
+     * @param recipe The recipe to display.
+     */
     public void setTextArea(Recipe recipe) {
-        System.out.println("Updating RecipeDetailView with new recipe");
         this.recipe = recipe; // Update the recipe instance
-
         updateDetailsArea();
         this.revalidate();
         this.repaint();
     }
 
+    /**
+     * Handles action events for the component, such as button clicks.
+     * @param e The action event.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == backButton) {
-//            RecipeListView.showListView();
+//          RecipeListView.showListView();
             HomeView.getHomeView().setHomeViewVisibility(true);
             setRecipeDetailViewVisibility(false);
             HomeView.getFrame().remove(this);
         }
     }
 
-
+    /**
+     * Sets the visibility of the RecipeDetailView.
+     * @param visible True to make the view visible, false to hide it.
+     */
     public void setRecipeDetailViewVisibility(boolean visible) {
-        JFrame frame = HomeView.getFrame(); // Get the main frame
+        JFrame frame = HomeView.getFrame();
         if (visible) {
-            frame.getContentPane().removeAll(); // Clear the frame's content pane
+            frame.getContentPane().removeAll();
             RecipeDetailView recipeDetailView = RecipeDetailView.getInstance();
 
             HomeView.getFrame().add(recipeDetailView);

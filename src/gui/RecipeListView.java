@@ -1,12 +1,9 @@
 package gui;
 
-import domain.logic.recipe.Ingredient;
 import domain.logic.recipe.Recipe;
-import domain.logic.recipe.RecipeApiClient;
 import domain.logic.recipe.RecipeUtility;
 
 import javax.imageio.ImageIO;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,20 +17,24 @@ import java.awt.event.ActionListener;
 
 import java.util.List;
 
+/**
+ * A panel that displays a list of recipes, allowing users to browse through them.
+ * It includes functionality to display recipe details and navigate back to the home view.
+ */
 public class RecipeListView extends JPanel implements ActionListener {
     private static RecipeListView instance;
     private JButton backButton = new JButton("Back to Home");
     private JPanel recipesPanel = new JPanel();
-
     private static Recipe wow = new Recipe(640352, "Cranberry Apple Crisp", "https://spoonacular.com/recipeImages/640352-312x231.jpg");
     private static Set<String> ingredients = new HashSet<>();
     private static List<Recipe> recipes = new ArrayList<>();
-
-    JScrollPane scrollPane;
-
+    private JScrollPane scrollPane;
     private static RecipeDetailView recipeDetailView = RecipeDetailView.getInstance(wow);
 
-
+    /**
+     * Private constructor for initializing the RecipeListView panel with a back button,
+     * a panel for recipes, and a scroll pane.
+     */
     private RecipeListView() {
         setLayout(new BorderLayout());
         backButton.addActionListener(this);
@@ -47,6 +48,11 @@ public class RecipeListView extends JPanel implements ActionListener {
         displayRecipes();
     }
 
+    /**
+     * Provides access to the instance of RecipeListView, creating it if it does not already exist.
+     *
+     * @return The instance of RecipeListView.
+     */
     public static RecipeListView getInstance() {
         if (instance == null) {
             instance = new RecipeListView();
@@ -54,6 +60,9 @@ public class RecipeListView extends JPanel implements ActionListener {
         return instance;
     }
 
+    /**
+     * Displays recipes in the panel, fetching and updating recipe details.
+     */
     private void displayRecipes() {
         recipesPanel.removeAll(); // Clear the panel before adding new components
 
@@ -62,6 +71,7 @@ public class RecipeListView extends JPanel implements ActionListener {
 
             // Placeholder label for the image
             JLabel imageLabel = new JLabel("Loading image...");
+
             // Load image in the background
             new SwingWorker<ImageIcon, Void>() {
                 @Override
@@ -91,12 +101,12 @@ public class RecipeListView extends JPanel implements ActionListener {
             String usedIngredientsList = recipe.getUsedIngredients().stream()
                     .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
                     .reduce("", (a, b) -> a + b);
-            if (usedIngredientsList.isEmpty()) usedIngredientsList = "<li>No used ingredients</li>";
+            if (usedIngredientsList.isEmpty()) usedIngredientsList = "<li>No available ingredients</li>";
 
             String missedIngredientsList = recipe.getMissedIngredients().stream()
                     .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
                     .reduce("", (a, b) -> a + b);
-            if (missedIngredientsList.isEmpty()) missedIngredientsList = "<li>No missed ingredients</li>";
+            if (missedIngredientsList.isEmpty()) missedIngredientsList = "<li>No missing ingredients</li>";
 
             JPanel detailsPanel = new JPanel(new BorderLayout());
             detailsPanel.setBackground(new Color(245, 223, 162));
@@ -118,29 +128,29 @@ public class RecipeListView extends JPanel implements ActionListener {
             recipesPanel.add(recipePanel);
         }
 
-        recipesPanel.revalidate(); // Revalidate to ensure layout managers redo the layout
-        recipesPanel.repaint(); // Repaint to show the updated UI
-
+        recipesPanel.revalidate();
+        recipesPanel.repaint();
         scrollPane.revalidate();
         scrollPane.repaint();
     }
 
+    /**
+     * Shows the detail view for a selected recipe.
+     *
+     * @param recipe The recipe to display details for.
+     */
     private void showRecipeDetails(Recipe recipe) {
         SwingUtilities.invokeLater(() -> {
             recipeDetailView.setRecipeDetailViewVisibility(true); // Show the RecipeDetailView first
             recipeDetailView.setTextArea(recipe);
         });
     }
-    public static void showListView() {
-        // Show the list view and hide the RecipeDetailView
-        if (instance != null) {
-            instance.setRecipeListViewVisibility(true);
-        }
-        if (recipeDetailView != null) {
-            recipeDetailView.setRecipeDetailViewVisibility(false);
-        }
-    }
 
+    /**
+     * Handles action events, such as clicking the back button to return to the home view.
+     *
+     * @param e The action event.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == backButton) {
@@ -149,6 +159,12 @@ public class RecipeListView extends JPanel implements ActionListener {
             HomeView.getFrame().remove(this); // Remove RecipeListView from the frame
         }
     }
+
+    /**
+     * Sets the visibility of the RecipeListView panel, updating the main frame's content pane as needed.
+     *
+     * @param visible If true, makes the RecipeListView visible; if false, hides it.
+     */
     public void setRecipeListViewVisibility(boolean visible) {
         JFrame frame = HomeView.getFrame(); // Get the main frame
         if (visible) {
