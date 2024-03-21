@@ -44,7 +44,7 @@ public class RecipeListView extends JPanel implements ActionListener {
         add(scrollPane, BorderLayout.CENTER);
         recipeDetailView.setPreferredSize(new Dimension(600, 400)); // Example size, adjust as needed
 
-        RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
+//        RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
         displayRecipes();
     }
 
@@ -62,76 +62,98 @@ public class RecipeListView extends JPanel implements ActionListener {
 
     /**
      * Displays recipes in the panel, fetching and updating recipe details.
+     * If the recipes list is empty, displays a message encouraging the user to add ingredients to their pantry.
      */
     private void displayRecipes() {
         recipesPanel.removeAll(); // Clear the panel before adding new components
-
-        for (Recipe recipe : recipes) {
-            JPanel recipePanel = new JPanel(new BorderLayout(5, 0)); // Add some horizontal spacing between components
-
-            // Placeholder label for the image
-            JLabel imageLabel = new JLabel("Loading image...");
-
-            // Load image in the background
-            new SwingWorker<ImageIcon, Void>() {
-                @Override
-                protected ImageIcon doInBackground() throws Exception {
-                    URL imageUrl = new URL(recipe.getImage());
-                    Image image = ImageIO.read(imageUrl).getScaledInstance(312, 231, Image.SCALE_SMOOTH);
-                    return new ImageIcon(image);
-                }
-
-                @Override
-                protected void done() {
-                    try {
-                        ImageIcon imageIcon = get();
-                        imageLabel.setIcon(imageIcon);
-                        imageLabel.setText(""); // Remove the "Loading image..." text
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                        imageLabel.setText("Failed to load image");
-                    }
-                }
-            }.execute();
-
-            recipePanel.add(imageLabel, BorderLayout.WEST);
-            recipePanel.setBackground(new Color(245, 223, 162));
-
-            // Convert ingredient lists to HTML list format
-            String usedIngredientsList = recipe.getUsedIngredients().stream()
-                    .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
-                    .reduce("", (a, b) -> a + b);
-            if (usedIngredientsList.isEmpty()) usedIngredientsList = "<li>No available ingredients</li>";
-
-            String missedIngredientsList = recipe.getMissedIngredients().stream()
-                    .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
-                    .reduce("", (a, b) -> a + b);
-            if (missedIngredientsList.isEmpty()) missedIngredientsList = "<li>No missing ingredients</li>";
-
-            JPanel detailsPanel = new JPanel(new BorderLayout());
-            detailsPanel.setBackground(new Color(245, 223, 162));
-
-            // use HTML for list formatting
-            JButton recipeButton = new JButton("<html><body style='text-align:left;'>"
-                    + "<h3>" + recipe.getTitle()+ "</h3>"
-                    + "<br><b>Available Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
-                    + "<br><b>Missing Ingredients:</b> <ul>" + missedIngredientsList + "</ul>"
-                    + "</body></html>");
-            recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
-            recipeButton.setFocusable(false);
-            recipeButton.addActionListener(e -> showRecipeDetails(recipe));
-
-            detailsPanel.add(recipeButton, BorderLayout.CENTER);
-
-            recipePanel.add(detailsPanel, BorderLayout.CENTER);
-
-            recipesPanel.add(recipePanel);
+        if (recipes.isEmpty()) {
+            // Display a message when there are no recipes
+            JLabel emptyMessageLabel = new JLabel("<html><center>Start adding non-expire food to your pantry to see recipes.</center></html>");
+            emptyMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            recipesPanel.setLayout(new BorderLayout());
+            recipesPanel.add(emptyMessageLabel, BorderLayout.CENTER);
+        } else {
+            // Reset to grid layout for recipes display
+            recipesPanel.setLayout(new GridLayout(0, 1));
+            for (Recipe recipe : recipes) {
+                JPanel recipePanel = createRecipePanel(recipe);
+                recipesPanel.add(recipePanel);
+            }
         }
 
         recipesPanel.revalidate();
         recipesPanel.repaint();
         scrollPane.revalidate();
         scrollPane.repaint();
+    }
+
+    /**
+     * Creates and returns a JPanel that represents the visual representation of a recipe.
+     *
+     * @param recipe The recipe to create a panel for.
+     * @return A JPanel that displays the recipe's details.
+     */
+    private JPanel createRecipePanel(Recipe recipe) {
+        JPanel recipePanel = new JPanel(new BorderLayout(5, 0)); // Add some horizontal spacing between components
+
+        // Placeholder label for the image
+        JLabel imageLabel = new JLabel("Loading image...");
+
+        // Load image in the background
+        new SwingWorker<ImageIcon, Void>() {
+            @Override
+            protected ImageIcon doInBackground() throws Exception {
+                URL imageUrl = new URL(recipe.getImage());
+                Image image = ImageIO.read(imageUrl).getScaledInstance(312, 231, Image.SCALE_SMOOTH);
+                return new ImageIcon(image);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    ImageIcon imageIcon = get();
+                    imageLabel.setIcon(imageIcon);
+                    imageLabel.setText(""); // Remove the "Loading image..." text
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                    imageLabel.setText("Failed to load image");
+                }
+            }
+        }.execute();
+
+        recipePanel.add(imageLabel, BorderLayout.WEST);
+        recipePanel.setBackground(new Color(245, 223, 162));
+
+        // Convert ingredient lists to HTML list format
+        String usedIngredientsList = recipe.getUsedIngredients().stream()
+                .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
+                .reduce("", (a, b) -> a + b);
+        if (usedIngredientsList.isEmpty()) usedIngredientsList = "<li>No available ingredients</li>";
+
+        String missedIngredientsList = recipe.getMissedIngredients().stream()
+                .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
+                .reduce("", (a, b) -> a + b);
+        if (missedIngredientsList.isEmpty()) missedIngredientsList = "<li>No missing ingredients</li>";
+
+        JPanel detailsPanel = new JPanel(new BorderLayout());
+        detailsPanel.setBackground(new Color(245, 223, 162));
+
+        // use HTML for list formatting
+        JButton recipeButton = new JButton("<html><body style='text-align:left;'>"
+                + "<h3>" + recipe.getTitle()+ "</h3>"
+                + "<br><b>Available Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
+                + "<br><b>Missing Ingredients:</b> <ul>" + missedIngredientsList + "</ul>"
+                + "</body></html>");
+        recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
+        recipeButton.setFocusable(false);
+        recipeButton.addActionListener(e -> showRecipeDetails(recipe));
+
+        detailsPanel.add(recipeButton, BorderLayout.CENTER);
+
+        recipePanel.add(detailsPanel, BorderLayout.CENTER);
+
+        recipesPanel.add(recipePanel);
+        return recipePanel;
     }
 
     /**
@@ -176,6 +198,7 @@ public class RecipeListView extends JPanel implements ActionListener {
 
             // Refresh
             RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
+
             recipeListView.displayRecipes();
 
         } else {

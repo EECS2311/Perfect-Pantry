@@ -38,7 +38,6 @@ public class RecipeUtility {
     public static void findRecipesLazyLoad(Set<String> ingredients, List<Recipe> recipes){
         if(isNearExpiryItemsChanged(ingredients)){
             String ingredientsString = String.join(", ", ingredients);
-            System.out.println(ingredientsString);
             // Retrieve new recipes based on the updated ingredients
             List<Recipe> newRecipes = RecipeApiClient.findRecipesByIngredients(ingredientsString, 5);
 
