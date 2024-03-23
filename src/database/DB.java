@@ -1,8 +1,12 @@
 package database;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import domain.logic.Container;
@@ -496,17 +500,9 @@ public class DB {
 
         try {
             //  select items whose expiry date is within the next 7 days
-            String sql = "SELECT name FROM item WHERE expiry <= ?";
+            String sql = "SELECT name FROM item WHERE fresh = Near_Expiry";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             
-            // Calculate the date 7 days from now
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, 7);
-            Date sevenDaysFromNow = new Date(calendar.getTimeInMillis());
-
-            // Set the parameter in the prepared statement
-            pstmt.setDate(1, sevenDaysFromNow);
-
             // Execute the query
             ResultSet rs = pstmt.executeQuery();
 //
