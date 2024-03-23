@@ -500,7 +500,7 @@ public class DB {
 
         try {
             //  select items whose expiry date is within the next 7 days
-            String sql = "SELECT * FROM item WHERE fresh = 'Near_Expiry'";
+            String sql = "SELECT name, container FROM item WHERE fresh = 'Near_Expiry'";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             
             // Execute the query
