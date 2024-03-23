@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import database.DB;
+import database.StubDB;
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
 
@@ -35,6 +36,11 @@ public class HomeView implements ActionListener {
 	 * Provide Access to Database
 	 */
 	public static DB data = new DB();
+
+	/**
+	 * Provide Access to stub Database
+	 */
+	public static StubDB stubData = new StubDB();
 
 	/**
 	 * Map of button and its corresponding Container object
@@ -68,22 +74,23 @@ public class HomeView implements ActionListener {
 	private JButton viewContainers = new JButton("View Containers");
 
 	// Button for the grocery list
-    private JButton groceryListButton = new JButton("Grocery List");
+	private JButton groceryListButton = new JButton("Grocery List");
+
+	private JButton recipeListButton = new JButton("Recipe List");
+
 
 	/**
 	 * Holds this instance of HomeView
 	 */
 	private static HomeView home;
 
-
 	public static void main(String[] args) {
-		//initialise other views
+		// initialise other views
 		SeeContainersView m = new SeeContainersView();
 		GroceryListView g = new GroceryListView();
 
 		home = new HomeView();
 	}
-
 
 	/**
 	 * Launches the application and initializes the main GUI components.
@@ -101,19 +108,21 @@ public class HomeView implements ActionListener {
 		ContainerUtility.initContainers(containerMap, data, this);
 
 		setHomeViewVisibility(true);
+                 new Notification();
 	}
 
 	/**
-	 * Sets the HomeView Gui components visibility depending on the boolean passed through
+	 * Sets the HomeView Gui components visibility depending on the boolean passed
+	 * through
+	 * 
 	 * @param b, Value whether gui should be visible or not
 	 */
 	public void setHomeViewVisibility(boolean b) {
 		if (b) {
-			//Set other gui visibility to false
+			// Set other gui visibility to false
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
 
-			
-			// Initialise all actionlisteners 
+			// Initialise all actionlisteners
 			newContainerText.addActionListener(this);
 			createContainer.addActionListener(this);
 			viewContainers.addActionListener(this);
@@ -151,18 +160,24 @@ public class HomeView implements ActionListener {
 			groceryListButton.setBackground(new Color(76, 183, 242));
 			groceryListButton.setBounds(500, 10, 200, 40);
 
+			homePanel.add(recipeListButton);
+			recipeListButton.setBackground(new Color(76, 183, 242));
+			recipeListButton.setBounds(500, 60, 200, 40); // Adjust the positioning as needed
+			recipeListButton.addActionListener(this);
+
 			homePanel.setVisible(true);
 		}
 		if (!b) {
-			//RemoveActionListeners
+			// RemoveActionListeners
 			newContainerText.removeActionListener(this);
 			createContainer.removeActionListener(this);
 			viewContainers.removeActionListener(this);
 			groceryListButton.removeActionListener(this);
+			recipeListButton.removeActionListener(this);
+
 			homePanel.setVisible(false);
 		}
 	}
-
 
 	/**
 	 * Adds a new container and its corresponding button to the GUI.
@@ -174,21 +189,18 @@ public class HomeView implements ActionListener {
 		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?");
 		if (opt == JOptionPane.YES_OPTION) {
 			ContainerUtility
-			.verifyAddContainer(
-					nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
-					.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
-					() -> {
-						newContainerText.setText("Pantry" + (containerMap.size() + 1));
-					});
+					.verifyAddContainer(
+							nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
+									.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+							() -> {
+								newContainerText.setText("Pantry" + (containerMap.size() + 1));
+							});
 		}
 	}
 
-
-
-
 	/**
-	 * Handles action events triggered by various GUI components.
-	 * This method is the central hub for processing user interactions within the home view.
+	 * Handles action events triggered by various GUI components. This method is the
+	 * central hub for processing user interactions within the home view.
 	 *
 	 * @param e The ActionEvent object containing details about the event.
 	 */
@@ -196,14 +208,15 @@ public class HomeView implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 
-			if (source == createContainer) {
-				addNewContainer();
-			} else if (source == viewContainers) {
-				SeeContainersView.getContainersView().setSeeContainersViewVisibility(true);
-			} else if (source == groceryListButton) {
-				GroceryListView.getGroceryListView().setGroceryListViewVisibility(true);
-			}
-
+		if (source == createContainer) {
+			addNewContainer();
+		} else if (source == viewContainers) {
+			SeeContainersView.getContainersView().setSeeContainersViewVisibility(true);
+		} else if (source == groceryListButton) {
+			GroceryListView.getGroceryListView().setGroceryListViewVisibility(true);
+		} else if (source == recipeListButton) {
+			RecipeListView.getInstance().setRecipeListViewVisibility(true);
+		}
 
 	}
 
@@ -230,7 +243,7 @@ public class HomeView implements ActionListener {
 	 *
 	 * @return the ConcurrentHashmap containerMap
 	 */
-	public static ConcurrentHashMap<JButton, Container> getContainerMap(){
+	public static ConcurrentHashMap<JButton, Container> getContainerMap() {
 		return containerMap;
 	}
 }

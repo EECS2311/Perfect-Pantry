@@ -1,13 +1,8 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.sql.Date;
+import java.util.*;
 
 import domain.logic.Container;
 import domain.logic.FoodFreshness;
@@ -373,58 +368,61 @@ public class DB {
 
 		return tip;
 	}
-	
+
 	/**
 	 * Adds an item to the grocery list in the database.
 	 *
 	 * @param itemName The name of the item to add to the grocery list.
 	 */
 	public void addToGroceryList(String itemName) {
-	    // Establish a connection to the database
-	    Connection conn = init();
-	    try {
-	        // Prepare an SQL statement to insert an item into the grocery table
-	        PreparedStatement statement = conn.prepareStatement("INSERT INTO grocery (name) VALUES (?)");
-	        // Set the item name as a parameter in the SQL statement
-	        statement.setString(1, itemName);
-	        // Execute the SQL statement to insert the item into the grocery table
-	        statement.executeUpdate();
-	        // Close the prepared statement
-	        statement.close();
-	        // Close the database connection
-	        conn.close();
-	    } catch (SQLException e) {
-	        // Handle any SQL exceptions by printing the stack trace
-	        e.printStackTrace();
-	    }
+		// Establish a connection to the database
+		Connection conn = init();
+		try {
+			// Prepare an SQL statement to insert an item into the grocery table
+			PreparedStatement statement = conn.prepareStatement("INSERT INTO grocery (name) VALUES (?)");
+			// Set the item name as a parameter in the SQL statement
+			statement.setString(1, itemName);
+			// Execute the SQL statement to insert the item into the grocery table
+			statement.executeUpdate();
+			// Close the prepared statement
+			statement.close();
+			// Close the database connection
+			conn.close();
+		} catch (SQLException e) {
+			// Handle any SQL exceptions by printing the stack trace
+			e.printStackTrace();
+		}
 	}
-	
+
 	/**
 	 * Removes an item from the grocery list in the database.
 	 *
 	 * @param itemName The name of the item to remove from the grocery list.
 	 */
 	public void removeFromGroceryList(String itemName) {
-	    // Establish a connection to the database
-	    Connection conn = init();
-	    try {
-	        // Prepare an SQL statement to delete an item from the grocery table based on its name
-	        PreparedStatement statement = conn.prepareStatement("DELETE FROM grocery WHERE name = ?");
-	        // Set the item name as a parameter in the SQL statement
-	        statement.setString(1, itemName);
-	        // Execute the SQL statement to delete the item from the grocery table
-	        statement.executeUpdate();
-	        // Close the prepared statement
-	        statement.close();
-	        // Close the database connection
-	        conn.close();
-	    } catch (SQLException e) {
-	        // Handle any SQL exceptions by printing the stack trace
-	        e.printStackTrace();
-	    }
+		// Establish a connection to the database
+		Connection conn = init();
+		try {
+			// Prepare an SQL statement to delete an item from the grocery table based on
+			// its name
+			PreparedStatement statement = conn.prepareStatement("DELETE FROM grocery WHERE name = ?");
+			// Set the item name as a parameter in the SQL statement
+			statement.setString(1, itemName);
+			// Execute the SQL statement to delete the item from the grocery table
+			statement.executeUpdate();
+			// Close the prepared statement
+			statement.close();
+			// Close the database connection
+			conn.close();
+		} catch (SQLException e) {
+			// Handle any SQL exceptions by printing the stack trace
+			e.printStackTrace();
+		}
 	}
 
-	/**
+
+
+    /**
      * Retrieves all grocery items from the database.
      *
      * @return A 2D array containing all grocery items, where each row represents an item.
@@ -460,5 +458,109 @@ public class DB {
 
         return itemArray;
     }
+  
+  	/**
+	 * Updates the quantity of an item in the database
+	 * 
+	 * @param item  The name of the item
+	 * @param value The quantity to be updated
+	 * @param c     The container in which the item belongs to
+	 */
+	public void updateQuantity(String item, int value, Container c) {
 
+		Connection conn = init();
+
+		try {
+			String query = "UPDATE item SET quantity = ? WHERE name = ? AND container = ?";
+			PreparedStatement p = conn.prepareStatement(query);
+			p.setInt(1, value);
+			p.setString(2, item);
+			p.setString(3, c.getName());
+			p.executeUpdate();
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	/**
+     * Retrieves items that are close to expiring.
+     *
+     * @return A list of item names that are expiring soon.
+     */
+    public List<String> getExpiringItems() {
+        List<String> expiringItems = new ArrayList<>();
+        Connection conn = init();
+
+        try {
+            //  select items whose expiry date is within the next 7 days
+            String sql = "SELECT name FROM item WHERE expiry <= ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            // Calculate the date 7 days from now
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, 7);
+            Date sevenDaysFromNow = new Date(calendar.getTimeInMillis());
+
+            // Set the parameter in the prepared statement
+            pstmt.setDate(1, sevenDaysFromNow);
+
+            // Execute the query
+            ResultSet rs = pstmt.executeQuery();
+//
+             //Process the result set
+            while (rs.next()) {
+                String itemName = rs.getString("name");
+                expiringItems.add(itemName);
+            }
+//            while (rs.next()) {
+//                String itemName = rs.getString("name");
+//                String containerName = rs.getString("container");
+//                Date expiryDate = rs.getDate("expiry");
+//                expiringItems.add(itemName + " in " + containerName + " (Expiry: " + expiryDate + ")");
+//            }
+//
+            // Close resources
+            rs.close();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return expiringItems;
+    }
+
+	/**
+	 * Retrieves the names of all items that are either Near Expiry or Fresh.
+	 *
+	 * @return A Set of Strings representing the names of items that are either near expiry or fresh.
+	 */
+	public Set<String> getNearExpiryOrFreshItemNames() {
+		Set<String> itemNames = new HashSet<>();
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				String sql = "SELECT name FROM item WHERE fresh IN ('Near_Expiry', 'Fresh')";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				ResultSet rs = pstmt.executeQuery();
+
+				while (rs.next()) {
+					String name = rs.getString("name").toLowerCase();
+					itemNames.add(name);
+				}
+
+				rs.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return itemNames;
+	}
 }
+
+
+

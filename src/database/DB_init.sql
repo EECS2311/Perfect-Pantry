@@ -1,3 +1,4 @@
+
 CREATE TYPE Food_Group AS ENUM ('Grain', 'Protein', 'Vegetable', 'Fruit', 'Dairy');
 CREATE TYPE Freshness AS ENUM ('Expired', 'Fresh', 'Near_Expiry');
 

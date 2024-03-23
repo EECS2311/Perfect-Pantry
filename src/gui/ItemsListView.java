@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -13,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
@@ -42,7 +43,7 @@ public class ItemsListView extends JPanel {
 	private JMenuItem removeItem;
 	private JMenuItem editQty;
 	private JMenuItem generateTip;
-	
+
 	private TableRowSorter<TableModel> sorter;
 
 	private boolean colourCodingEnabled = true;
@@ -96,38 +97,44 @@ public class ItemsListView extends JPanel {
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
-				if (!isRowSelected(row) && colourCodingEnabled) {
-					// Dynamically find the index of the 'Food Freshness' column
-					int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
+				if(colourCodingEnabled){
+					if (!isRowSelected(row)) {
+						// Dynamically find the index of the 'Food Freshness' column
+						int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
 
-					// Retrieve the value from the correct column, regardless of its position
-					Object freshnessValue = getValueAt(row, freshnessCol);
-					String freshness = "";
+						// Retrieve the value from the correct column, regardless of its position
+						Object freshnessValue = getValueAt(row, freshnessCol);
+						String freshness = "";
 
-					// Check the type of the freshness value and convert it to String appropriately
-					if (freshnessValue instanceof GenericTag) {
-						freshness = ((GenericTag<FoodFreshness>) freshnessValue).toString();
-					} else if (freshnessValue != null) {
-						freshness = freshnessValue.toString();
+						// Check the type of the freshness value and convert it to String appropriately
+						if (freshnessValue instanceof GenericTag) {
+							freshness = ((GenericTag<FoodFreshness>) freshnessValue).toString();
+						} else if (freshnessValue != null) {
+							freshness = freshnessValue.toString();
+						}
+
+						// Apply background color based on the freshness string
+						switch (freshness) {
+							case "Expired":
+								c.setBackground(new Color(252, 156, 156));
+								break;
+							case "Near_Expiry":
+								c.setBackground(new Color(236, 236, 127));
+								break;
+							case "Fresh":
+								c.setBackground(new Color(145, 252, 145));
+								break;
+							default:
+								c.setBackground(Color.WHITE);
+								break;
+						}
+					} else {
+						// If row is selected, use default selection background
 					}
-
-					// Apply background color based on the freshness string
-					switch (freshness) {
-					case "Expired":
-						c.setBackground(new Color(252, 156, 156));
-						break;
-					case "Near_Expiry":
-						c.setBackground(new Color(236, 236, 127));
-						break;
-					case "Fresh":
-						c.setBackground(new Color(145, 252, 145));
-						break;
-					default:
-						c.setBackground(Color.WHITE); // Default background
-						break;
+				}else {
+					if (!isRowSelected(row)) {
+						c.setBackground(Color.WHITE); // Default background for non-selected rows when toggled off
 					}
-				} else {
-					// If row is selected, use default selection background
 				}
 				return c;
 			}
@@ -155,8 +162,8 @@ public class ItemsListView extends JPanel {
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
 		// Initialize items and assign food freshness
-		ItemUtility.assignFoodFreshness(data, this.getC());
-		ItemUtility.initItems(data, container, tableModel);
+		ItemUtility.assignFoodFreshness(this.getC());
+		ItemUtility.initItems(container, tableModel);
 
 		// Init the right click popup menu
 		popup = new JPopupMenu();
@@ -184,51 +191,80 @@ public class ItemsListView extends JPanel {
 		});
 
 		removeItem.addActionListener(e -> {
+
 			int row = table.getSelectedRow();
-			String name = tableModel.getValueAt(row, 0).toString();
-			ItemUtility.verifyDeleteItem(name, this.getC(), this);
+
+			if (row != -1) {
+				String name = tableModel.getValueAt(row, 0).toString();
+				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
+					this.removeItem(name);
+				}
+
+			}
 
 		});
 		generateTip.addActionListener(e -> {
 
 			int row = table.getSelectedRow();
-			String name = tableModel.getValueAt(row, 0).toString();
-			String sTip = ItemUtility.retrieveStorageTip(name, data);
 
-			if (sTip != null) {
-				JOptionPane.showMessageDialog(this,
-						"<html><body><p style='width:300px;'>" + sTip + "</p></body></html>", name + " - Storage Tip",
-						JOptionPane.PLAIN_MESSAGE);
-			} else {
-				JOptionPane.showMessageDialog(this, "No Storage Tips Available", "NoStorageTipsError",
-						JOptionPane.ERROR_MESSAGE);
+			if (row != -1) {
+				String name = tableModel.getValueAt(row, 0).toString();
+				String sTip = ItemUtility.retrieveStorageTip(name);
+
+				if (sTip != null) {
+					JOptionPane.showMessageDialog(HomeView.getFrame(),
+							"<html><body><p style='width:300px;'>" + sTip + "</p></body></html>",
+							name + " - Storage Tip", JOptionPane.PLAIN_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(HomeView.getFrame(), "No Storage Tips Available",
+							"NoStorageTipsError", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 
 		});
-		
+		editQty.addActionListener(e -> {
+
+			String val = JOptionPane.showInputDialog(HomeView.getFrame(), "Edit Quantity", "Enter a new Value", 3);
+
+			int row = table.getSelectedRow();
+			if (row != -1) {
+				String name = tableModel.getValueAt(row, 0).toString();
+				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
+						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
+							tableModel.setValueAt(val, row, 1);
+						});
+				ItemUtility.initItems(this.getC(), tableModel);
+			}
+		});
+
 		sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
-		
+
 	}
-	
+
 	// Code adapted from docs.oracle.com for SwingUI table component
 	/**
 	 * Updates the table sorter with the string provided from the filter text box
-	 * @param str The string from the filter text box to filter the items by.
+	 * 
+	 * @param filter The string from the filter text box to filter the items by.
 	 */
-	public void filterTable(String str) {
-		RowFilter<TableModel, Object> rf = null;
+	public void filterTable(List<String> filter) {
+		RowFilter<TableModel, Object> rf;
+		List<RowFilter<TableModel, Object>> filters = new ArrayList<RowFilter<TableModel, Object>>();
 		try {
-			rf = RowFilter.regexFilter(str);
+			filters.add(RowFilter.regexFilter("(?i)" + filter.get(0), 0));
+			filters.add(RowFilter.regexFilter("(?i)" + filter.get(1), 3));
+			filters.add(RowFilter.regexFilter("(?i)" + filter.get(2), 4));
+
 		} catch (java.util.regex.PatternSyntaxException e) {
 			return;
 		}
 		
+		rf = RowFilter.andFilter(filters);
 		sorter.setRowFilter(rf);
-		
+
 	}
-	
-	
+
 	/**
 	 * Adds an item to the table and updates the underlying container.
 	 * 
@@ -237,8 +273,8 @@ public class ItemsListView extends JPanel {
 	public void addItem(Item item) {
 		tableModel.addRow(
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
-		ItemUtility.assignFoodFreshness(data, this.getC());
-		ItemUtility.initItems(data, this.getC(), tableModel);
+		ItemUtility.assignFoodFreshness(this.getC());
+		ItemUtility.initItems(this.getC(), tableModel);
 
 	}
 
@@ -254,6 +290,7 @@ public class ItemsListView extends JPanel {
 
 				// Remove the row from the table model
 				tableModel.removeRow(i);
+
 				break;
 			}
 		}
@@ -270,9 +307,9 @@ public class ItemsListView extends JPanel {
 		Object newValue = table.getModel().getValueAt(row, column);
 
 		// Call the new ItemUtility update method
-		ItemUtility.updateItem(data, getC(), itemName, newValue, column);
-		ItemUtility.assignFoodFreshness(data, this.getC());
-		ItemUtility.initItems(data, this.getC(), tableModel);
+		ItemUtility.updateItemFoodGroupTag(getC(), itemName, newValue, column);
+		ItemUtility.assignFoodFreshness(this.getC());
+		ItemUtility.initItems(this.getC(), tableModel);
 	}
 
 	/**
@@ -281,9 +318,9 @@ public class ItemsListView extends JPanel {
 	 * When disabled, the default background color is used for all rows. The table
 	 * is repainted after toggling to reflect the change immediately.
 	 */
-	public void toggleColorCoding() {
+	public void toggleColourCoding() {
 		colourCodingEnabled = !colourCodingEnabled;
-		table.repaint(); // Repaint the table to reflect the change
+		table.repaint();
 	}
 
 	public Container getC() {

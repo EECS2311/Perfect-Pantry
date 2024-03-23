@@ -117,6 +117,101 @@ Focus:
 - Reviewed the detailed iteration 2 stories and discussed how they might work.
 - Assigned one user story to each member
 
-## Iteration 2 Summary 
+## User Stories
+
+BIG Story: Pantry Awareness (This big story aims to help the user make more informed decisions about what is in their pantry, by developing the virtual fridge)
+
+Colour Coded Fridge Items
+Priority: Low
+Cost: 1 Days
+Colour coded fridge items would be extremely beneficial. For example, food items that are going bad could be coloured red. This should give a sense of urgency for me to use them. The food groups could also be colour coded.
+
+Calendar
+Priority: High
+Cost: 2 Days
+I want to see all food expiry dates in a calendar format. This will help me have a better idea of when foods will go bad. This should help me make more informed decisions about what I cook.
+
+Manage Grocery List
+Priority: Med
+Cost: 2 Days
+I definitely would like to have a grocery list feature implemented. When I see that food is running low or has expired, it would be great to add them to a grocery list.
+QUESTION: Is it better to have one big grocery list or one per pantry/container?
+One big list is preferred
+
+Generate Food Storage Tips
+Priority: Med
+Cost: 1 Day
+I'd like to be able to choose an item and get proper food storage tips. This will help me ensure that my food lasts longer. 
+
+Sorting
+Priority: Low
+Cost: 4 Days
+It would be nice if I could sort foods based on food groups, and also based on the days that they will expire.
+
+Notifications
+Priority: Med
+Cost: 2 Days
+Whenever I open a pantry, I'd like to receive some instant notification on the app. This should mostly be for foods that are about to expire. This should help me be alert and aware of foods that are about to go bad. 
+
+## Development Tasks
+
+1. Colour Coded Fridge Items (Nina)
+Dev Tasks: 
+Colour coded item entries based on food freshness
+Auto assign Food Freshness Tag based on distance between current date and expiry date
+Make enums in database and enums in food group and food freshness consistent
+Allow Food Group tag dropbox to update items enum in database
+Display the item tags on ItemListView
+Refactor itemUtility methods such as ​​verifyAddItem to return a boolean, making it consistent with verifyDeleteItem.
+Add ItemUtility JUnit test
+Estimated Cost: 1 Day
+Actual Cost: 1 Day
+
+2. Calendar (Sarah)
+Dev Tasks: 
+Create Calendar view
+Retrieve items and corresponding expiry date information from the database, and display it in the calendar view.
+Refactor SeeContainersView to use right click to edit or delete containers instead of a separate page
+
+Estimated Cost: 2 Days
+Actual Cost: 1 Days
+
+3. Manage Grocery List (Ning)
+Dev Tasks: 
+Implement add, remove, and export functionalities. 
+Design GUI components for interaction. 
+Enable strikethrough font for crossed off items. 
+Handle user interactions and events. 
+Ensure data consistency and error handling.
+Estimated Cost: 2 Days
+Actual Cost: 2 Day
+
+4. Generate Food Storage Tips (Michel)
+Dev Tasks: 
+Update database schema to include table for storing food tips
+Setup right click popup menu with generate storage tip option.
+Initialise storage tips database with some values for the user.
+Create a utility function to query the database with the name of the item that the user wants a tip for.
+Estimated Cost: 1 Day
+Actual Cost: 2 Days
+
+5. Sorting (Edison)
+Dev Tasks: 
+Integrate database for storing a food item in a container
+Initialise database on program startup to load each item to their respective container from the database
+Include test cases for database integration
+Implement sorting and filtering functionality to the JTable inside of a container.
+Estimated Cost: 1 Days
+Actual Cost: 1 Days
+
+6. Notifications (Allen)
+Dev Tasks:  
+-  Creating notification that alerts the users of expired or soon to expire products.
+Update database to allow notification read through the database for expired products.
+Initialise the notifications to work with newly created containers and already existing containers.
+
+Estimated Cost: 1 Days
+Actual Cost: 1 Days
+
 
 
