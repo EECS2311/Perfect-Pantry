@@ -192,4 +192,16 @@ public class ItemUtility {
 		}
 
 	}
+	
+	public static void updateFreshness() {
+		DB db = HomeView.data;
+		
+		 List<String> s =  db.retrieveContainers();
+	       Container c;
+	       for (String containerName: s) {
+	    	   
+	    	   c = new Container(containerName);
+	    	   db.batchUpdateItemFreshness(c);
+	       }
+	}
 }

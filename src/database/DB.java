@@ -1,5 +1,6 @@
 package database;
 
+
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -495,24 +496,16 @@ public class DB {
 
         try {
             //  select items whose expiry date is within the next 7 days
-            String sql = "SELECT name FROM item WHERE expiry <= ?";
+            String sql = "SELECT name, container FROM item WHERE fresh = 'Near_Expiry'";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             
-            // Calculate the date 7 days from now
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, 7);
-            Date sevenDaysFromNow = new Date(calendar.getTimeInMillis());
-
-            // Set the parameter in the prepared statement
-            pstmt.setDate(1, sevenDaysFromNow);
-
             // Execute the query
             ResultSet rs = pstmt.executeQuery();
 //
              //Process the result set
             while (rs.next()) {
                 String itemName = rs.getString("name");
-                expiringItems.add(itemName);
+                expiringItems.add(itemName + " - " + rs.getString("container"));
             }
 //            while (rs.next()) {
 //                String itemName = rs.getString("name");

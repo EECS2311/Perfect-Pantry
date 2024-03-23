@@ -19,6 +19,7 @@ import database.DB;
 import database.StubDB;
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
+import domain.logic.ItemUtility;
 
 /**
  * The main GUI frame for the application, serving as the entry point for user
@@ -108,7 +109,10 @@ public class HomeView implements ActionListener {
 		ContainerUtility.initContainers(containerMap, data, this);
 
 		setHomeViewVisibility(true);
-                 new Notification();
+
+		ItemUtility.updateFreshness();
+		new Notification();
+
 	}
 
 	/**
