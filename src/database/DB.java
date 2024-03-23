@@ -1,13 +1,9 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.sql.*;
+import java.sql.Date;
+import java.util.*;
 
 import domain.logic.Container;
 import domain.logic.FoodFreshness;
@@ -489,7 +485,7 @@ public class DB {
 		}
 
 	}
-/**
+	/**
      * Retrieves items that are close to expiring.
      *
      * @return A list of item names that are expiring soon.
@@ -529,7 +525,35 @@ public class DB {
         return expiringItems;
     }
 
+	/**
+	 * Retrieves the names of all items that are either Near Expiry or Fresh.
+	 *
+	 * @return A Set of Strings representing the names of items that are either near expiry or fresh.
+	 */
+	public Set<String> getNearExpiryOrFreshItemNames() {
+		Set<String> itemNames = new HashSet<>();
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				String sql = "SELECT name FROM item WHERE fresh IN ('Near_Expiry', 'Fresh')";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				ResultSet rs = pstmt.executeQuery();
 
+				while (rs.next()) {
+					String name = rs.getString("name").toLowerCase();
+					itemNames.add(name);
+				}
+
+				rs.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return itemNames;
+	}
 }
+
 
 

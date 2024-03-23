@@ -79,7 +79,7 @@ public class ItemUtility {
 	}
 
 	/**
-	 * Updates the specified item's properties based on the provided new value and
+	 * Updates the specified item's food group tag based on the provided new value and
 	 * column index. The update is only performed if the item exists in the
 	 * container.
 	 *
@@ -90,7 +90,7 @@ public class ItemUtility {
 	 *                  updated.
 	 * @return true if the item was successfully updated, false otherwise.
 	 */
-	public static void updateItem(Container container, String itemName, Object newValue, int column) {
+	public static void updateItemFoodGroupTag(Container container, String itemName, Object newValue, int column) {
 		if (column == 3 && newValue instanceof FoodGroup) {
 			HomeView.data.updateItemFoodGroup(container, itemName, (FoodGroup) newValue);
 		}
@@ -177,10 +177,14 @@ public class ItemUtility {
 			if (o < 0) {
 				errorHandler.accept("You can't have a negative quantity!");
 				return;
-			}
+			} else if (o == 0) {
+				verifyDeleteItem(item, c);
+				successCallback.run();
 
-			data.updateQuantity(item, o, c);
-			successCallback.run();
+			} else {
+				data.updateQuantity(item, o, c);
+				successCallback.run();
+			}
 
 		} catch (NumberFormatException e) {
 			errorHandler.accept("Not a valid number!");
