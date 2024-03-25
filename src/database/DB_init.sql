@@ -30,3 +30,10 @@ create Table general_tips(
 CREATE TABLE grocery(
     name VARCHAR(50) PRIMARY KEY UNIQUE
 );
+
+CREATE TABLE settings(
+	setting_type varchar(8),
+	fontsize INTEGER, 
+	notificationBoolean bit NOT NULL
+
+);
