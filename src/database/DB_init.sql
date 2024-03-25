@@ -34,6 +34,7 @@ CREATE TABLE grocery(
 CREATE TABLE settings(
 	setting_type varchar(8),
 	fontsize INTEGER, 
-	notificationBoolean bit NOT NULL
+	notificationBoolean bit NOT NULL,
+	PRIMARY KEY(setting_type)
 
 );
