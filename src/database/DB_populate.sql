@@ -27,3 +27,7 @@ VALUES
 ('Ginger', 'Store ginger in the refrigerator’s vegetable drawer. It will keep for a week or two.'),
 ('Milk', 'Store it in the fridge, of course, unless you bought a shelf-stable option (refrigerate after opening). Always give your milk a whiff before using—if it smells off, it’s gone bad.'),
 ('Eggs', 'Store eggs in their original cartons inside the fridge—not in the refrigerator door. Wondering if your eggs are still fresh? Fill a bowl with cold water and place your eggs (a couple at a time). If they sink and lay flat on their sides (very fresh) or stand on one end at the bottom of the bowl (less fresh), they’re fine. If they float to the top, they’ve gone bad.');
+
+INSERT INTO settings(setting_type, fontsize, notificationBoolean)
+VALUES
+('User', '14', '1');
