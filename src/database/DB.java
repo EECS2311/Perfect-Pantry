@@ -201,7 +201,7 @@ public class DB {
 		try {
 			Statement s = conn.createStatement();
 			s.execute("INSERT INTO item(name, container, quantity, expiry) VALUES('" + name + "', " + "'" + c.getName()
-					+ "', " + "" + ite.getQuantity() + ", '" + "" + ite.getExpiryDate() + "')");
+			+ "', " + "" + ite.getQuantity() + ", '" + "" + ite.getExpiryDate() + "')");
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -251,10 +251,10 @@ public class DB {
 			if (rs.next()) {
 				GenericTag<FoodGroup> fg = (rs.getString("fg") != null)
 						? GenericTag.fromString(FoodGroup.class, rs.getString("fg"))
-						: null;
+								: null;
 				GenericTag<FoodFreshness> fresh = (rs.getString("fresh") != null)
 						? GenericTag.fromString(FoodFreshness.class, rs.getString("fresh"))
-						: null;
+								: null;
 
 				conn.close();
 				return Item.getInstance(rs.getString("name"), fg, fresh, rs.getInt("quantity"), rs.getDate("expiry"));
@@ -423,44 +423,44 @@ public class DB {
 
 
 
-    /**
-     * Retrieves all grocery items from the database.
-     *
-     * @return A 2D array containing all grocery items, where each row represents an item.
-     */
-    public Object[][] getAllGroceryItems() {
-        Connection conn = init();
-        List<Object[]> itemList = new ArrayList<>();
+	/**
+	 * Retrieves all grocery items from the database.
+	 *
+	 * @return A 2D array containing all grocery items, where each row represents an item.
+	 */
+	public Object[][] getAllGroceryItems() {
+		Connection conn = init();
+		List<Object[]> itemList = new ArrayList<>();
 
-        if (conn != null) {
-            try {
-                PreparedStatement statement = conn.prepareStatement("SELECT * FROM grocery");
-                ResultSet resultSet = statement.executeQuery();
+		if (conn != null) {
+			try {
+				PreparedStatement statement = conn.prepareStatement("SELECT * FROM grocery");
+				ResultSet resultSet = statement.executeQuery();
 
-                while (resultSet.next()) {
-                    String itemName = resultSet.getString("name");
+				while (resultSet.next()) {
+					String itemName = resultSet.getString("name");
 
-                    // Create an array representing the current item
-                    Object[] itemData = { itemName };
-                    itemList.add(itemData);
-                }
+					// Create an array representing the current item
+					Object[] itemData = { itemName };
+					itemList.add(itemData);
+				}
 
-                resultSet.close();
-                statement.close();
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+				resultSet.close();
+				statement.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
-        // Convert the list to a 2D array
-        Object[][] itemArray = new Object[itemList.size()][];
-        itemList.toArray(itemArray);
+		// Convert the list to a 2D array
+		Object[][] itemArray = new Object[itemList.size()][];
+		itemList.toArray(itemArray);
 
-        return itemArray;
-    }
-  
-  	/**
+		return itemArray;
+	}
+
+	/**
 	 * Updates the quantity of an item in the database
 	 * 
 	 * @param item  The name of the item
@@ -486,44 +486,44 @@ public class DB {
 
 	}
 	/**
-     * Retrieves items that are close to expiring.
-     *
-     * @return A list of item names that are expiring soon.
-     */
-    public List<String> getExpiringItems() {
-        List<String> expiringItems = new ArrayList<>();
-        Connection conn = init();
+	 * Retrieves items that are close to expiring.
+	 *
+	 * @return A list of item names that are expiring soon.
+	 */
+	public List<String> getExpiringItems() {
+		List<String> expiringItems = new ArrayList<>();
+		Connection conn = init();
 
-        try {
-            //  select items whose expiry date is within the next 7 days
-            String sql = "SELECT name, container FROM item WHERE fresh = 'Near_Expiry'";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            
-            // Execute the query
-            ResultSet rs = pstmt.executeQuery();
-//
-             //Process the result set
-            while (rs.next()) {
-                String itemName = rs.getString("name");
-                expiringItems.add(itemName + " - " + rs.getString("container"));
-            }
-//            while (rs.next()) {
-//                String itemName = rs.getString("name");
-//                String containerName = rs.getString("container");
-//                Date expiryDate = rs.getDate("expiry");
-//                expiringItems.add(itemName + " in " + containerName + " (Expiry: " + expiryDate + ")");
-//            }
-//
-            // Close resources
-            rs.close();
-            pstmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		try {
+			//  select items whose expiry date is within the next 7 days
+			String sql = "SELECT name, container FROM item WHERE fresh = 'Near_Expiry'";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 
-        return expiringItems;
-    }
+			// Execute the query
+			ResultSet rs = pstmt.executeQuery();
+			//
+			//Process the result set
+			while (rs.next()) {
+				String itemName = rs.getString("name");
+				expiringItems.add(itemName + " - " + rs.getString("container"));
+			}
+			//            while (rs.next()) {
+			//                String itemName = rs.getString("name");
+			//                String containerName = rs.getString("container");
+			//                Date expiryDate = rs.getDate("expiry");
+			//                expiringItems.add(itemName + " in " + containerName + " (Expiry: " + expiryDate + ")");
+			//            }
+			//
+			// Close resources
+			rs.close();
+			pstmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return expiringItems;
+	}
 
 	/**
 	 * Retrieves the names of all items that are either Near Expiry or Fresh.
@@ -552,6 +552,40 @@ public class DB {
 			}
 		}
 		return itemNames;
+	}
+
+	/**
+	 * Retrieves settings for the program
+	 * 
+	 * @return a List representing the settings for the program
+	 */
+	public List<String> getSettings(){
+		List<String> settings = new ArrayList<String>();
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				String sql = "SELECT fontsize, notificationBoolean FROM settings";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				ResultSet rs = pstmt.executeQuery();
+
+				while(rs.next()) {
+					String font = rs.getString("fontsize").toLowerCase();
+					String notifBool = rs.getString("notificationBoolean").toLowerCase();
+
+					settings.add(font);
+					settings.add(notifBool);
+				}
+
+
+				rs.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return settings;
 	}
 }
 
