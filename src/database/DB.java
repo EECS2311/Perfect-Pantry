@@ -10,6 +10,8 @@ import domain.logic.FoodFreshness;
 import domain.logic.FoodGroup;
 import domain.logic.GenericTag;
 import domain.logic.Item;
+import domain.logic.recipe.Ingredient;
+import domain.logic.recipe.Recipe;
 
 /**
  * The {@code DB} class represents a simple database for storing and managing
@@ -552,6 +554,131 @@ public class DB {
 			}
 		}
 		return itemNames;
+	}
+
+	public void saveRecipeToDatabase(Recipe recipe) {
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				conn.setAutoCommit(false); // Disable auto-commit to manage transactions manually
+
+				// Use the provided recipe ID instead of expecting an auto-generated one
+				String insertRecipeSQL = "INSERT INTO recipes (id, title, image_url) VALUES (?, ?, ?)";
+				try (PreparedStatement pstmt = conn.prepareStatement(insertRecipeSQL)) {
+					pstmt.setInt(1, recipe.getId());
+					pstmt.setString(2, recipe.getTitle());
+					pstmt.setString(3, recipe.getImage());
+
+					// Execute the update without expecting a returning id
+					pstmt.executeUpdate();
+				}
+
+				// Use recipe.getId() directly as recipeId is now directly provided by Recipe class
+				for (Ingredient ingredient : recipe.getUsedIngredients()) {
+					int ingredientId = getOrInsertIngredient(conn, ingredient);
+					linkRecipeIngredient(conn, recipe.getId(), ingredientId, ingredient.getAmount(), true);
+				}
+				for (Ingredient ingredient : recipe.getMissedIngredients()) {
+					int ingredientId = getOrInsertIngredient(conn, ingredient);
+					linkRecipeIngredient(conn, recipe.getId(), ingredientId, ingredient.getAmount(), false);
+				}
+
+				// Insert Detailed Instructions
+				String insertInstructionSQL = "INSERT INTO detailed_instructions (recipe_id, step_number, instruction) VALUES (?, ?, ?)";
+				try (PreparedStatement pstmt = conn.prepareStatement(insertInstructionSQL)) {
+					for (Map.Entry<Integer, String> entry : recipe.getDetailedInstructions().entrySet()) {
+						pstmt.setInt(1, recipe.getId()); // Direct use of recipe.getId()
+						pstmt.setInt(2, entry.getKey());
+						pstmt.setString(3, entry.getValue());
+						pstmt.executeUpdate();
+					}
+				}
+
+				conn.commit(); // Commit transaction
+			} catch (SQLException e) {
+				// Handle exceptions by rolling back the transaction
+				try {
+					if (conn != null) conn.rollback();
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+				e.printStackTrace();
+			} finally {
+				// Ensure the connection is closed properly
+				try {
+					if (conn != null) {
+						conn.setAutoCommit(true); // Re-enable autoCommit
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private int getOrInsertIngredient(Connection conn, Ingredient ingredient) throws SQLException {
+		// Check if the ingredient exists by ID
+		String checkIngredientSQL = "SELECT id FROM ingredients WHERE id = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(checkIngredientSQL)) {
+			pstmt.setInt(1, ingredient.getId());
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return ingredient.getId(); // Ingredient exists, return its ID
+			}
+		}
+
+		// Ingredient does not exist, insert it with the provided ID
+		String insertIngredientSQL = "INSERT INTO ingredients (id, name, unit, image_url, original) VALUES (?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(insertIngredientSQL)) {
+			pstmt.setInt(1, ingredient.getId());
+			pstmt.setString(2, ingredient.getName());
+			pstmt.setString(3, ingredient.getUnit());
+			pstmt.setString(4, ingredient.getImage());
+			pstmt.setString(5, ingredient.getOriginal());
+			pstmt.executeUpdate();
+		}
+		return ingredient.getId(); // Return the provided ingredient's ID
+	}
+
+	private void linkRecipeIngredient(Connection conn, int recipeId, int ingredientId, double amount, boolean isUsed) throws SQLException {
+		// Insert into recipe_ingredients table
+		String sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, is_used) VALUES (?, ?, ?, ?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, recipeId);
+			pstmt.setInt(2, ingredientId);
+			pstmt.setDouble(3, amount);
+			pstmt.setBoolean(4, isUsed);
+			pstmt.executeUpdate();
+		}
+	}
+
+	public boolean isRecipeInDatabase(int recipeId) {
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				String checkRecipeSQL = "SELECT COUNT(*) FROM recipes WHERE id = ?";
+				try (PreparedStatement pstmt = conn.prepareStatement(checkRecipeSQL)) {
+					pstmt.setInt(1, recipeId);
+					ResultSet rs = pstmt.executeQuery();
+					if (rs.next()) {
+						int count = rs.getInt(1);
+						return count > 0; // Return true if the recipe exists, false otherwise
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null) {
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return false; // Return false if the recipe is not found or if any exception occurs
 	}
 }
 

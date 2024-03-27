@@ -47,5 +47,12 @@ public class RecipeUtility {
         // If the ingredients have not changed, the original recipes list remains unchanged
     }
 
+    public static void saveRecipeToDatabase(Recipe recipe){
+        HomeView.data.saveRecipeToDatabase(recipe);
+    }
+
+    public static boolean isRecipeInDatabase(int recipeId) {
+        return HomeView.data.isRecipeInDatabase(recipeId);
+    }
 
 }
