@@ -32,7 +32,7 @@ public class AddItemView extends JPanel {
         setLayout(new FlowLayout());
         add(new JLabel("Item Name:"));
         add(itemNameField);
-        add(new JLabel("Quantity:"));
+        add(new JLabel("Quantity (int >= 1):"));
         add(itemQuantityField);
         add(new JLabel("Expiration Date (dd-MMM-yyyy):"));
         add(itemExpiryField);
@@ -58,7 +58,7 @@ public class AddItemView extends JPanel {
                 (errorMsg) -> JOptionPane.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE));
 
         if (isValid) {
-            Item item = Item.getInstance(name, Integer.parseInt(quantityStr), expiryDate);
+            Item item = Item.getInstance(name, Integer.parseInt(quantityStr.trim()), expiryDate);
 
             // Assume itemsListPanel.getC() gets a context or container where items are to be added
             boolean addedToData = HomeView.data.addItem(itemsListPanel.getC(), item.getName(), item);
