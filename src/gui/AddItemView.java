@@ -32,7 +32,7 @@ public class AddItemView extends JPanel {
         setLayout(new FlowLayout());
         add(new JLabel("Item Name:"));
         add(itemNameField);
-        add(new JLabel("Quantity:"));
+        add(new JLabel("Quantity (int >= 1):"));
         add(itemQuantityField);
         add(new JLabel("Expiration Date (dd-MMM-yyyy):"));
         add(itemExpiryField);
