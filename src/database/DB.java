@@ -557,10 +557,10 @@ public class DB {
 	/**
 	 * Retrieves settings for the program
 	 * 
-	 * @return a List representing the settings for the program
+	 * @return a array representing the settings for the program
 	 */
-	public List<String> getSettings(){
-		List<String> settings = new ArrayList<String>();
+	public String[] getSettings(){
+		String [] settings = new String [2];
 		Connection conn = init();
 		if (conn != null) {
 			try {
@@ -572,8 +572,8 @@ public class DB {
 					String font = rs.getString("fontsize").toLowerCase();
 					String notifBool = rs.getString("notificationBoolean").toLowerCase();
 
-					settings.add(font);
-					settings.add(notifBool);
+					settings[0] = font;
+					settings[1] = notifBool;
 				}
 
 
