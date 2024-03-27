@@ -30,4 +30,4 @@ VALUES
 
 INSERT INTO settings(setting_type, fontsize, notificationBoolean)
 VALUES
-('User', '14', '1');
+('User', '14', 'true');
