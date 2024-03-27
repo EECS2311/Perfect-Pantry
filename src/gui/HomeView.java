@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.JButton;
@@ -97,6 +98,9 @@ public class HomeView implements ActionListener {
 	 * Launches the application and initializes the main GUI components.
 	 */
 	public HomeView() {
+		String[] settings = data.getSettings();
+		boolean notificationOn = Boolean.parseBoolean(settings[1]);
+
 		// Initialize frame
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
@@ -111,7 +115,10 @@ public class HomeView implements ActionListener {
 		setHomeViewVisibility(true);
 
 		ItemUtility.updateFreshness();
-		new Notification();
+
+		if(notificationOn) {
+			new Notification();
+		}
 
 	}
 
@@ -193,12 +200,12 @@ public class HomeView implements ActionListener {
 		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?");
 		if (opt == JOptionPane.YES_OPTION) {
 			ContainerUtility
-					.verifyAddContainer(
-							nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
-									.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
-							() -> {
-								newContainerText.setText("Pantry" + (containerMap.size() + 1));
-							});
+			.verifyAddContainer(
+					nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
+					.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+					() -> {
+						newContainerText.setText("Pantry" + (containerMap.size() + 1));
+					});
 		}
 	}
 
