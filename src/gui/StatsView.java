@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import domain.logic.StatsUtilities;
+
 public class StatsView extends JPanel {
 	
 	static JFrame frame = new JFrame("Perfect Pantry");
@@ -23,6 +25,11 @@ public class StatsView extends JPanel {
 	
 	private final int BAR_LENGTH = 550;
 	private final int LEFT_EDGE = 100;
+	
+	//Components
+	
+	private JComboBox b = new JComboBox();
+	
 	
 
 
@@ -47,11 +54,11 @@ public class StatsView extends JPanel {
 		
 		super.paintComponent(g);
 				
-		double protein  = (double)getTotal("Protein", allItems)/totalItemCount ;
-		double vegetable  = (double)getTotal("Vegetable", allItems)/totalItemCount ;
-		double grain  = (double)getTotal("Grain", allItems)/totalItemCount ;
-		double fruit  = (double)getTotal("Fruit", allItems)/totalItemCount ;
-		double dairy  = (double)getTotal("Dairy", allItems)/totalItemCount ;
+		double protein  = (double)StatsUtilities.getTotalFoodGroup("Protein", allItems)/totalItemCount ;
+		double vegetable  = (double)StatsUtilities.getTotalFoodGroup("Vegetable", allItems)/totalItemCount ;
+		double grain  = (double)StatsUtilities.getTotalFoodGroup("Grain", allItems)/totalItemCount ;
+		double fruit  = (double)StatsUtilities.getTotalFoodGroup("Fruit", allItems)/totalItemCount ;
+		double dairy  = (double)StatsUtilities.getTotalFoodGroup("Dairy", allItems)/totalItemCount ;
 		
 		g.setColor(Color.BLACK);
 		
@@ -79,16 +86,18 @@ public class StatsView extends JPanel {
 	
 		setBackground(new Color(245, 223, 162));
 		setLayout(null);
-		JComboBox b = new JComboBox();
 		JLabel title = new JLabel("Pantry Composition: ");
-		JLabel protein = new JLabel("<html>" + "<font color='Brown'>Protein: </font>" + getTotal("Protein", allItems)+ "</html>");
-		JLabel vegetable = new JLabel("<html> <font color='Green'>Vegetables: </font>" + getTotal("Vegetable", allItems) + "</html>");
-		JLabel grain = new JLabel("<html><font color='Orange'>Grain: </font>" + getTotal("Grain", allItems) +"</html>");
-		JLabel fruit = new JLabel("<html><font color='Red'>Fruit: </font>" + getTotal("Fruit", allItems) + "</html>");
-		JLabel dairy = new JLabel("<html><font color='White'>Dairy: </font>" + getTotal("Dairy", allItems) +"</html>");
+		JLabel protein = new JLabel("<html>" + "<font color='Brown'>Protein: </font>" + StatsUtilities.getPercent(allItems, totalItemCount, "Protein") + "%</html>");
+		JLabel vegetable = new JLabel("<html> <font color='Green'>Vegetables: </font>" +StatsUtilities.getPercent(allItems, totalItemCount, "Vegetable") + "%</html>");
+		JLabel grain = new JLabel("<html><font color='Orange'>Grain: </font>" + StatsUtilities.getPercent(allItems, totalItemCount, "Grain") +"%</html>");
+		JLabel fruit = new JLabel("<html><font color='Red'>Fruit: </font>" + StatsUtilities.getPercent(allItems, totalItemCount, "Fruit") + "%</html>");
+		JLabel dairy = new JLabel("<html><font color='White'>Dairy: </font>" + StatsUtilities.getPercent(allItems, totalItemCount, "Dairy")+"%</html>");
 
+		String.format("%.2f",((StatsUtilities.getTotalFoodGroup("Dairy", allItems)+0.0)/totalItemCount+ 0.0)*100 );
 		
-		JPanel foodGroups = new JPanel (new GridLayout(1, 5, 3,0 ));
+		JLabel b = new JLabel("All Pantries: " + totalItemCount + " Items");
+		b.setBounds(LEFT_EDGE, 90, 300, 100);
+		JPanel foodGroups = new JPanel (new GridLayout(1, 5, 7,0 ));
 		foodGroups.add(protein);
 		foodGroups.add(vegetable);
 		foodGroups.add(grain);
@@ -97,13 +106,13 @@ public class StatsView extends JPanel {
 		
 		add(foodGroups);
 	
-		foodGroups.setBounds(LEFT_EDGE,220,500,50);
+		foodGroups.setBounds(LEFT_EDGE,220,600,50);
 		foodGroups.setBackground(null);
 		
 		title.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
 		title.setBounds(LEFT_EDGE, 50, 500, 100);
 	
-		b.setBounds(LEFT_EDGE, 250, 300, 100);
+		
 		
 		add(title);
 		add(b);
@@ -113,12 +122,6 @@ public class StatsView extends JPanel {
 		
 	}
 	
-	public int getTotal(String group, ArrayList<String> s) {
-		
-		return s.stream().filter(x -> x!= null && x.equals(group)).toList().size();
-		
-		
-	}
 	
 	
 
