@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,6 +16,9 @@ import domain.logic.StatsUtilities;
 public class StatsView extends JPanel {
 
 	private static StatsView instance;
+	private JPanel foodGroups = new JPanel(new GridLayout(1, 5, 7, 0));
+	private JLabel title = new JLabel("Pantry Composition: ");
+	private JButton backButton = new JButton("Back");
 
 	public ArrayList<String> allItems = HomeView.data.getTotalCount();
 	private int totalItemCount = allItems.size();
@@ -59,7 +63,7 @@ public class StatsView extends JPanel {
 
 		setBackground(new Color(245, 223, 162));
 		setLayout(null);
-		JLabel title = new JLabel("Pantry Composition: ");
+		
 		JLabel protein = new JLabel("<html>" + "<font color='Brown'>Protein: </font>"
 				+ StatsUtilities.getPercent(allItems, totalItemCount, "Protein") + "%</html>");
 		JLabel vegetable = new JLabel("<html> <font color='Green'>Vegetables: </font>"
@@ -71,27 +75,29 @@ public class StatsView extends JPanel {
 		JLabel dairy = new JLabel("<html><font color='White'>Dairy: </font>"
 				+ StatsUtilities.getPercent(allItems, totalItemCount, "Dairy") + "%</html>");
 
-		String.format("%.2f",
-				((StatsUtilities.getTotalFoodGroup("Dairy", allItems) + 0.0) / totalItemCount + 0.0) * 100);
-
 		JLabel b = new JLabel("All Pantries: " + totalItemCount + " Items");
 		b.setBounds(LEFT_EDGE, 90, 300, 100);
-		
-		JPanel foodGroups = new JPanel(new GridLayout(1, 5, 7, 0));
+
 		foodGroups.add(protein);
 		foodGroups.add(vegetable);
 		foodGroups.add(grain);
 		foodGroups.add(fruit);
 		foodGroups.add(dairy);
 
-		add(foodGroups);
-
 		foodGroups.setBounds(LEFT_EDGE, 220, 600, 50);
 		foodGroups.setBackground(null);
 
 		title.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
 		title.setBounds(LEFT_EDGE, 50, 500, 100);
+		
+		backButton.setBounds(20, 20, 80, 30);
+		backButton.addActionListener(e ->{
+				HomeView.getHomeView().setHomeViewVisibility(true);
+				setStatsViewVisibility(false);
+		});
 
+		add(backButton);
+		add(foodGroups);
 		add(title);
 		add(b);
 		setVisible(true);
@@ -99,7 +105,6 @@ public class StatsView extends JPanel {
 	}
 	
 	
-
 	public static StatsView getInstance() {
 		if (instance == null) {
 			instance = new StatsView();
