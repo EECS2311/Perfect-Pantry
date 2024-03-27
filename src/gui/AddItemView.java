@@ -58,7 +58,7 @@ public class AddItemView extends JPanel {
                 (errorMsg) -> JOptionPane.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE));
 
         if (isValid) {
-            Item item = Item.getInstance(name, Integer.parseInt(quantityStr), expiryDate);
+            Item item = Item.getInstance(name, Integer.parseInt(quantityStr.trim()), expiryDate);
 
             // Assume itemsListPanel.getC() gets a context or container where items are to be added
             boolean addedToData = HomeView.data.addItem(itemsListPanel.getC(), item.getName(), item);
