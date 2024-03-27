@@ -44,6 +44,10 @@ public class Recipe {
         return detailedInstructions;
     }
 
+    public void setDetailedInstructions(Map<Integer, String> detailedInstructions){
+        this.detailedInstructions = detailedInstructions;
+    }
+
     /**
      * Adds an ingredient to the list of used ingredients in the recipe.
      *

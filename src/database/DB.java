@@ -680,6 +680,87 @@ public class DB {
 		}
 		return false; // Return false if the recipe is not found or if any exception occurs
 	}
+
+	public List<Recipe> getAllStarredRecipes() {
+		List<Recipe> recipes = new ArrayList<>();
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				// Retrieve all recipes
+				String selectRecipesSQL = "SELECT * FROM recipes";
+				try (Statement stmt = conn.createStatement();
+					 ResultSet rsRecipes = stmt.executeQuery(selectRecipesSQL)) {
+
+					while (rsRecipes.next()) {
+						int recipeId = rsRecipes.getInt("id");
+						String title = rsRecipes.getString("title");
+						String imageUrl = rsRecipes.getString("image_url");
+
+						Recipe recipe = new Recipe(recipeId, title, imageUrl);
+
+						// Fetch and set used and missed ingredients
+						recipe.setUsedIngredients(getIngredientsForRecipe(conn, recipeId, true));
+						recipe.setMissedIngredients(getIngredientsForRecipe(conn, recipeId, false));
+
+						// Fetch and set detailed instructions
+						recipe.setDetailedInstructions(getDetailedInstructionsForRecipe(conn, recipeId));
+
+						recipes.add(recipe);
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null) {
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return recipes;
+	}
+
+	private List<Ingredient> getIngredientsForRecipe(Connection conn, int recipeId, boolean isUsed) throws SQLException {
+		List<Ingredient> ingredients = new ArrayList<>();
+		String selectIngredientsSQL = "SELECT i.* FROM ingredients i JOIN recipe_ingredients ri ON i.id = ri.ingredient_id WHERE ri.recipe_id = ? AND ri.is_used = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(selectIngredientsSQL)) {
+			pstmt.setInt(1, recipeId);
+			pstmt.setBoolean(2, isUsed);
+			try (ResultSet rsIngredients = pstmt.executeQuery()) {
+				while (rsIngredients.next()) {
+					int id = rsIngredients.getInt("id");
+					String name = rsIngredients.getString("name");
+					double amount = rsIngredients.getDouble("amount"); // This should ideally come from recipe_ingredients table
+					String unit = rsIngredients.getString("unit");
+					String image = rsIngredients.getString("image_url");
+					String original = rsIngredients.getString("original");
+
+					ingredients.add(new Ingredient(id, name, amount, unit, image, original));
+				}
+			}
+		}
+		return ingredients;
+	}
+
+	private Map<Integer, String> getDetailedInstructionsForRecipe(Connection conn, int recipeId) throws SQLException {
+		Map<Integer, String> instructions = new HashMap<>();
+		String selectInstructionsSQL = "SELECT * FROM detailed_instructions WHERE recipe_id = ? ORDER BY step_number";
+		try (PreparedStatement pstmt = conn.prepareStatement(selectInstructionsSQL)) {
+			pstmt.setInt(1, recipeId);
+			try (ResultSet rsInstructions = pstmt.executeQuery()) {
+				while (rsInstructions.next()) {
+					int stepNumber = rsInstructions.getInt("step_number");
+					String instruction = rsInstructions.getString("instruction");
+					instructions.put(stepNumber, instruction);
+				}
+			}
+		}
+		return instructions;
+	}
+
 }
 
 
