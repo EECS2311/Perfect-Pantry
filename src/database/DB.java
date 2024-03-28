@@ -1,9 +1,16 @@
 package database;
 
 
-import java.sql.*;
-import java.sql.Date;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import domain.logic.Container;
 import domain.logic.FoodFreshness;
@@ -552,6 +559,36 @@ public class DB {
 			}
 		}
 		return itemNames;
+	}
+
+	public ArrayList<String> getTotalCount(String container) {
+		
+		Connection conn = init();
+		
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result;
+			if (container == null){
+				result = s.executeQuery("SELECT * FROM item");
+			}
+			else {
+				result = s.executeQuery("Select * FROM item where container='" + container +"'");
+			}
+			
+			ArrayList<String> l = new ArrayList<String>();
+			while (result.next()) {
+				if (result.getString("fg") != null) {
+							l.add(result.getString("fg"));
+				}
+		
+			}
+			return l;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 
