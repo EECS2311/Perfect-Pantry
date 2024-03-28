@@ -561,15 +561,21 @@ public class DB {
 		return itemNames;
 	}
 
-	public ArrayList<String> getTotalCount() {
+	public ArrayList<String> getTotalCount(String container) {
 		
 		Connection conn = init();
 		
 		try {
 			Statement s = conn.createStatement();
-			ResultSet result = s.executeQuery("SELECT * FROM item");
+			ResultSet result;
+			if (container == null){
+				result = s.executeQuery("SELECT * FROM item");
+			}
+			else {
+				result = s.executeQuery("Select * FROM item where container='" + container +"'");
+			}
+			
 			ArrayList<String> l = new ArrayList<String>();
-
 			while (result.next()) {
 				if (result.getString("fg") != null) {
 							l.add(result.getString("fg"));
