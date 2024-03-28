@@ -236,7 +236,7 @@ public class HomeView implements ActionListener {
 		} else if (source == recipeListButton) {
 			RecipeListView.getInstance().setRecipeListViewVisibility(true);
 		} else if(source == settingsButton) {
-			new SettingsView();
+			new SettingsView(homePanel);
 		}
 
 	}
