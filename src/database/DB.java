@@ -582,7 +582,9 @@ public class DB {
 				}
 		
 			}
+			conn.close();
 			return l;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
