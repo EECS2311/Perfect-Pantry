@@ -587,6 +587,32 @@ public class DB {
 
 		return settings;
 	}
+	
+	public void setFontsize(int n) {
+		Connection conn = init();
+		try {
+			String query = "UPDATE settings SET fontsize = ? WHERE setting_type = 'User'";
+			PreparedStatement p = conn.prepareStatement(query);
+			p.setInt(1, n);
+			p.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setNotificationBoolean(boolean b) {
+		Connection conn = init();
+		try {
+			String query = "UPDATE settings SET notificationboolean = ? WHERE setting_type = 'User';";
+			PreparedStatement p = conn.prepareStatement(query);
+			p.setString(1, Boolean.toString(b));
+			p.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
 
 
