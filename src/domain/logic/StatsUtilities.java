@@ -13,7 +13,9 @@ public class StatsUtilities {
 	}
 	
 	public static String getPercent(ArrayList<String> allItems, int total, String group) {
-		
+		if (total == 0) {
+			return "0.0";
+		}
 		return String.format("%2.1f", ((StatsUtilities.getTotalFoodGroup(group, allItems)+0.0))/total*100);
 		
 	}

@@ -15,8 +15,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import domain.logic.StatsUtilities;
-
 public class StatsView extends JPanel implements ItemListener {
 
 	private static StatsView instance;
@@ -25,6 +23,9 @@ public class StatsView extends JPanel implements ItemListener {
 	private JButton backButton;
 	private JComboBox containerSelect;
 	private StatsRectangle st;
+	StatsDesc d1;
+	StatsDesc dx;
+	JLabel b2;
 	List<String> containers;
 	public ArrayList<String> allItems;
 	private int totalItemCount;
@@ -36,8 +37,8 @@ public class StatsView extends JPanel implements ItemListener {
 	protected void paintComponent(Graphics g) {
 
 		super.paintComponent(g);
-		st.drawRect(g, 150, allItems);
-		st.drawRect(g, 400, HomeView.data.getTotalCount((String)containerSelect.getSelectedItem()));
+		st.drawRect(g, 150, allItems, 50);
+		st.drawRect(g, 400, HomeView.data.getTotalCount((String)containerSelect.getSelectedItem()), 30);
 
 	}
 
@@ -52,32 +53,18 @@ public class StatsView extends JPanel implements ItemListener {
 		allItems = HomeView.data.getTotalCount(null);
 		totalItemCount = allItems.size();
 		st = new StatsRectangle(containers.get(0));
+		d1 = new StatsDesc(220);
+		d1.setDesc(allItems);
+		dx = new StatsDesc(450);
+		dx.setDesc(HomeView.data.getTotalCount(containers.get(0)));
 	
-
-		JLabel protein = new JLabel("Protein: " + StatsUtilities.getPercent(allItems, totalItemCount, "Protein") + "%");
-		protein.setForeground(new Color(252, 156, 156));
-		JLabel vegetable = new JLabel(
-				"Vegetables: " + StatsUtilities.getPercent(allItems, totalItemCount, "Vegetable") + "%");
-		vegetable.setForeground(new Color(193, 219, 155));
-		JLabel grain = new JLabel("Grain: " + StatsUtilities.getPercent(allItems, totalItemCount, "Grain") + "%");
-		grain.setForeground(new Color(255, 235, 156));
-		JLabel fruit = new JLabel("Fruit: " + StatsUtilities.getPercent(allItems, totalItemCount, "Fruit") + "%");
-		fruit.setForeground(new Color(195, 177, 225));
-		JLabel dairy = new JLabel("Dairy: " + StatsUtilities.getPercent(allItems, totalItemCount, "Dairy") + "%");
-		dairy.setForeground(new Color(207, 219, 231));
 
 		JLabel b = new JLabel("All Pantries: " + totalItemCount + " Items");
 		b.setBounds(LEFT_EDGE, 90, 300, 100);
+		
+		b2 = new JLabel(HomeView.data.getTotalCount(containers.get(0)).size() + " Items");
+		b2.setBounds(LEFT_EDGE, 340, 300, 100);
 
-		foodGroups.add(protein);
-		foodGroups.add(vegetable);
-		foodGroups.add(grain);
-		foodGroups.add(fruit);
-		foodGroups.add(dairy);
-
-		foodGroups.setBounds(LEFT_EDGE, 220, 600, 30);
-
-		foodGroups.setBackground(new Color(0, 0, 0));
 
 		title.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
 		title.setBounds(LEFT_EDGE, 50, 500, 100);
@@ -96,7 +83,10 @@ public class StatsView extends JPanel implements ItemListener {
 		add(foodGroups);
 		add(title);
 		add(b);
+		add(b2);
 		add(st);
+		add(d1);
+		add(dx);
 		
 		setBackground(new Color(253, 241, 203));
 		setLayout(null);
@@ -132,7 +122,9 @@ public class StatsView extends JPanel implements ItemListener {
 	public void itemStateChanged(ItemEvent e) {
 			
 		if (e.getSource() == containerSelect && e.getStateChange() == ItemEvent.SELECTED) {
-		
+			
+			dx.setDesc(HomeView.data.getTotalCount((String)containerSelect.getSelectedItem()));
+			b2.setText(HomeView.data.getTotalCount((String)containerSelect.getSelectedItem()).size() + " Items");
 			repaint();
 			
 		}
