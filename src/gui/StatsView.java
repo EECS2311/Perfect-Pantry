@@ -25,7 +25,8 @@ public class StatsView extends JPanel implements ItemListener {
 	private StatsRectangle st;
 	StatsDesc d1;
 	StatsDesc dx;
-	JLabel b2;
+	JLabel b1;
+	JLabel bx;
 	List<String> containers;
 	public ArrayList<String> allItems;
 	private int totalItemCount;
@@ -59,11 +60,11 @@ public class StatsView extends JPanel implements ItemListener {
 		dx.setDesc(HomeView.data.getTotalCount(containers.get(0)));
 	
 
-		JLabel b = new JLabel("All Pantries: " + totalItemCount + " Items");
-		b.setBounds(LEFT_EDGE, 90, 300, 100);
+		b1 = new JLabel("All Pantries: " + totalItemCount + " Items");
+		b1.setBounds(LEFT_EDGE, 90, 300, 100);
 		
-		b2 = new JLabel(HomeView.data.getTotalCount(containers.get(0)).size() + " Items");
-		b2.setBounds(LEFT_EDGE, 340, 300, 100);
+		bx = new JLabel(HomeView.data.getTotalCount(containers.get(0)).size() + " Items");
+		bx.setBounds(LEFT_EDGE, 340, 300, 100);
 
 
 		title.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
@@ -82,8 +83,8 @@ public class StatsView extends JPanel implements ItemListener {
 		add(backButton);
 		add(foodGroups);
 		add(title);
-		add(b);
-		add(b2);
+		add(b1);
+		add(bx);
 		add(st);
 		add(d1);
 		add(dx);
@@ -124,7 +125,7 @@ public class StatsView extends JPanel implements ItemListener {
 		if (e.getSource() == containerSelect && e.getStateChange() == ItemEvent.SELECTED) {
 			
 			dx.setDesc(HomeView.data.getTotalCount((String)containerSelect.getSelectedItem()));
-			b2.setText(HomeView.data.getTotalCount((String)containerSelect.getSelectedItem()).size() + " Items");
+			bx.setText(HomeView.data.getTotalCount((String)containerSelect.getSelectedItem()).size() + " Items");
 			repaint();
 			
 		}
