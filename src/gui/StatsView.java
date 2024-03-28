@@ -89,6 +89,8 @@ public class StatsView extends JPanel implements ItemListener {
 		add(d1);
 		add(dx);
 		
+		
+		
 		setBackground(new Color(253, 241, 203));
 		setLayout(null);
 		setVisible(true);
@@ -108,6 +110,7 @@ public class StatsView extends JPanel implements ItemListener {
 		if (visible) {
 			frame.getContentPane().removeAll(); // Clear the frame's content pane
 			StatsView sView = StatsView.getInstance();
+			refresh();
 			// Add all panels
 			HomeView.getFrame().add(sView);
 
@@ -129,6 +132,15 @@ public class StatsView extends JPanel implements ItemListener {
 			repaint();
 			
 		}
+		
+	}
+	
+	public void refresh() {
+		allItems = HomeView.data.getTotalCount(null);
+		b1.setText("All Pantries: " + allItems.size() + " Items");
+		d1.setDesc(allItems);
+		bx.setText(HomeView.data.getTotalCount((String)containerSelect.getSelectedItem()).size() + " Items");
+		dx.setDesc(HomeView.data.getTotalCount((String)containerSelect.getSelectedItem()));
 		
 	}
 
