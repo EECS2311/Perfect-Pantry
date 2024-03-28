@@ -79,6 +79,8 @@ public class HomeView implements ActionListener {
 
 	private JButton recipeListButton = new JButton("Recipe List");
 
+	private JButton starredRecipeListButton = new JButton("Starred Recipes");
+
 
 	/**
 	 * Holds this instance of HomeView
@@ -166,8 +168,13 @@ public class HomeView implements ActionListener {
 
 			homePanel.add(recipeListButton);
 			recipeListButton.setBackground(new Color(76, 183, 242));
-			recipeListButton.setBounds(500, 60, 200, 40); // Adjust the positioning as needed
+			recipeListButton.setBounds(500, 60, 200, 40);
 			recipeListButton.addActionListener(this);
+
+			homePanel.add(starredRecipeListButton);
+			starredRecipeListButton.setBackground(new Color(76, 183, 242));
+			starredRecipeListButton.setBounds(500, 100, 200, 40);
+			starredRecipeListButton.addActionListener(this);
 
 			homePanel.setVisible(true);
 		}
@@ -178,6 +185,7 @@ public class HomeView implements ActionListener {
 			viewContainers.removeActionListener(this);
 			groceryListButton.removeActionListener(this);
 			recipeListButton.removeActionListener(this);
+			starredRecipeListButton.removeActionListener(this);
 
 			homePanel.setVisible(false);
 		}
@@ -220,7 +228,11 @@ public class HomeView implements ActionListener {
 			GroceryListView.getGroceryListView().setGroceryListViewVisibility(true);
 		} else if (source == recipeListButton) {
 			RecipeListView.getInstance().setRecipeListViewVisibility(true);
+		} else if (source == starredRecipeListButton) {
+			StarredRecipeListView.getInstance().setRecipeListViewVisibility(true);
 		}
+
+
 
 	}
 

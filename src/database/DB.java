@@ -4,6 +4,7 @@ package database;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import domain.logic.Container;
 import domain.logic.FoodFreshness;
@@ -686,6 +687,7 @@ public class DB {
 		Connection conn = init();
 		if (conn != null) {
 			try {
+				List<Integer> recipeIds = new ArrayList<>();
 				// Retrieve all recipes
 				String selectRecipesSQL = "SELECT * FROM recipes";
 				try (Statement stmt = conn.createStatement();
@@ -697,16 +699,21 @@ public class DB {
 						String imageUrl = rsRecipes.getString("image_url");
 
 						Recipe recipe = new Recipe(recipeId, title, imageUrl);
-
-						// Fetch and set used and missed ingredients
-						recipe.setUsedIngredients(getIngredientsForRecipe(conn, recipeId, true));
-						recipe.setMissedIngredients(getIngredientsForRecipe(conn, recipeId, false));
-
-						// Fetch and set detailed instructions
-						recipe.setDetailedInstructions(getDetailedInstructionsForRecipe(conn, recipeId));
-
+						recipe.setFetchedStep(true);
 						recipes.add(recipe);
+						recipeIds.add(recipeId); // Collect recipe IDs for bulk ingredient and instruction retrieval
 					}
+				}
+
+				// Bulk fetch ingredients and instructions
+				Map<Integer, List<Ingredient>> ingredientsMap = getAllIngredientsForRecipes(conn, recipeIds);
+				Map<Integer, Map<Integer, String>> instructionsMap = getAllDetailedInstructionsForRecipes(conn, recipeIds);
+
+				// Associate fetched data with recipes
+				for (Recipe recipe : recipes) {
+					recipe.setUsedIngredients(ingredientsMap.getOrDefault(recipe.getId(), new ArrayList<>()));
+					recipe.setMissedIngredients(new ArrayList<>()); // Assuming you need to adjust how to differentiate used/missed
+					recipe.setDetailedInstructions(instructionsMap.getOrDefault(recipe.getId(), new HashMap<>()));
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -723,42 +730,59 @@ public class DB {
 		return recipes;
 	}
 
-	private List<Ingredient> getIngredientsForRecipe(Connection conn, int recipeId, boolean isUsed) throws SQLException {
-		List<Ingredient> ingredients = new ArrayList<>();
-		String selectIngredientsSQL = "SELECT i.* FROM ingredients i JOIN recipe_ingredients ri ON i.id = ri.ingredient_id WHERE ri.recipe_id = ? AND ri.is_used = ?";
-		try (PreparedStatement pstmt = conn.prepareStatement(selectIngredientsSQL)) {
-			pstmt.setInt(1, recipeId);
-			pstmt.setBoolean(2, isUsed);
-			try (ResultSet rsIngredients = pstmt.executeQuery()) {
-				while (rsIngredients.next()) {
-					int id = rsIngredients.getInt("id");
-					String name = rsIngredients.getString("name");
-					double amount = rsIngredients.getDouble("amount"); // This should ideally come from recipe_ingredients table
-					String unit = rsIngredients.getString("unit");
-					String image = rsIngredients.getString("image_url");
-					String original = rsIngredients.getString("original");
+	private Map<Integer, List<Ingredient>> getAllIngredientsForRecipes(Connection conn, List<Integer> recipeIds) throws SQLException {
+		Map<Integer, List<Ingredient>> recipeIngredientsMap = new HashMap<>();
+		if (recipeIds.isEmpty()) {
+			return recipeIngredientsMap;
+		}
 
-					ingredients.add(new Ingredient(id, name, amount, unit, image, original));
-				}
+		String inClause = recipeIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+		String selectIngredientsSQL =
+				"SELECT ri.recipe_id, i.id, i.name, ri.amount, i.unit, i.image_url, i.original " +
+						"FROM ingredients i " +
+						"JOIN recipe_ingredients ri ON i.id = ri.ingredient_id " +
+						"WHERE ri.recipe_id IN (" + inClause + ")";
+
+		try (Statement stmt = conn.createStatement();
+			 ResultSet rsIngredients = stmt.executeQuery(selectIngredientsSQL)) {
+			while (rsIngredients.next()) {
+				int recipeId = rsIngredients.getInt("recipe_id");
+				int id = rsIngredients.getInt("id");
+				String name = rsIngredients.getString("name");
+				double amount = rsIngredients.getDouble("amount");
+				String unit = rsIngredients.getString("unit");
+				String image = rsIngredients.getString("image_url");
+				String original = rsIngredients.getString("original");
+
+				Ingredient ingredient = new Ingredient(id, name, amount, unit, image, original);
+				recipeIngredientsMap.computeIfAbsent(recipeId, k -> new ArrayList<>()).add(ingredient);
 			}
 		}
-		return ingredients;
+		return recipeIngredientsMap;
 	}
+	private Map<Integer, Map<Integer, String>> getAllDetailedInstructionsForRecipes(Connection conn, List<Integer> recipeIds) throws SQLException {
+		Map<Integer, Map<Integer, String>> recipeInstructionsMap = new HashMap<>();
+		if (recipeIds.isEmpty()) {
+			return recipeInstructionsMap;
+		}
 
-	private Map<Integer, String> getDetailedInstructionsForRecipe(Connection conn, int recipeId) throws SQLException {
-		Map<Integer, String> instructions = new HashMap<>();
-		String selectInstructionsSQL = "SELECT * FROM detailed_instructions WHERE recipe_id = ? ORDER BY step_number";
-		try (PreparedStatement pstmt = conn.prepareStatement(selectInstructionsSQL)) {
-			pstmt.setInt(1, recipeId);
-			try (ResultSet rsInstructions = pstmt.executeQuery()) {
-				while (rsInstructions.next()) {
-					int stepNumber = rsInstructions.getInt("step_number");
-					String instruction = rsInstructions.getString("instruction");
-					instructions.put(stepNumber, instruction);
-				}
+		String inClause = recipeIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+		String selectInstructionsSQL =
+				"SELECT recipe_id, step_number, instruction " +
+						"FROM detailed_instructions WHERE recipe_id IN (" + inClause + ") " +
+						"ORDER BY recipe_id, step_number";
+
+		try (Statement stmt = conn.createStatement();
+			 ResultSet rsInstructions = stmt.executeQuery(selectInstructionsSQL)) {
+			while (rsInstructions.next()) {
+				int recipeId = rsInstructions.getInt("recipe_id");
+				int stepNumber = rsInstructions.getInt("step_number");
+				String instruction = rsInstructions.getString("instruction");
+
+				recipeInstructionsMap.computeIfAbsent(recipeId, k -> new HashMap<>()).put(stepNumber, instruction);
 			}
 		}
-		return instructions;
+		return recipeInstructionsMap;
 	}
 
 }
