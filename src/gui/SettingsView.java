@@ -37,9 +37,6 @@ public class SettingsView extends Settings {
 
 	int highestFontSize = 50;
 	
-	
-
-
 
 	public SettingsView(JPanel homePanel) {
 		this.homePanel = homePanel;
@@ -107,11 +104,13 @@ public class SettingsView extends Settings {
 	public void setFontSizeCurrent(int n) {
 		if(n >= lowestFontSize && n <= highestFontSize) {
 			setFontSize(n);
+			Font f = new Font("Lucida Grande", Font.PLAIN, n);
 			fontSizeCurrent.setText(Integer.toString(n));
-			fontSizeCurrent.setFont(new Font("Lucida Grande", Font.PLAIN, n));;
+			fontSizeCurrent.setFont(f);;
 			
 			settings.setSize(settings.getPreferredSize());
 			settings.repaint();
+			
 		}
 	}
 
