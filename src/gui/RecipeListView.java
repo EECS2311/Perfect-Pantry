@@ -38,7 +38,7 @@ public class RecipeListView extends JPanel implements ActionListener {
     protected JPanel recipesPanel = new JPanel();
     protected static Recipe wow = new Recipe(640352, "Cranberry Apple Crisp", "https://spoonacular.com/recipeImages/640352-312x231.jpg");
     protected static Set<String> ingredients = new HashSet<>();
-    protected static List<Recipe> recipes = new ArrayList<>();
+    private List<Recipe> recipes = new ArrayList<>(); // Instance variable
     protected JScrollPane scrollPane;
     protected static RecipeDetailView recipeDetailView = RecipeDetailView.getInstance(wow);
 
@@ -138,21 +138,14 @@ public class RecipeListView extends JPanel implements ActionListener {
         String usedIngredientsList = recipe.getUsedIngredients().stream()
                 .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
                 .reduce("", (a, b) -> a + b);
-        if (usedIngredientsList.isEmpty()) usedIngredientsList = "<li>No available ingredients</li>";
-
-        String missedIngredientsList = recipe.getMissedIngredients().stream()
-                .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
-                .reduce("", (a, b) -> a + b);
-        if (missedIngredientsList.isEmpty()) missedIngredientsList = "<li>No missing ingredients</li>";
-
+        if (usedIngredientsList.isEmpty()) usedIngredientsList = "<li>No ingredients</li>";
         JPanel detailsPanel = new JPanel(new BorderLayout());
         detailsPanel.setBackground(new Color(245, 223, 162));
 
         // use HTML for list formatting
         JButton recipeButton = new JButton("<html><body style='text-align:left;'>"
                 + "<h3>" + recipe.getTitle() + "</h3>"
-                + "<br><b>Available Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
-                + "<br><b>Missing Ingredients:</b> <ul>" + missedIngredientsList + "</ul>"
+                + "<br><b>Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
                 + "</body></html>");
         recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
         recipeButton.setFocusable(false);
@@ -188,7 +181,6 @@ public class RecipeListView extends JPanel implements ActionListener {
         if (e.getSource() == backButton) {
             HomeView.getHomeView().setHomeViewVisibility(true);
             setRecipeListViewVisibility(false);
-//            HomeView.getFrame().remove(this);
         }
     }
 
@@ -199,20 +191,17 @@ public class RecipeListView extends JPanel implements ActionListener {
      */
     public void setRecipeListViewVisibility(boolean visible) {
         if (visible) {
-            // Clear the previous view
             HomeView.getFrame().getContentPane().removeAll();
 
             RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
 
-            // Setup the view
             this.addActionListeners();
-            this.displayRecipes(); // Make sure this is called after listeners are added
+            this.displayRecipes();
 
             // Add this view
             HomeView.getFrame().add(this);
             this.setVisible(true);
         } else {
-            // Clear the view and remove listeners
             this.setVisible(false);
             this.removeActionListeners(backButton);
             HomeView.getFrame().getContentPane().remove(this);
@@ -228,7 +217,7 @@ public class RecipeListView extends JPanel implements ActionListener {
      * Safely adds action listeners to buttons.
      */
     public void addActionListeners() {
-        removeActionListeners(backButton); // Remove listeners before re-adding
+        removeActionListeners(backButton);
         backButton.addActionListener(this);
     }
 
