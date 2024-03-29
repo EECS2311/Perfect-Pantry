@@ -588,6 +588,10 @@ public class DB {
 		return settings;
 	}
 	
+	/**
+	 * Updates the fontSize of font in the database
+	 * @param n The fontSize 
+	 */
 	public void setFontsize(int n) {
 		Connection conn = init();
 		try {
@@ -601,6 +605,11 @@ public class DB {
 		}
 	}
 	
+	/**
+	 * Sets whether or not opening the application will give the notifications and saves it in database
+	 * 
+	 * @param b Boolean value, true if notifcation should be on, false otherwise
+	 */
 	public void setNotificationBoolean(boolean b) {
 		Connection conn = init();
 		try {
