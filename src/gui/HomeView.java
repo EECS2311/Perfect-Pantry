@@ -130,6 +130,16 @@ public class HomeView implements ActionListener {
 			// Set other gui visibility to false
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
 
+			// Remove existing action listeners, prevents creating multiple containers
+			newContainerText.removeActionListener(this);
+			createContainer.removeActionListener(this);
+			viewContainers.removeActionListener(this);
+			groceryListButton.removeActionListener(this);
+			recipeListButton.removeActionListener(this);
+			starredRecipeListButton.removeActionListener(this);
+			statisticsButton.removeActionListener(this);
+
+
 			// Initialise all actionlisteners
 			newContainerText.addActionListener(this);
 			createContainer.addActionListener(this);
