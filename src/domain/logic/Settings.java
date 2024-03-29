@@ -4,7 +4,7 @@ import database.DB;
 import gui.HomeView;
 
 public class Settings {
-	private static int fontSize;
+	private int fontSize;
 	
 	private boolean notificationBoolean;
 	
@@ -28,7 +28,7 @@ public class Settings {
 		fontSize = n;
 	}
 	
-	public static int getFontSize() {
+	public int getFontSize() {
 		return fontSize;
 	}
 	
