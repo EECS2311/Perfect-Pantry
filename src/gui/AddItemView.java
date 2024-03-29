@@ -7,6 +7,7 @@ import domain.logic.Item;
 import database.DB;
 import domain.logic.Container;
 import domain.logic.ItemUtility;
+import domain.logic.Settings;
 
 /**
  * A JPanel subclass that provides a user interface for adding items with name, quantity, and expiration date.
@@ -28,14 +29,33 @@ public class AddItemView extends JPanel {
      */
     public AddItemView(ItemsListView itemsListPanel) {
         this.itemsListPanel = itemsListPanel; // Initialize the reference
+        
+        Settings s = new Settings();
+        Font font = new Font("Dialog", Font.PLAIN, s.getFontSize());
 
         setLayout(new FlowLayout());
-        add(new JLabel("Item Name:"));
+        JLabel itemName = new JLabel("Item Name:");
+        itemName.setFont(font);
+        add(itemName);
+      
         add(itemNameField);
-        add(new JLabel("Quantity:"));
+        itemNameField.setFont(font);
+        
+        JLabel quantity = new JLabel("Quantity:");
+        quantity.setFont(font);
+        add(quantity);
+        
+        itemQuantityField.setFont(font);
         add(itemQuantityField);
-        add(new JLabel("Expiration Date (dd-MMM-yyyy):"));
+        
+        JLabel expire = new JLabel("Expiration Date (dd-MMM-yyyy):");
+        expire.setFont(font);
+        add(expire);
+        
+        itemExpiryField.setFont(font);
         add(itemExpiryField);
+        
+        addButton.setFont(font);
         add(addButton);
 //        add(viewCalendar);
 
