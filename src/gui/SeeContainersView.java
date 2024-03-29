@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,9 +17,11 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.FontUIResource;
 
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
+import domain.logic.Settings;
 
 /**
  * The GUI which shows the list of Containers the user made,
@@ -75,6 +78,8 @@ public class SeeContainersView implements ActionListener{
 	 * Holds this instance of SeeContainersView
 	 */
 	private static SeeContainersView containersView;
+	
+	private Font font;
 
 
 
@@ -85,6 +90,7 @@ public class SeeContainersView implements ActionListener{
 		containersView = this;
 	}
 
+
 	/**
 	 * Sets the visibility of the SeeContainersView GUI depending on the boolean passed
 	 * @param b the value of whether the visibility is true or not
@@ -92,19 +98,24 @@ public class SeeContainersView implements ActionListener{
 
 	public void setSeeContainersViewVisibility(boolean b) {
 		if (b == true) { 
+			Settings s = new Settings();
+			font = new FontUIResource("Dialog", Font.PLAIN, s.getFontSize());
+
 			HomeView.getHomeView().setHomeViewVisibility(false);
 			viewOfContainer2HomeButton.addActionListener(this);
-
+			viewOfContainer2HomeButton.setFont(font);
+			
 			HomeView.getFrame().add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
 			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
 
 			backPanel.setBackground(new Color(253, 241, 203));
-			viewOfContainerPanel.add(backPanel);
 			backPanel.setLayout(new FlowLayout());
-			backPanel.setBounds(0, 0, 800, 50);
-
 			backPanel.add(viewOfContainer2HomeButton);
+			
+			JScrollPane backScrollPanel = new JScrollPane(backPanel);
+			backScrollPanel.setBounds(0, 0, 800, 50);
+			viewOfContainerPanel.add(backScrollPanel);
 
 			containerButtonsPanel.setBounds(0, 50, 800, 500);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
@@ -115,9 +126,11 @@ public class SeeContainersView implements ActionListener{
 
 			popup = new JPopupMenu();
 			removeContainerBtn = new JMenuItem("Delete Container");
+			removeContainerBtn.addActionListener(this);
+
 			renameContainerBtn = new JMenuItem("Rename Container");
 			renameContainerBtn.addActionListener(this);
-			removeContainerBtn.addActionListener(this);
+
 
 			popup.add(renameContainerBtn);
 			popup.add(removeContainerBtn);
@@ -126,6 +139,7 @@ public class SeeContainersView implements ActionListener{
 				containerButtonsPanel.add(button);
 				button.addActionListener(this);
 				button.setComponentPopupMenu(popup);
+				button.setFont(font);
 				button.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent p) {
 						Boolean bool = SwingUtilities.isRightMouseButton(p);
@@ -141,6 +155,7 @@ public class SeeContainersView implements ActionListener{
 			pane.setBounds(0, 50, 800, 500);
 
 			viewOfContainerPanel.setVisible(true);
+			
 
 		}
 		if (b == false) {
@@ -174,7 +189,8 @@ public class SeeContainersView implements ActionListener{
 						c.setName(nameOfContainer);
 						// Update the button text directly instead of replacing the button in the map
 						b.setText(c.getName());
-						HomeView.getHomeView().setHomeViewVisibility(true);
+						viewOfContainerPanel.revalidate();
+//						HomeView.getHomeView().setHomeViewVisibility(true);
 					});
 		}
 	}
@@ -191,7 +207,8 @@ public class SeeContainersView implements ActionListener{
 			if (opt == JOptionPane.YES_OPTION) { // if not cancelled
 				ContainerUtility.verifyDeleteContainer(c.getName(), HomeView.data, b, HomeView.getContainerMap(), (errorMsg) -> JOptionPane
 						.showMessageDialog(HomeView.getFrame(), errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-							HomeView.getHomeView().setHomeViewVisibility(true);
+//							HomeView.getHomeView().setHomeViewVisibility(true);
+							viewOfContainerPanel.revalidate();
 						});
 
 				c = null;
@@ -239,6 +256,11 @@ public class SeeContainersView implements ActionListener{
 	public static SeeContainersView getContainersView() {
 		return containersView;
 	}
+	
+
+
+		
+	
 
 
 
