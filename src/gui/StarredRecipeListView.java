@@ -3,11 +3,17 @@ package gui;
 import domain.logic.recipe.Recipe;
 import domain.logic.recipe.RecipeUtility;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class StarredRecipeListView extends RecipeListView {
@@ -50,6 +56,94 @@ public class StarredRecipeListView extends RecipeListView {
         scrollPane.repaint();
     }
 
+    @Override
+    public JPanel createRecipePanel(Recipe recipe) {
+        JPanel recipePanel = new JPanel(new BorderLayout(5, 0));
+
+        // Placeholder label for the image
+        JLabel imageLabel = new JLabel("Loading image...");
+
+        // Load image in the background
+        new SwingWorker<ImageIcon, Void>() {
+            @Override
+            protected ImageIcon doInBackground() throws Exception {
+                URL imageUrl = new URL(recipe.getImage());
+                Image image = ImageIO.read(imageUrl).getScaledInstance(312, 231, Image.SCALE_SMOOTH);
+                return new ImageIcon(image);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    ImageIcon imageIcon = get();
+                    imageLabel.setIcon(imageIcon);
+                    imageLabel.setText(""); // Remove the "Loading image..." text
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                    imageLabel.setText("Failed to load image");
+                }
+            }
+        }.execute();
+
+        recipePanel.add(imageLabel, BorderLayout.WEST);
+        recipePanel.setBackground(new Color(245, 223, 162));
+
+        // Convert ingredient lists to HTML list format
+        String usedIngredientsList = recipe.getUsedIngredients().stream()
+                .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
+                .reduce("", (a, b) -> a + b);
+        if (usedIngredientsList.isEmpty()) usedIngredientsList = "<li>No ingredients</li>";
+        JPanel detailsPanel = new JPanel(new BorderLayout());
+        detailsPanel.setBackground(new Color(245, 223, 162));
+
+        // use HTML for list formatting
+        JButton recipeButton = new JButton("<html><body style='text-align:left;'>"
+                + "<h3>" + recipe.getTitle() + "</h3>"
+                + "<br><b>Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
+                + "</body></html>");
+        recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
+        recipeButton.setFocusable(false);
+        recipeButton.addActionListener(e -> showRecipeDetails(recipe));
+
+        detailsPanel.add(recipeButton, BorderLayout.CENTER);
+
+        recipePanel.add(detailsPanel, BorderLayout.CENTER);
+
+        recipePanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    showPopupMenu(e, recipePanel, recipe);
+                }
+            }
+        });
+
+        recipesPanel.add(recipePanel);
+        return recipePanel;
+    }
+
+    private void showPopupMenu(MouseEvent e, JPanel recipePanel, Recipe recipe) {
+        JPopupMenu popup = new JPopupMenu();
+        JMenuItem deleteRecipeBtn = new JMenuItem("Delete Recipe");
+        deleteRecipeBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteRecipe(recipe, recipePanel);
+            }
+        });
+        popup.add(deleteRecipeBtn);
+        popup.show(recipePanel, e.getX(), e.getY());
+    }
+
+    private void deleteRecipe(Recipe recipe, JPanel recipePanel) {
+        int opt = JOptionPane.showConfirmDialog(HomeView.getFrame(), "Delete Recipe \"" + recipe.getTitle() + "\"?");
+        if (opt == JOptionPane.YES_OPTION) {
+            HomeView.data.removeStarredRecipe(recipe);
+            recipesPanel.remove(recipePanel);
+            recipesPanel.revalidate();
+            recipesPanel.repaint();
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -104,7 +104,7 @@ public class RecipeListView extends JPanel implements ActionListener {
      * @return A JPanel that displays the recipe's details.
      */
     protected JPanel createRecipePanel(Recipe recipe) {
-        JPanel recipePanel = new JPanel(new BorderLayout(5, 0)); // Add some horizontal spacing between components
+        JPanel recipePanel = new JPanel(new BorderLayout(5, 0));
 
         // Placeholder label for the image
         JLabel imageLabel = new JLabel("Loading image...");
@@ -123,7 +123,7 @@ public class RecipeListView extends JPanel implements ActionListener {
                 try {
                     ImageIcon imageIcon = get();
                     imageLabel.setIcon(imageIcon);
-                    imageLabel.setText(""); // Remove the "Loading image..." text
+                    imageLabel.setText("");
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                     imageLabel.setText("Failed to load image");
@@ -138,14 +138,21 @@ public class RecipeListView extends JPanel implements ActionListener {
         String usedIngredientsList = recipe.getUsedIngredients().stream()
                 .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
                 .reduce("", (a, b) -> a + b);
-        if (usedIngredientsList.isEmpty()) usedIngredientsList = "<li>No ingredients</li>";
+        if (usedIngredientsList.isEmpty()) usedIngredientsList = "<li>No available ingredients</li>";
+
+        String missedIngredientsList = recipe.getMissedIngredients().stream()
+                .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
+                .reduce("", (a, b) -> a + b);
+        if (missedIngredientsList.isEmpty()) missedIngredientsList = "<li>No missing ingredients</li>";
+
         JPanel detailsPanel = new JPanel(new BorderLayout());
         detailsPanel.setBackground(new Color(245, 223, 162));
 
         // use HTML for list formatting
         JButton recipeButton = new JButton("<html><body style='text-align:left;'>"
                 + "<h3>" + recipe.getTitle() + "</h3>"
-                + "<br><b>Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
+                + "<br><b>Available Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
+                + "<br><b>Missing Ingredients:</b> <ul>" + missedIngredientsList + "</ul>"
                 + "</body></html>");
         recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
         recipeButton.setFocusable(false);
@@ -166,7 +173,7 @@ public class RecipeListView extends JPanel implements ActionListener {
      */
     protected void showRecipeDetails(Recipe recipe) {
         SwingUtilities.invokeLater(() -> {
-            recipeDetailView.setRecipeDetailViewVisibility(true); // Show the RecipeDetailView first
+            recipeDetailView.setRecipeDetailViewVisibility(true);
             recipeDetailView.setTextArea(recipe);
         });
     }
