@@ -136,8 +136,10 @@ public class StubDB extends DB {
 	 * @param name The name of the item to be removed.
 	 */
 	public void removeItem(Container c, String name) {
+
 		itemMap.remove(name);
 		c.removeItem(name);
+
 	}
 
 	/**
