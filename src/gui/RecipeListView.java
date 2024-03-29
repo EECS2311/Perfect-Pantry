@@ -191,6 +191,8 @@ public class RecipeListView extends JPanel implements ActionListener {
             // Clear the previous view
             HomeView.getFrame().getContentPane().removeAll();
 
+            RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
+
             // Setup the view
             this.addActionListeners();
             this.displayRecipes(); // Make sure this is called after listeners are added
