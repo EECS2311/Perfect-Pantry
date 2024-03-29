@@ -229,23 +229,20 @@ public class DB {
 	/**
 	 * Removes an item from a specified container.
 	 *
-	 * @param c    The container from which the item will be removed.
-	 * @param name The name of the item to be removed.
+	 * @param container    The container from which the item will be removed.
+	 * @param itemName The name of the item to be removed.
 	 */
-	public void removeItem(Container c, String name, Item ite) {
+	public void removeItem(Container container, String itemName) {
 
 		Connection conn = init();
 
 		try {
 			Statement s = conn.createStatement();
-			s.execute(String.format("DELETE FROM item WHERE name='%s'", name));
+			s.execute(String.format("DELETE FROM item WHERE name='%s' AND container='%s'", itemName, container.getName()));
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		// Any method that calls removeItem() will ensure that the item exists.
-
 	}
 
 	/**
