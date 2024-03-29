@@ -1,8 +1,10 @@
 package gui;
 
 import domain.logic.recipe.Recipe;
+import domain.logic.recipe.RecipeUtility;
 
 import javax.swing.*;
+import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +21,9 @@ public class RecipeDetailView extends JPanel implements ActionListener {
 
     private static RecipeDetailView instance;
 
+    private JButton starRecipeButton = new JButton("Star Recipe");
+
+
     /**
      * Private constructor to initialize the detail view with a recipe.
      * @param recipe The recipe to display.
@@ -34,6 +39,8 @@ public class RecipeDetailView extends JPanel implements ActionListener {
 
         scrollPane = new JScrollPane(detailsArea);
         add(scrollPane, BorderLayout.CENTER);
+        starRecipeButton.addActionListener(this);
+        add(starRecipeButton, BorderLayout.SOUTH);
     }
 
     /**
@@ -108,6 +115,12 @@ public class RecipeDetailView extends JPanel implements ActionListener {
             HomeView.getHomeView().setHomeViewVisibility(true);
             setRecipeDetailViewVisibility(false);
             HomeView.getFrame().remove(this);
+        }
+        else if (e.getSource() == starRecipeButton) {
+            boolean isRecipeExists = RecipeUtility.verifySaveRecipeToDatabase(recipe);
+            if (!isRecipeExists) {
+                JOptionPane.showMessageDialog(this, "This recipe is already saved.");
+            }
         }
     }
 

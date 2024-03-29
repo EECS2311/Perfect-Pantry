@@ -2,6 +2,7 @@ package domain.logic.recipe;
 
 import gui.HomeView;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Set;
 
@@ -47,5 +48,18 @@ public class RecipeUtility {
         // If the ingredients have not changed, the original recipes list remains unchanged
     }
 
+    public static boolean verifySaveRecipeToDatabase(Recipe recipe){
+        boolean isRecipeExists = RecipeUtility.isRecipeInDatabase(recipe.getId());
+        if (!isRecipeExists) {
+            HomeView.data.saveRecipeToDatabase(recipe);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean isRecipeInDatabase(int recipeId) {
+        return HomeView.data.isRecipeInDatabase(recipeId);
+    }
 
 }
