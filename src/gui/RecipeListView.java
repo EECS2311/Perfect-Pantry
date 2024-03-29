@@ -50,12 +50,12 @@ public class RecipeListView extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
         backButton.addActionListener(this);
         add(backButton, BorderLayout.NORTH);
-        recipesPanel.setLayout(new GridLayout(0, 1)); // Dynamic grid layout, 1 column
+        recipesPanel.setLayout(new GridLayout(0, 1));
         scrollPane = new JScrollPane(recipesPanel);
         add(scrollPane, BorderLayout.CENTER);
-        recipeDetailView.setPreferredSize(new Dimension(600, 400)); // Example size, adjust as needed
+        recipeDetailView.setPreferredSize(new Dimension(600, 400));
 
-        displayRecipes();
+//        displayRecipes();
     }
 
     /**

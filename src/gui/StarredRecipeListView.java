@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
@@ -18,11 +17,13 @@ import java.util.concurrent.ExecutionException;
 
 public class StarredRecipeListView extends RecipeListView {
     private static StarredRecipeListView instance;
-    private List<Recipe> starredRecipes = new ArrayList<>(); // Instance variable
+    private List<Recipe> starredRecipes = new ArrayList<>();
 
+    private JLabel titleLabel = new JLabel("Starred Recipes");
 
     private StarredRecipeListView() {
         super();
+        titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
     }
 
     public static StarredRecipeListView getInstance() {
@@ -35,8 +36,11 @@ public class StarredRecipeListView extends RecipeListView {
     @Override
     protected void displayRecipes() {
         recipesPanel.removeAll();
-
+        recipesPanel.setBackground(new Color(245, 223, 162));
         starredRecipes = HomeView.data.getAllStarredRecipes();
+
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        recipesPanel.add(titleLabel);
 
         if (starredRecipes.isEmpty()) {
             JLabel emptyMessageLabel = new JLabel("No starred recipes. Start exploring and star your favorites!");
@@ -50,6 +54,8 @@ public class StarredRecipeListView extends RecipeListView {
             }
         }
 
+
+
         recipesPanel.revalidate();
         recipesPanel.repaint();
         scrollPane.revalidate();
@@ -59,6 +65,9 @@ public class StarredRecipeListView extends RecipeListView {
     @Override
     public JPanel createRecipePanel(Recipe recipe) {
         JPanel recipePanel = new JPanel(new BorderLayout(5, 0));
+        // Create popup menu
+        JPopupMenu popup = createPopupMenu(recipe, recipePanel);
+        recipePanel.setComponentPopupMenu(popup);
 
         // Placeholder label for the image
         JLabel imageLabel = new JLabel("Loading image...");
@@ -88,7 +97,6 @@ public class StarredRecipeListView extends RecipeListView {
         recipePanel.add(imageLabel, BorderLayout.WEST);
         recipePanel.setBackground(new Color(245, 223, 162));
 
-        // Convert ingredient lists to HTML list format
         String usedIngredientsList = recipe.getUsedIngredients().stream()
                 .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
                 .reduce("", (a, b) -> a + b);
@@ -96,52 +104,47 @@ public class StarredRecipeListView extends RecipeListView {
         JPanel detailsPanel = new JPanel(new BorderLayout());
         detailsPanel.setBackground(new Color(245, 223, 162));
 
-        // use HTML for list formatting
         JButton recipeButton = new JButton("<html><body style='text-align:left;'>"
                 + "<h3>" + recipe.getTitle() + "</h3>"
                 + "<br><b>Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
                 + "</body></html>");
+        recipeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
         recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
         recipeButton.setFocusable(false);
         recipeButton.addActionListener(e -> showRecipeDetails(recipe));
+
 
         detailsPanel.add(recipeButton, BorderLayout.CENTER);
 
         recipePanel.add(detailsPanel, BorderLayout.CENTER);
 
-        recipePanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    showPopupMenu(e, recipePanel, recipe);
-                }
-            }
-        });
-
         recipesPanel.add(recipePanel);
         return recipePanel;
     }
 
-    private void showPopupMenu(MouseEvent e, JPanel recipePanel, Recipe recipe) {
+    private JPopupMenu createPopupMenu(Recipe recipe, JPanel recipePanel) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem deleteRecipeBtn = new JMenuItem("Delete Recipe");
-        deleteRecipeBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteRecipe(recipe, recipePanel);
-            }
-        });
+        deleteRecipeBtn.addActionListener(e -> deleteRecipe(recipe, recipePanel));
         popup.add(deleteRecipeBtn);
-        popup.show(recipePanel, e.getX(), e.getY());
+        return popup;
     }
 
     private void deleteRecipe(Recipe recipe, JPanel recipePanel) {
-        int opt = JOptionPane.showConfirmDialog(HomeView.getFrame(), "Delete Recipe \"" + recipe.getTitle() + "\"?");
+        int opt = JOptionPane.showConfirmDialog(HomeView.getFrame(), "Delete Recipe \"" + recipe.getTitle() + "\"?", "Confirmation", JOptionPane.YES_NO_OPTION);
         if (opt == JOptionPane.YES_OPTION) {
             HomeView.data.removeStarredRecipe(recipe);
-            recipesPanel.remove(recipePanel);
-            recipesPanel.revalidate();
-            recipesPanel.repaint();
+//            recipesPanel.remove(recipePanel);
+//            recipesPanel.revalidate();
+//            recipesPanel.repaint();
+            displayRecipes();
         }
     }
 
@@ -158,7 +161,6 @@ public class StarredRecipeListView extends RecipeListView {
 
             StarredRecipeListView recipeListView = StarredRecipeListView.getInstance();
 
-            //Add all panels
             HomeView.getFrame().add(recipeListView);
 
             recipeListView.displayRecipes();
