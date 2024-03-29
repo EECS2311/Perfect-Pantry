@@ -145,6 +145,7 @@ public class GroceryListView extends JPanel implements ActionListener {
             // Refresh the table
             refreshTable();
 
+            
             //Add all panels
             HomeView.getFrame().add(viewOfAllPanel);
 

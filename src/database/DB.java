@@ -1,10 +1,22 @@
 package database;
 
 
+
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import domain.logic.Container;
 import domain.logic.FoodFreshness;
@@ -557,13 +569,13 @@ public class DB {
 		return itemNames;
 	}
 
+
 	public void saveRecipeToDatabase(Recipe recipe) {
 		Connection conn = init();
 		if (conn != null) {
 			try {
 				conn.setAutoCommit(false); // Disable auto-commit to manage transactions manually
 
-				// Use the provided recipe ID instead of expecting an auto-generated one
 				String insertRecipeSQL = "INSERT INTO recipes (id, title, image_url) VALUES (?, ?, ?)";
 				try (PreparedStatement pstmt = conn.prepareStatement(insertRecipeSQL)) {
 					pstmt.setInt(1, recipe.getId());
@@ -783,6 +795,38 @@ public class DB {
 			}
 		}
 		return recipeInstructionsMap;
+	}
+
+
+	public ArrayList<String> getTotalCount(String container) {
+		
+		Connection conn = init();
+		
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result;
+			if (container == null){
+				result = s.executeQuery("SELECT * FROM item");
+			}
+			else {
+				result = s.executeQuery("Select * FROM item where container='" + container +"'");
+			}
+			
+			ArrayList<String> l = new ArrayList<String>();
+			while (result.next()) {
+				if (result.getString("fg") != null) {
+							l.add(result.getString("fg"));
+				}
+		
+			}
+			conn.close();
+			return l;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 }

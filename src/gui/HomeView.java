@@ -78,6 +78,8 @@ public class HomeView implements ActionListener {
 	private JButton groceryListButton = new JButton("Grocery List");
 
 	private JButton recipeListButton = new JButton("Recipe List");
+	
+	private JButton statisticsButton = new JButton("Statistics");
 
 	private JButton starredRecipeListButton = new JButton("Starred Recipes");
 
@@ -164,17 +166,22 @@ public class HomeView implements ActionListener {
 
 			homePanel.add(groceryListButton);
 			groceryListButton.setBackground(new Color(76, 183, 242));
-			groceryListButton.setBounds(500, 10, 200, 40);
+			groceryListButton.setBounds(570, 10, 200, 40);
 
 			homePanel.add(recipeListButton);
 			recipeListButton.setBackground(new Color(76, 183, 242));
 			recipeListButton.setBounds(500, 60, 200, 40);
 			recipeListButton.addActionListener(this);
-
-			homePanel.add(starredRecipeListButton);
+			
+      homePanel.add(starredRecipeListButton);
 			starredRecipeListButton.setBackground(new Color(76, 183, 242));
 			starredRecipeListButton.setBounds(500, 100, 200, 40);
 			starredRecipeListButton.addActionListener(this);
+      
+			homePanel.add(statisticsButton);
+			statisticsButton.setBackground(new Color(76, 183, 242));
+			statisticsButton.setBounds(570, 150, 200, 40); // Adjust the positioning as needed
+			statisticsButton.addActionListener(this);
 
 			homePanel.setVisible(true);
 		}
@@ -186,6 +193,7 @@ public class HomeView implements ActionListener {
 			groceryListButton.removeActionListener(this);
 			recipeListButton.removeActionListener(this);
 			starredRecipeListButton.removeActionListener(this);
+			statisticsButton.removeActionListener(this);
 
 			homePanel.setVisible(false);
 		}
@@ -230,12 +238,11 @@ public class HomeView implements ActionListener {
 			RecipeListView.getInstance().setRecipeListViewVisibility(true);
 		} else if (source == starredRecipeListButton) {
 			StarredRecipeListView.getInstance().setRecipeListViewVisibility(true);
+		} else if (source == statisticsButton) {
+			StatsView.getInstance().setStatsViewVisibility(true);
 		}
-
-
-
 	}
-
+	
 	/**
 	 * Provides access to the main application frame.
 	 *
