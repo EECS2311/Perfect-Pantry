@@ -195,6 +195,7 @@ public class ItemsListView extends JPanel {
 		});
 
 		table.getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
+		table.getTableHeader().setReorderingAllowed(false);
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
