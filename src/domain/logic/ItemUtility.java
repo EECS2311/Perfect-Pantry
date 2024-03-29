@@ -30,7 +30,7 @@ public class ItemUtility {
 		// Checking to see if item is in the database
 		if (HomeView.data.getItem(container, itemName) != null) {
 			// Remove the item if its present
-			HomeView.data.removeItem(container, itemName, null);
+			HomeView.data.removeItem(container, itemName);
 
 			return true;
 		} else
