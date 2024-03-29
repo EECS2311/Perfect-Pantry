@@ -94,7 +94,7 @@ class ItemDBTest {
 		data.addItem(container, "Feta", item);
 
 		assertNotNull(data.getItem(container, "Feta"));
-		data.removeItem(container, "Feta");
+		data.removeItem(container, "Feta", item);
 
 		assertTrue(data.getItem(container, "Feta") == null);
 
