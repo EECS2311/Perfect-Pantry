@@ -181,7 +181,6 @@ public class RecipeListView extends JPanel implements ActionListener {
         if (e.getSource() == backButton) {
             HomeView.getHomeView().setHomeViewVisibility(true);
             setRecipeListViewVisibility(false);
-//            HomeView.getFrame().remove(this);
         }
     }
 
@@ -192,20 +191,17 @@ public class RecipeListView extends JPanel implements ActionListener {
      */
     public void setRecipeListViewVisibility(boolean visible) {
         if (visible) {
-            // Clear the previous view
             HomeView.getFrame().getContentPane().removeAll();
 
             RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
 
-            // Setup the view
             this.addActionListeners();
-            this.displayRecipes(); // Make sure this is called after listeners are added
+            this.displayRecipes();
 
             // Add this view
             HomeView.getFrame().add(this);
             this.setVisible(true);
         } else {
-            // Clear the view and remove listeners
             this.setVisible(false);
             this.removeActionListeners(backButton);
             HomeView.getFrame().getContentPane().remove(this);
@@ -221,7 +217,7 @@ public class RecipeListView extends JPanel implements ActionListener {
      * Safely adds action listeners to buttons.
      */
     public void addActionListeners() {
-        removeActionListeners(backButton); // Remove listeners before re-adding
+        removeActionListeners(backButton);
         backButton.addActionListener(this);
     }
 

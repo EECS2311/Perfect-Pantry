@@ -35,7 +35,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
         add(backButton, BorderLayout.NORTH);
         detailsArea.setEditable(false);
         detailsArea.setBackground(new Color(253, 241, 203));
-        detailsArea.setContentType("text/html"); // Set content type to HTML
+        detailsArea.setContentType("text/html");
 
         scrollPane = new JScrollPane(detailsArea);
         add(scrollPane, BorderLayout.CENTER);
@@ -70,23 +70,26 @@ public class RecipeDetailView extends JPanel implements ActionListener {
         if (recipe != null) {
             StringBuilder htmlContent = new StringBuilder("<html><head><style>body { font-family: Arial, sans-serif; }</style></head><body>");
 
-            // Title
             htmlContent.append("<h1>").append(recipe.getTitle()).append("</h1>");
 
-            // Image
             htmlContent.append("<img src='").append(recipe.getImage()).append("' style='width: 200px; height: auto;'><br>");
 
-            // Ingredients
-            htmlContent.append("<h3>Available Ingredients:</h3><ul>");
+            htmlContent.append("<h3>Ingredients:</h3><ul>");
             recipe.getUsedIngredients().forEach(ingredient -> htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>"));
             if (!recipe.getMissedIngredients().isEmpty()) {
                 htmlContent.append("<h3>Missing Ingredients:</h3><ul>");
                 recipe.getMissedIngredients().forEach(ingredient -> htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>"));
             }
 
-            // Instructions
-            htmlContent.append("<h2>Instructions:</h2><ol>");
-            recipe.getDetailedInstructions().forEach((step, instruction) -> htmlContent.append("<li>").append(instruction).append("</li>"));
+            htmlContent.append("<h2>Instructions:</h2>");
+            if (recipe.getDetailedInstructions().isEmpty()) {
+                htmlContent.append("<p>No instructions available</p>");
+            } else {
+                htmlContent.append("<ol>");
+                recipe.getDetailedInstructions().forEach((step, instruction) -> htmlContent.append("<li>").append(instruction).append("</li>"));
+                htmlContent.append("</ol>");
+            }
+
             htmlContent.append("</ol></body></html>");
 
             detailsArea.setText(htmlContent.toString());
