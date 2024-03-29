@@ -170,12 +170,12 @@ public class HomeView implements ActionListener {
 
 			homePanel.add(recipeListButton);
 			recipeListButton.setBackground(new Color(76, 183, 242));
-			recipeListButton.setBounds(500, 60, 200, 40);
+			recipeListButton.setBounds(570, 60, 200, 40);
 			recipeListButton.addActionListener(this);
 			
-      homePanel.add(starredRecipeListButton);
+      		homePanel.add(starredRecipeListButton);
 			starredRecipeListButton.setBackground(new Color(76, 183, 242));
-			starredRecipeListButton.setBounds(500, 100, 200, 40);
+			starredRecipeListButton.setBounds(570, 100, 200, 40);
 			starredRecipeListButton.addActionListener(this);
       
 			homePanel.add(statisticsButton);
