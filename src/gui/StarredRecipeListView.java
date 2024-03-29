@@ -6,9 +6,14 @@ import domain.logic.recipe.RecipeUtility;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class StarredRecipeListView extends RecipeListView {
     private static StarredRecipeListView instance;
+    private List<Recipe> starredRecipes = new ArrayList<>(); // Instance variable
+
 
     private StarredRecipeListView() {
         super();
@@ -25,20 +30,17 @@ public class StarredRecipeListView extends RecipeListView {
     protected void displayRecipes() {
         recipesPanel.removeAll();
 
-        // Assuming HomeView.data.getAllStarredRecipes() is a static method that fetches the recipes
-//        recipes = HomeView.data.getAllStarredRecipes(); // Fetch starred recipes from database
+        starredRecipes = HomeView.data.getAllStarredRecipes();
 
-        if (recipes.isEmpty()) {
+        if (starredRecipes.isEmpty()) {
             JLabel emptyMessageLabel = new JLabel("No starred recipes. Start exploring and star your favorites!");
             emptyMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
             recipesPanel.add(emptyMessageLabel);
         } else {
-            // This assumes a vertical BoxLayout is what you want. If not, set your desired layout
             recipesPanel.setLayout(new BoxLayout(recipesPanel, BoxLayout.Y_AXIS));
-            for (Recipe recipe : recipes) {
+            for (Recipe recipe : starredRecipes) {
                 JPanel recipePanel = createRecipePanel(recipe);
                 recipesPanel.add(recipePanel);
-                // Removed the line adding a Box.createRigidArea
             }
         }
 
@@ -51,7 +53,7 @@ public class StarredRecipeListView extends RecipeListView {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        super.actionPerformed(e); // This will handle the backButton among other things if you have more actions
+        super.actionPerformed(e);
     }
 
     @Override
@@ -64,8 +66,6 @@ public class StarredRecipeListView extends RecipeListView {
 
             //Add all panels
             HomeView.getFrame().add(recipeListView);
-
-            recipes = HomeView.data.getAllStarredRecipes();
 
             recipeListView.displayRecipes();
         } else {
