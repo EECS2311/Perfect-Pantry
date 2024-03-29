@@ -101,7 +101,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
      * @param recipe The recipe to display.
      */
     public void setTextArea(Recipe recipe) {
-        this.recipe = recipe; // Update the recipe instance
+        this.recipe = recipe;
         updateDetailsArea();
         this.revalidate();
         this.repaint();
@@ -114,7 +114,6 @@ public class RecipeDetailView extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == backButton) {
-//          RecipeListView.showListView();
             HomeView.getHomeView().setHomeViewVisibility(true);
             setRecipeDetailViewVisibility(false);
             HomeView.getFrame().remove(this);

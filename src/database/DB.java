@@ -797,6 +797,50 @@ public class DB {
 		return recipeInstructionsMap;
 	}
 
+	public void removeStarredRecipe(Recipe recipe) {
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				conn.setAutoCommit(false); // Disable auto-commit to manage transactions manually
+
+				String deleteRecipeSQL = "DELETE FROM recipes WHERE id = ?";
+				try (PreparedStatement pstmt = conn.prepareStatement(deleteRecipeSQL)) {
+					pstmt.setInt(1, recipe.getId());
+					pstmt.executeUpdate();
+				}
+
+				String deleteRecipeIngredientsSQL = "DELETE FROM recipe_ingredients WHERE recipe_id = ?";
+				try (PreparedStatement pstmt = conn.prepareStatement(deleteRecipeIngredientsSQL)) {
+					pstmt.setInt(1, recipe.getId());
+					pstmt.executeUpdate();
+				}
+
+				String deleteInstructionsSQL = "DELETE FROM detailed_instructions WHERE recipe_id = ?";
+				try (PreparedStatement pstmt = conn.prepareStatement(deleteInstructionsSQL)) {
+					pstmt.setInt(1, recipe.getId());
+					pstmt.executeUpdate();
+				}
+
+				conn.commit();
+			} catch (SQLException e) {
+				try {
+					if (conn != null) conn.rollback();
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null) {
+						conn.setAutoCommit(true);
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	public ArrayList<String> getTotalCount(String container) {
 		
