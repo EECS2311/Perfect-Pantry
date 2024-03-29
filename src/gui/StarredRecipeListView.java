@@ -37,6 +37,7 @@ public class StarredRecipeListView extends RecipeListView {
     protected void displayRecipes() {
         recipesPanel.removeAll();
         recipesPanel.setBackground(new Color(245, 223, 162));
+
         starredRecipes = HomeView.data.getAllStarredRecipes();
 
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -53,8 +54,6 @@ public class StarredRecipeListView extends RecipeListView {
                 recipesPanel.add(recipePanel);
             }
         }
-
-
 
         recipesPanel.revalidate();
         recipesPanel.repaint();

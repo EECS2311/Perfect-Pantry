@@ -1,10 +1,6 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -15,15 +11,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 
 import domain.logic.recipe.Recipe;
 import domain.logic.recipe.RecipeUtility;
@@ -41,6 +29,8 @@ public class RecipeListView extends JPanel implements ActionListener {
     private List<Recipe> recipes = new ArrayList<>(); // Instance variable
     protected JScrollPane scrollPane;
     protected static RecipeDetailView recipeDetailView = RecipeDetailView.getInstance(wow);
+    private JLabel titleLabel = new JLabel("Recipes");
+
 
     /**
      * constructor for initializing the RecipeListView panel with a back button,
@@ -50,12 +40,19 @@ public class RecipeListView extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
         backButton.addActionListener(this);
         add(backButton, BorderLayout.NORTH);
-        recipesPanel.setLayout(new GridLayout(0, 1));
+
+        titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Set up recipesPanel with BoxLayout for vertical stacking of components
+        recipesPanel.setLayout(new BoxLayout(recipesPanel, BoxLayout.Y_AXIS));
+        recipesPanel.setBackground(new Color(245, 223, 162));
+        recipesPanel.add(titleLabel);
+
         scrollPane = new JScrollPane(recipesPanel);
         add(scrollPane, BorderLayout.CENTER);
-        recipeDetailView.setPreferredSize(new Dimension(600, 400));
 
-//        displayRecipes();
+        recipeDetailView.setPreferredSize(new Dimension(600, 400));
     }
 
     /**
@@ -75,16 +72,16 @@ public class RecipeListView extends JPanel implements ActionListener {
      * If the recipes list is empty, displays a message encouraging the user to add ingredients to their pantry.
      */
     protected void displayRecipes() {
-        recipesPanel.removeAll(); // Clear the panel before adding new components
+        recipesPanel.removeAll();
+        recipesPanel.setBackground(new Color(245, 223, 162));
+
+        recipesPanel.add(titleLabel);
+
         if (recipes.isEmpty()) {
-            // Display a message when there are no recipes
-            JLabel emptyMessageLabel = new JLabel("<html><center>Start adding non-expire food to your pantry to see recipes.</center></html>");
-            emptyMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            recipesPanel.setLayout(new BorderLayout());
-            recipesPanel.add(emptyMessageLabel, BorderLayout.CENTER);
+            JLabel emptyMessageLabel = new JLabel("Start adding non-expire food to your pantry to see recipes.");
+            emptyMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center alignment for BoxLayout
+            recipesPanel.add(emptyMessageLabel);
         } else {
-            // Reset to grid layout for recipes display
-            recipesPanel.setLayout(new GridLayout(0, 1));
             for (Recipe recipe : recipes) {
                 JPanel recipePanel = createRecipePanel(recipe);
                 recipesPanel.add(recipePanel);
@@ -96,6 +93,7 @@ public class RecipeListView extends JPanel implements ActionListener {
         scrollPane.revalidate();
         scrollPane.repaint();
     }
+
 
     /**
      * Creates and returns a JPanel that represents the visual representation of a recipe.
