@@ -50,7 +50,12 @@ public class SeeContainersView implements ActionListener {
 	 * Button to go from container view to home
 	 */
 	private JButton viewOfContainer2HomeButton = new JButton("Back");
-
+	
+	/**
+	 * Button to go from container view to list of all items
+	 */
+	private JButton seeAllItemsButton = new JButton("All Items");
+	
 	/**
 	 * Popup for edit or deleting container button
 	 */
@@ -70,7 +75,7 @@ public class SeeContainersView implements ActionListener {
 	 * Holds button which has been pressed
 	 */
 	private JButton buttonPressed;
-
+	
 	/**
 	 * Holds this instance of SeeContainersView
 	 */
@@ -94,6 +99,7 @@ public class SeeContainersView implements ActionListener {
 		if (b == true) {
 			HomeView.getHomeView().setHomeViewVisibility(false);
 			viewOfContainer2HomeButton.addActionListener(this);
+			seeAllItemsButton.addActionListener(this);
 
 			HomeView.getFrame().add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
@@ -105,6 +111,7 @@ public class SeeContainersView implements ActionListener {
 			backPanel.setBounds(0, 0, 800, 50);
 
 			backPanel.add(viewOfContainer2HomeButton);
+			backPanel.add(seeAllItemsButton);
 
 			containerButtonsPanel.setBounds(0, 50, 800, 500);
 			containerButtonsPanel.setBackground(new Color(253, 241, 200));
@@ -151,6 +158,7 @@ public class SeeContainersView implements ActionListener {
 			renameContainerBtn.removeActionListener(this);
 			removeContainerBtn.removeActionListener(this);
 			viewOfContainer2HomeButton.removeActionListener(this);
+			seeAllItemsButton.removeActionListener(this);
 			viewOfContainerPanel.setVisible(false);
 
 		}
@@ -222,7 +230,13 @@ public class SeeContainersView implements ActionListener {
 
 		else if (source == removeContainerBtn) {
 			removeContainer(buttonPressed);
-		} else {
+		} 
+		
+		else if (source == seeAllItemsButton) {
+			AllItemsView.setAllItemsViewVisibility(true);
+		} 
+		
+		else {
 			Container c = HomeView.getContainerMap().get(source); // This will return null if the button is not found
 			if (c != null) {
 				c.getGUI();
