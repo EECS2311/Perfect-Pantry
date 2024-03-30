@@ -80,6 +80,8 @@ public class SeeContainersView implements ActionListener{
 	private static SeeContainersView containersView;
 	
 	private Font font;
+	
+	JScrollPane backScrollPanel = new JScrollPane(backPanel);
 
 
 
@@ -98,8 +100,7 @@ public class SeeContainersView implements ActionListener{
 
 	public void setSeeContainersViewVisibility(boolean b) {
 		if (b == true) { 
-			Settings s = new Settings();
-			font = new FontUIResource("Dialog", Font.PLAIN, s.getFontSize());
+			font = new FontUIResource("Dialog", Font.PLAIN, HomeView.getSettings().getFontSize());
 
 			HomeView.getHomeView().setHomeViewVisibility(false);
 			viewOfContainer2HomeButton.addActionListener(this);
@@ -113,7 +114,6 @@ public class SeeContainersView implements ActionListener{
 			backPanel.setLayout(new FlowLayout());
 			backPanel.add(viewOfContainer2HomeButton);
 			
-			JScrollPane backScrollPanel = new JScrollPane(backPanel);
 			backScrollPanel.setBounds(0, 0, 800, 50);
 			viewOfContainerPanel.add(backScrollPanel);
 
