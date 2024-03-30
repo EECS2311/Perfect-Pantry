@@ -21,20 +21,26 @@ public class RecipeUtility {
     public static boolean isNearExpiryItemsChanged(Set<String> ingredients) {
         Set<String> currentIngredients = HomeView.data.getNearExpiryOrFreshItemNames();
         if (!currentIngredients.equals(ingredients)) {
-            // Clear the original set and add all the new ingredients
             ingredients.clear();
             ingredients.addAll(currentIngredients);
-            return true; // Indicates the set was updated
+            return true;
         }
-        return false; // Indicates no update was needed
+        return false;
     }
 
     /**
      * Finds recipes lazily based on a set of ingredients. If the non-expired items have changed,
-     * it queries for new recipes based on these ingredients; otherwise, it retains the cached recipes.
+     * it queries the external Recipe API for new recipes based on these ingredients and updates
+     * the provided `recipes` list; otherwise, it retains the cached recipes in the `recipes` list.
      *
-     * @param ingredients A set of ingredient names.
-     * @param recipes The current list of recipes (cached).
+     * @param ingredients A set of ingredient names (non-null) to be used for finding recipes.
+     * @param recipes The current list of recipes (cached). This list will be cleared and updated
+     *                with new recipes if the non-expired items have changed since the last query.
+     *                The list should not be null, but it can be empty.
+     * @throws RateLimitPerMinuteExceededException If the rate limit for querying the Recipe API
+     *                                             per minute is exceeded.
+     * @throws DailyLimitExceededException If the daily limit for querying the Recipe API is exceeded.
+     * @throws IOException If an I/O error occurs while communicating with the Recipe API.
      */
     public static void findRecipesLazyLoad(Set<String> ingredients, List<Recipe> recipes) throws RateLimitPerMinuteExceededException, IOException, DailyLimitExceededException {
         if(isNearExpiryItemsChanged(ingredients)){
@@ -46,6 +52,17 @@ public class RecipeUtility {
         }
     }
 
+    /**
+     * Attempts to save a recipe to the database if it does not already exist.
+     *
+     * This method checks whether a recipe with the same ID already exists in the database.
+     * If the recipe is new, it saves the recipe to the database and returns true.
+     * If the recipe already exists, it does not perform any operation and returns false.
+     *
+     * @param recipe The Recipe object to save to the database.
+     * @return true if the recipe was successfully saved (i.e., it did not exist in the database),
+     *         false if the recipe already exists in the database and was not saved.
+     */
     public static boolean verifySaveRecipeToDatabase(Recipe recipe){
         boolean isRecipeExists = RecipeUtility.isRecipeInDatabase(recipe.getId());
         if (!isRecipeExists) {
@@ -56,6 +73,15 @@ public class RecipeUtility {
         }
     }
 
+    /**
+     * Checks if a recipe with a specific ID exists in the database.
+     *
+     * This method queries the database to determine whether a recipe with the given ID
+     * is already stored. It is used internally to avoid duplicating recipes in the database.
+     *
+     * @param recipeId The unique identifier of the recipe to check in the database.
+     * @return true if the recipe exists in the database, false otherwise.
+     */
     private static boolean isRecipeInDatabase(int recipeId) {
         return HomeView.data.isRecipeInDatabase(recipeId);
     }
