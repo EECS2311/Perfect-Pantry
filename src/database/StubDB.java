@@ -310,16 +310,21 @@ public class StubDB extends DB {
 		return nearExpiryOrFreshItems;
 	}
 
+	/**
+	 * Saves a recipe to the stub database. This method stores the recipe object,
+	 * its used and missed ingredients, and detailed instructions.
+	 *
+	 * @param recipe The recipe to be saved. Assumes that the recipe's ID is unique.
+	 * @throws RuntimeException If an error occurs while fetching detailed instructions due to rate limits,
+	 *                          IO issues, or daily limits being exceeded.
+	 */
 	@Override
 	public void saveRecipeToDatabase(Recipe recipe) {
-		// Saves the recipe object into the map using its ID as the key.
 		recipesMap.put(recipe.getId(), recipe);
-		// Saves both used and missed ingredients into a set for the recipe.
 		Set<Ingredient> ingredients = new HashSet<>();
 		ingredients.addAll(recipe.getUsedIngredients());
 		ingredients.addAll(recipe.getMissedIngredients());
 		recipeIngredientsMap.put(recipe.getId(), ingredients);
-		// Saves the detailed instructions for the recipe.
 		try {
 			recipeInstructionsMap.put(recipe.getId(), new HashMap<>(recipe.getDetailedInstructions()));
 		} catch (RateLimitPerMinuteExceededException e) {
@@ -331,21 +336,35 @@ public class StubDB extends DB {
 		}
 	}
 
+	/**
+	 * Checks if a recipe is present in the stub database.
+	 *
+	 * @param recipeId The ID of the recipe to check.
+	 * @return {@code true} if the recipe is present, {@code false} otherwise.
+	 */
 	@Override
 	public boolean isRecipeInDatabase(int recipeId) {
-		// Checks if the recipesMap contains the recipe ID, indicating presence in the "database".
 		return recipesMap.containsKey(recipeId);
 	}
 
+	/**
+	 * Retrieves all starred (saved) recipes from stub database.
+	 *
+	 * @return A list of all saved recipes.
+	 */
 	@Override
 	public List<Recipe> getAllStarredRecipes() {
-		// Returns all recipes stored in the map as a new list.
 		return new ArrayList<>(recipesMap.values());
 	}
 
+	/**
+	 * Removes a starred (saved) recipe from the stub database.
+	 * This operation also removes any associated ingredients and instructions.
+	 *
+	 * @param recipe The recipe to remove. The recipe's ID is used to identify the recipe.
+	 */
 	@Override
 	public void removeStarredRecipe(Recipe recipe) {
-		// Removes the recipe and its associated ingredients and instructions from their respective maps.
 		recipesMap.remove(recipe.getId());
 		recipeIngredientsMap.remove(recipe.getId());
 		recipeInstructionsMap.remove(recipe.getId());
