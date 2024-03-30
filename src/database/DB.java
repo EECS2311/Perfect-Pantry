@@ -713,7 +713,7 @@ public class DB {
 						Recipe recipe = new Recipe(recipeId, title, imageUrl);
 						recipe.setFetchedStep(true);
 						recipes.add(recipe);
-						recipeIds.add(recipeId); // Collect recipe IDs for bulk ingredient and instruction retrieval
+						recipeIds.add(recipeId);
 					}
 				}
 
@@ -724,7 +724,7 @@ public class DB {
 				// Associate fetched data with recipes
 				for (Recipe recipe : recipes) {
 					recipe.setUsedIngredients(ingredientsMap.getOrDefault(recipe.getId(), new ArrayList<>()));
-					recipe.setMissedIngredients(new ArrayList<>()); // Assuming you need to adjust how to differentiate used/missed
+					recipe.setMissedIngredients(new ArrayList<>());
 					recipe.setDetailedInstructions(instructionsMap.getOrDefault(recipe.getId(), new HashMap<>()));
 				}
 			} catch (SQLException e) {

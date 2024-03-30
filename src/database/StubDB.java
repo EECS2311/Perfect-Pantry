@@ -1,13 +1,19 @@
 package database;
 
+import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import domain.logic.Container;
 import domain.logic.FoodFreshness;
 import domain.logic.FoodGroup;
 import domain.logic.GenericTag;
 import domain.logic.Item;
+import domain.logic.recipe.DailyLimitExceededException;
+import domain.logic.recipe.Ingredient;
+import domain.logic.recipe.RateLimitPerMinuteExceededException;
+import domain.logic.recipe.Recipe;
 
 public class StubDB extends DB {
 
@@ -15,6 +21,11 @@ public class StubDB extends DB {
 	public HashMap<String, Item> itemMap = new HashMap<String, Item>();
 	public HashMap<String, String> storageTipMap = new HashMap<String, String>();
 	public ArrayList<String> groceryList = new ArrayList<String>();
+
+	private Map<Integer, Recipe> recipesMap = new HashMap<>();
+	private Map<Integer, Set<Ingredient>> recipeIngredientsMap = new HashMap<>();
+	private Map<Integer, Map<Integer, String>> recipeInstructionsMap = new HashMap<>();
+
 
 	/**
 	 * Inserts a new container into the database
@@ -297,5 +308,46 @@ public class StubDB extends DB {
 			}
 		}
 		return nearExpiryOrFreshItems;
+	}
+
+	@Override
+	public void saveRecipeToDatabase(Recipe recipe) {
+		// Saves the recipe object into the map using its ID as the key.
+		recipesMap.put(recipe.getId(), recipe);
+		// Saves both used and missed ingredients into a set for the recipe.
+		Set<Ingredient> ingredients = new HashSet<>();
+		ingredients.addAll(recipe.getUsedIngredients());
+		ingredients.addAll(recipe.getMissedIngredients());
+		recipeIngredientsMap.put(recipe.getId(), ingredients);
+		// Saves the detailed instructions for the recipe.
+		try {
+			recipeInstructionsMap.put(recipe.getId(), new HashMap<>(recipe.getDetailedInstructions()));
+		} catch (RateLimitPerMinuteExceededException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (DailyLimitExceededException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public boolean isRecipeInDatabase(int recipeId) {
+		// Checks if the recipesMap contains the recipe ID, indicating presence in the "database".
+		return recipesMap.containsKey(recipeId);
+	}
+
+	@Override
+	public List<Recipe> getAllStarredRecipes() {
+		// Returns all recipes stored in the map as a new list.
+		return new ArrayList<>(recipesMap.values());
+	}
+
+	@Override
+	public void removeStarredRecipe(Recipe recipe) {
+		// Removes the recipe and its associated ingredients and instructions from their respective maps.
+		recipesMap.remove(recipe.getId());
+		recipeIngredientsMap.remove(recipe.getId());
+		recipeInstructionsMap.remove(recipe.getId());
 	}
 }
