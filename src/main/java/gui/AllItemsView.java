@@ -2,8 +2,11 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,7 +44,22 @@ public class AllItemsView extends JPanel implements ActionListener {
 		displayAllItems();
 		add(new JScrollPane(allItemsTable), BorderLayout.CENTER);
 
-		
+		allItemsTable.addMouseListener(new MouseAdapter() {
+			
+			public void mousePressed(MouseEvent e) {
+				int row = allItemsTable.getSelectedRow();
+				if (row != -1) {
+					String name = tableModel.getValueAt(row, 5).toString();
+					
+					HomeView.getContainerMap().forEach((button, container) -> {
+						if (name.equals(container.getName())) {
+							container.getGUI();
+						}
+							
+					});
+				}
+			}
+		});
 	}
 	
 	public static AllItemsView getInstance() {
@@ -53,14 +71,23 @@ public class AllItemsView extends JPanel implements ActionListener {
 		containerMap = HomeView.getContainerMap();
 		String[] columnNames = {"Name", "Quantity", "Expiry Date", "Food Group", "Food Freshness", "Container"};
 		
-		DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+		tableModel = new DefaultTableModel(null, columnNames) {
+			
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+			
+		};
 		
 		containerMap.forEach((button, container) -> {
 			ItemUtility.assignFoodFreshness(container);
+			
 			List<Item> items = HomeView.data.retrieveItems(container);
+			
 			for (Item item : items) {
 				tableModel.addRow(new Object[] { item.getName(), item.getQuantity(), ItemUtility.dateFormat(item.getExpiryDate()),
-						item.getFoodGroupTag(), item.getFoodFreshnessTag() });
+						item.getFoodGroupTag(), item.getFoodFreshnessTag(), container.getName() });
 			}
 		});
 		
