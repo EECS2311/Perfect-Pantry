@@ -18,7 +18,6 @@ public class AddItemView extends JPanel {
     private JTextField itemQuantityField = new JTextField(5);
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
-    private JButton viewCalendar = new JButton("View Calendar");
     private JLabel itemName = new JLabel("Item Name:");
     private JLabel quantity = new JLabel("Quantity:");
     private JLabel expire = new JLabel("Expiration Date (dd-MMM-yyyy):");
