@@ -234,7 +234,7 @@ public class ItemsListView extends JPanel {
 			int row = table.getSelectedRow();
 
 			if (row != -1) {
-				String name = tableModel.getValueAt(row, 0).toString();
+				String name = table.getValueAt(row, 0).toString();
 				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
 					this.removeItem(name);
 				}
@@ -247,7 +247,7 @@ public class ItemsListView extends JPanel {
 			int row = table.getSelectedRow();
 
 			if (row != -1) {
-				String name = tableModel.getValueAt(row, 0).toString();
+				String name = table.getValueAt(row, 0).toString();
 				String sTip = ItemUtility.retrieveStorageTip(name);
 
 				if (sTip != null) {
@@ -267,10 +267,10 @@ public class ItemsListView extends JPanel {
 
 			int row = table.getSelectedRow();
 			if (row != -1) {
-				String name = tableModel.getValueAt(row, 0).toString();
+				String name = table.getValueAt(row, 0).toString();
 				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
 						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-							tableModel.setValueAt(val, row, 1);
+							table.setValueAt(val, row, 1);
 						});
 				ItemUtility.initItems(this.getC(), tableModel);
 			}
