@@ -14,6 +14,13 @@ public class Recipe {
     private Map<Integer, String> detailedInstructions;
     private boolean fetchedStep = false;
 
+    public void setFetchedStep(boolean fetchedStep){
+        this.fetchedStep = fetchedStep;
+    }
+
+    public boolean getFetchedStep(){
+        return this.fetchedStep;
+    }
     /**
      * Constructs a Recipe instance with specified details.
      *
@@ -42,6 +49,10 @@ public class Recipe {
             fetchedStep = true;
         }
         return detailedInstructions;
+    }
+
+    public void setDetailedInstructions(Map<Integer, String> detailedInstructions){
+        this.detailedInstructions = detailedInstructions;
     }
 
     /**

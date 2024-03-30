@@ -31,10 +31,41 @@ CREATE TABLE grocery(
     name VARCHAR(50) PRIMARY KEY UNIQUE
 );
 
+
 CREATE TABLE settings(
 	setting_type varchar(8),
 	fontsize INTEGER, 
 	notificationBoolean varchar(5),
 	PRIMARY KEY(setting_type)
+ );
+
+
+CREATE TABLE recipes (
+     id INTEGER PRIMARY KEY,
+     title VARCHAR(255) NOT NULL,
+     image_url TEXT
+);
+
+CREATE TABLE ingredients (
+     id INTEGER PRIMARY KEY,
+     name VARCHAR(255) NOT NULL,
+     unit VARCHAR(50),
+     image_url TEXT,
+     original TEXT
+);
+
+CREATE TABLE recipe_ingredients (
+    recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
+    ingredient_id INTEGER REFERENCES ingredients(id) ON DELETE CASCADE,
+    amount DECIMAL,
+    is_used BOOLEAN, -- TRUE if the ingredient is used, FALSE if it is missed
+    PRIMARY KEY (recipe_id, ingredient_id)
+);
+
+CREATE TABLE detailed_instructions (
+   recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
+   step_number INTEGER NOT NULL,
+   instruction TEXT NOT NULL,
+   PRIMARY KEY (recipe_id, step_number)
 
 );

@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
@@ -29,6 +28,7 @@ import domain.logic.Settings;
  */
 public class SeeContainersView implements ActionListener{
 
+	
 	/**
 	 * Hold buttons pertaining to its containers
 	 */

@@ -81,9 +81,14 @@ public class HomeView implements ActionListener {
 
 	private JButton recipeListButton = new JButton("Recipe List");
 	
+
 	private JButton settingsButton = new JButton("Settings");
 	
 	private static Settings setting;
+
+	private JButton statisticsButton = new JButton("Statistics");
+
+	private JButton starredRecipeListButton = new JButton("Starred Recipes");
 
 
 	/**
@@ -140,6 +145,16 @@ public class HomeView implements ActionListener {
 			// Set other gui visibility to false
 			SeeContainersView.getContainersView().setSeeContainersViewVisibility(false);
 
+			// Remove existing action listeners, prevents creating multiple containers
+			newContainerText.removeActionListener(this);
+			createContainer.removeActionListener(this);
+			viewContainers.removeActionListener(this);
+			groceryListButton.removeActionListener(this);
+			recipeListButton.removeActionListener(this);
+			starredRecipeListButton.removeActionListener(this);
+			statisticsButton.removeActionListener(this);
+
+
 			// Initialise all actionlisteners
 			newContainerText.addActionListener(this);
 			createContainer.addActionListener(this);
@@ -176,17 +191,29 @@ public class HomeView implements ActionListener {
 
 			homePanel.add(groceryListButton);
 			groceryListButton.setBackground(new Color(76, 183, 242));
-			groceryListButton.setBounds(500, 10, 200, 40);
+			groceryListButton.setBounds(570, 10, 200, 40);
 
 			homePanel.add(recipeListButton);
 			recipeListButton.setBackground(new Color(76, 183, 242));
-			recipeListButton.setBounds(500, 60, 200, 40); // Adjust the positioning as needed
+			recipeListButton.setBounds(570, 60, 200, 40);
 			recipeListButton.addActionListener(this);
 			
+
 			homePanel.add(settingsButton);
 			settingsButton.setBackground(new Color(76, 183, 242));
 			settingsButton.setBounds(10, 10, 200, 40);
 			settingsButton.addActionListener(this);
+
+      		homePanel.add(starredRecipeListButton);
+			starredRecipeListButton.setBackground(new Color(76, 183, 242));
+			starredRecipeListButton.setBounds(570, 100, 200, 40);
+			starredRecipeListButton.addActionListener(this);
+      
+			homePanel.add(statisticsButton);
+			statisticsButton.setBackground(new Color(76, 183, 242));
+			statisticsButton.setBounds(570, 150, 200, 40); // Adjust the positioning as needed
+			statisticsButton.addActionListener(this);
+
 
 			homePanel.setVisible(true);
 		}
@@ -198,6 +225,8 @@ public class HomeView implements ActionListener {
 			groceryListButton.removeActionListener(this);
 			recipeListButton.removeActionListener(this);
 			settingsButton.removeActionListener(this);
+			starredRecipeListButton.removeActionListener(this);
+			statisticsButton.removeActionListener(this);
 
 			homePanel.setVisible(false);
 		}
@@ -242,10 +271,13 @@ public class HomeView implements ActionListener {
 			RecipeListView.getInstance().setRecipeListViewVisibility(true);
 		} else if(source == settingsButton) {
 			SettingsView.getSettingsView().setSettingsViewVisibility(true);
+		} else if (source == starredRecipeListButton) {
+			StarredRecipeListView.getInstance().setRecipeListViewVisibility(true);
+		} else if (source == statisticsButton) {
+			StatsView.getInstance().setStatsViewVisibility(true);
 		}
-
 	}
-
+	
 	/**
 	 * Provides access to the main application frame.
 	 *

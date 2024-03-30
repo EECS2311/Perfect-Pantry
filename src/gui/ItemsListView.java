@@ -48,6 +48,7 @@ public class ItemsListView extends JPanel {
 	private TableRowSorter<TableModel> sorter;
 
 	private boolean colourCodingEnabled = true;
+	private ColorCodingMode colorCodingMode = ColorCodingMode.BY_FRESHNESS; // Default mode
 
 	private HomeView home;
 
@@ -98,43 +99,79 @@ public class ItemsListView extends JPanel {
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
-				if(colourCodingEnabled){
-					if (!isRowSelected(row)) {
-						// Dynamically find the index of the 'Food Freshness' column
-						int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
+				if (!isRowSelected(row)) {
+					switch (colorCodingMode) {
+						case BY_FRESHNESS:
+							// Dynamically find the index of the 'Food Freshness' column
+							int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
 
-						// Retrieve the value from the correct column, regardless of its position
-						Object freshnessValue = getValueAt(row, freshnessCol);
-						String freshness = "";
+							// Retrieve the value from the correct column, regardless of its position
+							Object freshnessValue = getValueAt(row, freshnessCol);
+							String freshness = "";
 
-						// Check the type of the freshness value and convert it to String appropriately
-						if (freshnessValue instanceof GenericTag) {
-							freshness = ((GenericTag<FoodFreshness>) freshnessValue).toString();
-						} else if (freshnessValue != null) {
-							freshness = freshnessValue.toString();
-						}
+							// Check the type of the freshness value and convert it to String appropriately
+							if (freshnessValue instanceof GenericTag) {
+								freshness = ((GenericTag<FoodFreshness>) freshnessValue).toString();
+							} else if (freshnessValue != null) {
+								freshness = freshnessValue.toString();
+							}
 
-						// Apply background color based on the freshness string
-						switch (freshness) {
-							case "Expired":
-								c.setBackground(new Color(252, 156, 156));
-								break;
-							case "Near_Expiry":
-								c.setBackground(new Color(236, 236, 127));
-								break;
-							case "Fresh":
-								c.setBackground(new Color(145, 252, 145));
-								break;
-							default:
-								c.setBackground(Color.WHITE);
-								break;
-						}
-					} else {
-						// If row is selected, use default selection background
+							switch (freshness) {
+								case "Expired":
+									c.setBackground(new Color(252, 156, 156));
+									break;
+								case "Near_Expiry":
+									c.setBackground(new Color(236, 236, 127));
+									break;
+								case "Fresh":
+									c.setBackground(new Color(145, 252, 145));
+									break;
+								default:
+									c.setBackground(Color.WHITE);
+									break;
+							}
+							break;
+						case BY_FOOD_GROUP:
+							int foodGroupCol = table.getColumnModel().getColumnIndex("Food Group");
+							Object foodGroupValue = getValueAt(row, foodGroupCol);
+
+							String foodGroup = "";
+
+							if (foodGroupValue instanceof GenericTag) {
+								foodGroup = ((GenericTag<FoodGroup>) foodGroupValue).toString();
+							} else if (foodGroupValue != null) {
+								foodGroup = foodGroupValue.toString();
+							}
+
+							switch (foodGroup) {
+								case "Grain":
+									c.setBackground(new Color(255, 235, 156));
+									break;
+								case "Protein":
+									c.setBackground(new Color(252, 156, 156));
+									break;
+								case "Vegetable":
+									c.setBackground(new Color(193,219,155));
+									break;
+								case "Fruit":
+									c.setBackground(new Color(195, 177, 225));
+									break;
+								case "Dairy":
+									c.setBackground(new Color(207,219,231));
+									break;
+								default:
+									c.setBackground(Color.WHITE);
+									break;
+							}
+							break;
+
+						case OFF:
+							c.setBackground(Color.WHITE);
+							break;
 					}
 				}else {
 					if (!isRowSelected(row)) {
-						c.setBackground(Color.WHITE); // Default background for non-selected rows when toggled off
+						c.setBackground(Color.WHITE);
 					}
 				}
 				return c;
@@ -159,6 +196,7 @@ public class ItemsListView extends JPanel {
 		});
 
 		table.getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
+		table.getTableHeader().setReorderingAllowed(false);
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -329,8 +367,18 @@ public class ItemsListView extends JPanel {
 	 * is repainted after toggling to reflect the change immediately.
 	 */
 	public void toggleColourCoding() {
-		colourCodingEnabled = !colourCodingEnabled;
-		table.repaint();
+		switch (colorCodingMode) {
+			case OFF:
+				colorCodingMode = ColorCodingMode.BY_FRESHNESS;
+				break;
+			case BY_FRESHNESS:
+				colorCodingMode = ColorCodingMode.BY_FOOD_GROUP;
+				break;
+			case BY_FOOD_GROUP:
+				colorCodingMode = ColorCodingMode.OFF;
+				break;
+		}
+		table.repaint(); // Refresh table to apply new color coding
 	}
 
 	public Container getC() {

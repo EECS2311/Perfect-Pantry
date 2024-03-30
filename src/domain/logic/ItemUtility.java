@@ -1,6 +1,8 @@
 package domain.logic;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
@@ -28,7 +30,7 @@ public class ItemUtility {
 		// Checking to see if item is in the database
 		if (HomeView.data.getItem(container, itemName) != null) {
 			// Remove the item if its present
-			HomeView.data.removeItem(container, itemName, null);
+			HomeView.data.removeItem(container, itemName);
 
 			return true;
 		} else
@@ -47,34 +49,79 @@ public class ItemUtility {
 	 * @param errorHandler A Consumer that handles error messages.
 	 */
 	public static boolean verifyAddItem(String name, String quantityStr, String expiryDate,
-			Consumer<String> errorHandler) {
-		try {
-			name = name.trim();
-			if (name.isEmpty()) {
-				errorHandler.accept("Item name cannot be empty.");
-				return false;
-			}
+										Consumer<String> errorHandler) {
+		name = name.trim();
+		quantityStr = quantityStr.trim();
+		expiryDate = expiryDate.trim();
 
-			int quantity;
-			try {
-				quantity = Integer.parseInt(quantityStr);
-			} catch (NumberFormatException ex) {
-				errorHandler.accept("Please enter a valid number for quantity.");
-				return false;
-			}
+		// Initialize counters for validation
+		boolean nameIsEmpty = name.isEmpty();
+		boolean quantityIsEmpty = quantityStr.isEmpty();
+		boolean expiryIsEmpty = expiryDate.isEmpty();
+		int expiryValidationResult = validateExpiryDate(expiryDate);
+		int invalidInputsCount = 0;
 
-			if (quantity <= 0) {
-				errorHandler.accept("Quantity must be greater than 0.");
-				return false;
-			}
+		if (nameIsEmpty || name.length() > 50) invalidInputsCount++;
+		if (quantityIsEmpty || !isQuantityValid(quantityStr)) invalidInputsCount++;
+		if (expiryIsEmpty || expiryValidationResult != 0) invalidInputsCount++;
 
-			Item item = Item.getInstance(name, quantity, expiryDate);
-
-			// Validation successful, return true
-			return true;
-		} catch (Exception ex) {
-			errorHandler.accept("Error validating item: " + ex.getMessage());
+		if (invalidInputsCount > 1) {
+			errorHandler.accept("There are empty and/or invalid inputs, no item added.");
 			return false;
+		} else if (nameIsEmpty) {
+			errorHandler.accept("Item name cannot be empty.");
+			return false;
+		} else if (name.length() > 50) {
+			errorHandler.accept("Item Name exceeds character length (50).");
+			return false;
+		} else if (quantityIsEmpty || !isQuantityValid(quantityStr)) {
+			errorHandler.accept("Please enter a valid number for quantity (has to be an integer greater than 0).");
+			return false;
+		} else if (expiryIsEmpty) {
+			errorHandler.accept("Date cannot be empty.");
+			return false;
+		} else if (expiryValidationResult == -1) {
+			errorHandler.accept("Please enter the expiry date in the correct format (dd-MMM-yyyy).");
+			return false;
+		} else if (expiryValidationResult == 1) {
+			errorHandler.accept("Expired item, please discard.");
+			return false;
+		}
+
+		return true;
+	}
+
+	private static boolean isQuantityValid(String quantityStr) {
+		try {
+			int quantity = Integer.parseInt(quantityStr);
+			return quantity > 0;
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+	}
+
+	private static int validateExpiryDate(String expiryDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		sdf.setLenient(false);
+		try {
+			Date expiry = sdf.parse(expiryDate);
+
+			// Set expiry time to the end of the day (23:59:59)
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(expiry);
+			calendar.set(Calendar.HOUR_OF_DAY, 23);
+			calendar.set(Calendar.MINUTE, 59);
+			calendar.set(Calendar.SECOND, 59);
+			calendar.set(Calendar.MILLISECOND, 999);
+			expiry = calendar.getTime();
+
+			Date current = new Date();
+			if (expiry.before(current)) {
+				return 1;
+			}
+			return 0;
+		} catch (ParseException ex) {
+			return -1;
 		}
 	}
 
