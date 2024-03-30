@@ -31,6 +31,15 @@ CREATE TABLE grocery(
     name VARCHAR(50) PRIMARY KEY UNIQUE
 );
 
+
+CREATE TABLE settings(
+	setting_type varchar(8),
+	fontsize INTEGER, 
+	notificationBoolean varchar(5),
+	PRIMARY KEY(setting_type)
+ );
+
+
 CREATE TABLE recipes (
      id INTEGER PRIMARY KEY,
      title VARCHAR(255) NOT NULL,
@@ -58,4 +67,5 @@ CREATE TABLE detailed_instructions (
    step_number INTEGER NOT NULL,
    instruction TEXT NOT NULL,
    PRIMARY KEY (recipe_id, step_number)
+
 );

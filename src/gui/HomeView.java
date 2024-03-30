@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import database.StubDB;
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
 import domain.logic.ItemUtility;
+import domain.logic.Settings;
 
 /**
  * The main GUI frame for the application, serving as the entry point for user
@@ -79,6 +81,11 @@ public class HomeView implements ActionListener {
 
 	private JButton recipeListButton = new JButton("Recipe List");
 	
+
+	private JButton settingsButton = new JButton("Settings");
+	
+	private static Settings setting;
+
 	private JButton statisticsButton = new JButton("Statistics");
 
 	private JButton starredRecipeListButton = new JButton("Starred Recipes");
@@ -90,10 +97,11 @@ public class HomeView implements ActionListener {
 	private static HomeView home;
 
 	public static void main(String[] args) {
+		setting = new Settings();
+		
 		// initialise other views
 		SeeContainersView m = new SeeContainersView();
 		GroceryListView g = new GroceryListView();
-
 		home = new HomeView();
 	}
 
@@ -101,6 +109,10 @@ public class HomeView implements ActionListener {
 	 * Launches the application and initializes the main GUI components.
 	 */
 	public HomeView() {
+		SettingsView s = new SettingsView(homePanel);
+		String[] settings = data.getSettings();
+		boolean notificationOn = Boolean.parseBoolean(settings[1]);
+
 		// Initialize frame
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
@@ -115,7 +127,10 @@ public class HomeView implements ActionListener {
 		setHomeViewVisibility(true);
 
 		ItemUtility.updateFreshness();
-		new Notification();
+
+		if(notificationOn) {
+			new Notification();
+		}
 
 	}
 
@@ -183,6 +198,12 @@ public class HomeView implements ActionListener {
 			recipeListButton.setBounds(570, 60, 200, 40);
 			recipeListButton.addActionListener(this);
 			
+
+			homePanel.add(settingsButton);
+			settingsButton.setBackground(new Color(76, 183, 242));
+			settingsButton.setBounds(10, 10, 200, 40);
+			settingsButton.addActionListener(this);
+
       		homePanel.add(starredRecipeListButton);
 			starredRecipeListButton.setBackground(new Color(76, 183, 242));
 			starredRecipeListButton.setBounds(570, 100, 200, 40);
@@ -193,6 +214,7 @@ public class HomeView implements ActionListener {
 			statisticsButton.setBounds(570, 150, 200, 40); // Adjust the positioning as needed
 			statisticsButton.addActionListener(this);
 
+
 			homePanel.setVisible(true);
 		}
 		if (!b) {
@@ -202,6 +224,7 @@ public class HomeView implements ActionListener {
 			viewContainers.removeActionListener(this);
 			groceryListButton.removeActionListener(this);
 			recipeListButton.removeActionListener(this);
+			settingsButton.removeActionListener(this);
 			starredRecipeListButton.removeActionListener(this);
 			statisticsButton.removeActionListener(this);
 
@@ -219,12 +242,12 @@ public class HomeView implements ActionListener {
 		int opt = JOptionPane.showConfirmDialog(frame, "Create Container \"" + nameOfContainer + "\"?");
 		if (opt == JOptionPane.YES_OPTION) {
 			ContainerUtility
-					.verifyAddContainer(
-							nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
-									.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
-							() -> {
-								newContainerText.setText("Pantry" + (containerMap.size() + 1));
-							});
+			.verifyAddContainer(
+					nameOfContainer, data, this, containerMap, (errorMsg) -> JOptionPane
+					.showMessageDialog(frame, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
+					() -> {
+						newContainerText.setText("Pantry" + (containerMap.size() + 1));
+					});
 		}
 	}
 
@@ -246,6 +269,8 @@ public class HomeView implements ActionListener {
 			GroceryListView.getGroceryListView().setGroceryListViewVisibility(true);
 		} else if (source == recipeListButton) {
 			RecipeListView.getInstance().setRecipeListViewVisibility(true);
+		} else if(source == settingsButton) {
+			SettingsView.getSettingsView().setSettingsViewVisibility(true);
 		} else if (source == starredRecipeListButton) {
 			StarredRecipeListView.getInstance().setRecipeListViewVisibility(true);
 		} else if (source == statisticsButton) {
@@ -279,4 +304,26 @@ public class HomeView implements ActionListener {
 	public static ConcurrentHashMap<JButton, Container> getContainerMap() {
 		return containerMap;
 	}
+	
+	public static Settings getSettings() {
+		return setting;
+	}
+// Add item from home view 
+	
+		private JButton addItemButton = new JButton("Add Item");
+		{
+		
+		    
+		    addItemButton.addActionListener(e -> openAddItemDialog());
+		    homePanel.add(addItemButton);
+		    addItemButton.setBounds(240, 350, 250, 40);  // Adjust the positioning as needed
+		    
+		    
+		}
+
+		private void openAddItemDialog() {
+		    Additemhome dialog = new Additemhome(frame);
+		    dialog.setVisible(true);
+		}
+
 }

@@ -7,6 +7,7 @@ import domain.logic.Item;
 import database.DB;
 import domain.logic.Container;
 import domain.logic.ItemUtility;
+import domain.logic.Settings;
 
 /**
  * A JPanel subclass that provides a user interface for adding items with name, quantity, and expiration date.
@@ -17,7 +18,11 @@ public class AddItemView extends JPanel {
     private JTextField itemQuantityField = new JTextField(5);
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
-    private JButton viewCalendar = new JButton("View Calendar");
+    private JLabel itemName = new JLabel("Item Name:");
+    private JLabel quantity = new JLabel("Quantity (int >= 1):");
+    private JLabel expire = new JLabel("Expiration Date (dd-MMM-yyyy):");
+
+
 
     private ItemsListView itemsListPanel;
 
@@ -28,19 +33,18 @@ public class AddItemView extends JPanel {
      */
     public AddItemView(ItemsListView itemsListPanel) {
         this.itemsListPanel = itemsListPanel; // Initialize the reference
-
+        
         setLayout(new FlowLayout());
-        add(new JLabel("Item Name:"));
+        add(itemName);
         add(itemNameField);
-        add(new JLabel("Quantity (int >= 1):"));
+        add(quantity);
         add(itemQuantityField);
-        add(new JLabel("Expiration Date (dd-MMM-yyyy):"));
+        add(expire);
         add(itemExpiryField);
         add(addButton);
-//        add(viewCalendar);
 
+        addFonts();
         addButton.addActionListener(e -> addItem());
-//        viewCalendar.addActionListener(e -> new CalendarView());
     }
 
     /**
@@ -75,6 +79,22 @@ public class AddItemView extends JPanel {
             itemQuantityField.setText("");
             itemExpiryField.setText("");
         }
+    }
+    
+    /**
+     * Adds fonts to components
+     */
+    public void addFonts() {
+        Font font = new Font("Dialog", Font.PLAIN, HomeView.getSettings().getFontSize());
+
+        itemName.setFont(font);
+        itemNameField.setFont(font);
+        quantity.setFont(font);
+        itemQuantityField.setFont(font);        
+        expire.setFont(font);
+        itemExpiryField.setFont(font);        
+        addButton.setFont(font);
+    	
     }
 
     /**

@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -231,7 +232,7 @@ public class ItemsListView extends JPanel {
 			int row = table.getSelectedRow();
 
 			if (row != -1) {
-				String name = tableModel.getValueAt(row, 0).toString();
+				String name = table.getValueAt(row, 0).toString();
 				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
 					this.removeItem(name);
 				}
@@ -244,7 +245,7 @@ public class ItemsListView extends JPanel {
 			int row = table.getSelectedRow();
 
 			if (row != -1) {
-				String name = tableModel.getValueAt(row, 0).toString();
+				String name = table.getValueAt(row, 0).toString();
 				String sTip = ItemUtility.retrieveStorageTip(name);
 
 				if (sTip != null) {
@@ -264,10 +265,10 @@ public class ItemsListView extends JPanel {
 
 			int row = table.getSelectedRow();
 			if (row != -1) {
-				String name = tableModel.getValueAt(row, 0).toString();
+				String name = table.getValueAt(row, 0).toString();
 				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
 						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-							tableModel.setValueAt(val, row, 1);
+							table.setValueAt(val, row, 1);
 						});
 				ItemUtility.initItems(this.getC(), tableModel);
 			}
@@ -276,6 +277,15 @@ public class ItemsListView extends JPanel {
 		sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
 
+	}
+	
+	/**
+	 * Adds fonts to components
+	 */
+	public void addFonts() {
+		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+		table.setFont(f);
+		table.setRowHeight(table.getRowHeight()+10);
 	}
 
 	// Code adapted from docs.oracle.com for SwingUI table component

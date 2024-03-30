@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 
 import domain.logic.Container;
 import domain.logic.Item;
+import domain.logic.Settings;
 
 public class CalendarView {
 	/**
@@ -79,7 +80,7 @@ public class CalendarView {
 	/**
 	 * Font for month
 	 */
-	private Font monthFont = new Font("Lucida Grande", Font.BOLD, 30);
+	private Font monthFont = new Font("Lucida Grande", Font.BOLD, 35);
 
 	/**
 	 * Button to see next month of calendar
@@ -127,9 +128,11 @@ public class CalendarView {
 		mainPanel.setLayout(null);
 
 		topBar.setLayout(new FlowLayout());
-		topBar.setBounds(0, 0, frame.getWidth(), 50);
 		topBar.setBackground(new Color(253, 241, 203));
-		mainPanel.add(topBar);
+		JScrollPane scrollTopBar = new JScrollPane(topBar);
+		scrollTopBar.setBounds(0, 0, frame.getWidth(), 50);
+		
+		mainPanel.add(scrollTopBar);
 
 		month.setFont(monthFont);
 		topBar.add(month);
@@ -138,6 +141,13 @@ public class CalendarView {
 		topBar.add(previousMonth);
 		topBar.add(actualCurrentMonth);
 		topBar.add(nextMonth);
+		
+		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+		Exit.setFont(f);
+		previousMonth.setFont(f);
+		actualCurrentMonth.setFont(f);
+		nextMonth.setFont(f);
+		
 
 		weekdayBar.setBounds(0, 50, frame.getWidth(), 30);
 		weekdayBar.setLayout(new GridLayout(0, 7));
@@ -233,6 +243,7 @@ public class CalendarView {
 		boolean emptyBox;
 		JLabel date;
 		int day = 1;
+		int fontSize = HomeView.getSettings().getFontSize();
 
 		for(int i = 0; i<numofPanels; i++) {
 			emptyBox = getEmptyBoxBoolean(day, dayOfWeekStart, maxDaysInMonth, i);
@@ -247,7 +258,7 @@ public class CalendarView {
 			}
 			else {
 				date = new JLabel("" + day);
-				date.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+				date.setFont(new Font("Lucida Grande", Font.BOLD, fontSize + 5));
 				if(todayDate(current, day)) {
 					date.setForeground(Color.RED);
 				}
@@ -257,7 +268,9 @@ public class CalendarView {
 				panel.add(date);
 				if(itemDate.containsKey(day)) {
 					for (Item item : itemDate.get(day)) {
-						panel.add(new JLabel(item.getName()));
+						JLabel itemName = new JLabel (item.getName());
+						itemName.setFont(new Font("Lucida Grande", Font.PLAIN, fontSize));
+						panel.add(itemName);
 					}
 				}
 				day++;
