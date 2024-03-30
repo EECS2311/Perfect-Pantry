@@ -2,7 +2,6 @@ package domain.logic.recipe;
 
 import gui.HomeView;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -40,13 +39,11 @@ public class RecipeUtility {
     public static void findRecipesLazyLoad(Set<String> ingredients, List<Recipe> recipes) throws RateLimitPerMinuteExceededException, IOException, DailyLimitExceededException {
         if(isNearExpiryItemsChanged(ingredients)){
             String ingredientsString = String.join(", ", ingredients);
-            // Retrieve new recipes based on the updated ingredients
             List<Recipe> newRecipes = RecipeApiClient.findRecipesByIngredients(ingredientsString, 5);
 
             recipes.clear();
             recipes.addAll(newRecipes);
         }
-        // If the ingredients have not changed, the original recipes list remains unchanged
     }
 
     public static boolean verifySaveRecipeToDatabase(Recipe recipe){

@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +21,6 @@ public class RecipeApiClient {
     private static Gson gson = new Gson();
     private static int rateLimitErrorCode = 429;
     private static int dailyLimitErrorCode = 402;
-
 
     /**
      * Sets the API key for all Spoonacular API requests.
@@ -49,9 +46,10 @@ public class RecipeApiClient {
 
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        checkResponseCode(connection);
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Content-Type", "application/json");
+
+        checkResponseCode(connection);
 
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         StringBuilder response = new StringBuilder();
@@ -81,10 +79,10 @@ public class RecipeApiClient {
 
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        checkResponseCode(connection);
-
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Content-Type", "application/json");
+
+        checkResponseCode(connection);
 
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         StringBuilder response = new StringBuilder();

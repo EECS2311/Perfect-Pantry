@@ -79,8 +79,6 @@ public class RecipeListView extends JPanel implements ActionListener {
 
         recipesPanel.add(titleLabel);
 
-        try {
-            RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
 
             if (recipes.isEmpty()) {
                 JLabel emptyMessageLabel = new JLabel("Start adding non-expire food to your pantry to see recipes.");
@@ -93,13 +91,7 @@ public class RecipeListView extends JPanel implements ActionListener {
                 }
             }
 
-        } catch (DailyLimitExceededException e) {
-            JOptionPane.showMessageDialog(this, "You have reached the daily limit for recipe lookups. Please try again tomorrow.", "Limit Reached", JOptionPane.ERROR_MESSAGE);
-        } catch (RateLimitPerMinuteExceededException e) {
-            JOptionPane.showMessageDialog(this, "Too many requests have been made in a short period. Please wait a moment and try again.", "Rate Limit Exceeded", JOptionPane.WARNING_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while fetching recipes.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+
 
         recipesPanel.revalidate();
         recipesPanel.repaint();
@@ -211,9 +203,18 @@ public class RecipeListView extends JPanel implements ActionListener {
         if (visible) {
             HomeView.getFrame().getContentPane().removeAll();
 
-
-            this.addActionListeners();
-            this.displayRecipes();
+            try {
+                RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
+                this.addActionListeners();
+                this.displayRecipes();
+            } catch (DailyLimitExceededException e) {
+                JOptionPane.showMessageDialog(this, "You have reached the daily limit for API requests. Please try again tomorrow.", "API Limit Reached", JOptionPane.ERROR_MESSAGE);
+            } catch (RateLimitPerMinuteExceededException e) {
+                JOptionPane.showMessageDialog(this, "Too many requests. Please wait a minute before trying again.", "Rate Limit Exceeded", JOptionPane.WARNING_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
 
             // Add this view
             HomeView.getFrame().add(this);
