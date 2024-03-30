@@ -17,36 +17,80 @@ import domain.logic.Settings;
 
 public class SettingsView  implements ActionListener{
 
-	JPanel settings = new JPanel();
+	/**
+	 * Main panel for settingsView
+	 */
+	private JPanel settings = new JPanel();
 
-	JButton close = new JButton("Close Settings");
+	/**
+	 * Closes settings panel
+	 */
+	private JButton close = new JButton("Close Settings");
 
-	JButton notifOn = new JButton("Notification On/Off");
+	/**
+	 * toggles notifications on or off
+	 */
+	private JButton notifOn = new JButton("Notification On/Off");
 
-	JLabel notifStatus = new JLabel();
+	/**
+	 * Displays current value of notifOn
+	 */
+	private JLabel notifStatus = new JLabel();
 
-	JButton decrease = new JButton("-");
+	/**
+	 * Decrease font size by 1
+	 */
+	private JButton decrease = new JButton("-");
 
-	JLabel fontSizeCurrent = new JLabel();
+	/**
+	 * Display current fontSize
+	 */
+	private JLabel fontSizeCurrent = new JLabel();
 
-	JButton increase = new JButton("+");
+	/**
+	 * increase fontsize by 1
+	 */
+	private JButton increase = new JButton("+");
 
-	JPanel homePanel;
+	/**
+	 * Homepanel to add settings on top of
+	 */
+	private JPanel homePanel;
 
-	int lowestFontSize = 10;
+	/**
+	 * Lowest font point
+	 */
+	private int lowestFontSize = 10;
 
-	int highestFontSize = 50;
+	/** 
+	 * highest font point
+	 */
+	private int highestFontSize = 50;
 
+	/**
+	 * Able to get settingsView
+	 */
 	private static SettingsView settingsView;
 	
-	JPanel northPanel = new JPanel();
+	/**
+	 * Panel to hold components in the north part of BorderLayout
+	 */
+	private JPanel northPanel = new JPanel();
 
 
+	/**
+	 * Instaiates SettingsView
+	 * @param homePanel The Panel the settingsView should be on
+	 */
 	public SettingsView(JPanel homePanel) {
 		settingsView = this;
 		this.homePanel = homePanel;
 	}
 
+	/**
+	 * Sets the visibility of SettingsView
+	 * @param b Boolean to know if visibility is true or not
+	 */
 	public void setSettingsViewVisibility(boolean b) {
 		if(b) {
 			this.homePanel.add(settings, 0);
@@ -92,6 +136,9 @@ public class SettingsView  implements ActionListener{
 
 	}
 
+	/**
+	 * Sets the notifcation status label value
+	 */
 	public void setNotifStatus() {
 		boolean notifBool = HomeView.getSettings().getNotificationBoolean();
 		if(notifBool) {
@@ -104,6 +151,10 @@ public class SettingsView  implements ActionListener{
 		settings.repaint();
 	}
 
+	/**
+	 * Sets the font sizes of the view
+	 * @param n the font size it should be set to
+	 */
 	public void setFontSizeCurrent(int n) {
 		if(n >= lowestFontSize && n <= highestFontSize) {
 			HomeView.getSettings().setFontSize(n);
@@ -122,6 +173,10 @@ public class SettingsView  implements ActionListener{
 		}
 	}
 
+	/**
+	 * Provides access to the settingsView
+	 * @return the current access of settingsView
+	 */
 	public static SettingsView getSettingsView() {
 		return settingsView;
 	}
@@ -151,6 +206,7 @@ public class SettingsView  implements ActionListener{
 
 		}
 	}
+
 
 
 

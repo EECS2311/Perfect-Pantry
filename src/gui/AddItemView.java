@@ -81,6 +81,9 @@ public class AddItemView extends JPanel {
         }
     }
     
+    /**
+     * Adds fonts to components
+     */
     public void addFonts() {
         Font font = new Font("Dialog", Font.PLAIN, HomeView.getSettings().getFontSize());
 

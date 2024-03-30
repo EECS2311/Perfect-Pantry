@@ -91,7 +91,6 @@ public class ContainerView implements ActionListener {
 		containerView.add(scrollAddItemPanel, BorderLayout.SOUTH);
 		
 		addFonts();
-//		containerView.add(new JScrollPane(addItemPanel), BorderLayout.SOUTH); // Add the add item panel to the bottom
 	}
 
 	/**
@@ -118,6 +117,9 @@ public class ContainerView implements ActionListener {
 		// updated
 	}
 	
+	/**
+	 * Adds fonts to components
+	 */
 	public void addFonts() {
 		
 		Font font = new Font("Dialog", Font.PLAIN, HomeView.getSettings().getFontSize());

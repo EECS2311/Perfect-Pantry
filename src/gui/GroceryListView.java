@@ -57,7 +57,10 @@ public class GroceryListView extends JPanel implements ActionListener {
     JButton backButton = new JButton("Back");
     JButton exportButton = new JButton("Export to .txt");
     
-    JPanel boxLayoutButtonsPanel = new JPanel();
+    /**
+     * BoxLayout of buttonsPanel
+     */
+    private JPanel boxLayoutButtonsPanel = new JPanel();
 
     /**
 	 * Launches the application and initializes the main GUI components.
@@ -140,7 +143,7 @@ public class GroceryListView extends JPanel implements ActionListener {
     /**
      * sets fonts of components and resizes if needed
      */
-    public void setFonts() {
+    public void addFonts() {
     	Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
     	
         table.setFont(f);
@@ -199,7 +202,7 @@ public class GroceryListView extends JPanel implements ActionListener {
                 }
             });
 
-            setFonts();
+            addFonts();
 
             // Set visibility to true
             viewOfAllPanel.setVisible(true);

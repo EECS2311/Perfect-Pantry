@@ -243,6 +243,9 @@ public class ItemsListView extends JPanel {
 
 	}
 	
+	/**
+	 * Adds fonts to components
+	 */
 	public void addFonts() {
 		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
 		table.setFont(f);

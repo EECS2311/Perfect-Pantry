@@ -79,8 +79,14 @@ public class SeeContainersView implements ActionListener{
 	 */
 	private static SeeContainersView containersView;
 	
+	/**
+	 * Font for components
+	 */
 	private Font font;
 	
+	/**
+	 * Scrollable for backPanel
+	 */
 	JScrollPane backScrollPanel = new JScrollPane(backPanel);
 
 
@@ -257,13 +263,5 @@ public class SeeContainersView implements ActionListener{
 		return containersView;
 	}
 	
-
-
-		
-	
-
-
-
-
 
 }
