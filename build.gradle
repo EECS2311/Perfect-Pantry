@@ -48,3 +48,9 @@ application {
     mainClass = 'src.gui.HomeView'
 }
 
+jar {
+	manifest {
+		attributes 'Main-Class': 'gui.HomeView'
+	}
+}
+
