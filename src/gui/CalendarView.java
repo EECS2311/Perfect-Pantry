@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 
 import domain.logic.Container;
 import domain.logic.Item;
+import domain.logic.Settings;
 
 public class CalendarView {
 	/**
@@ -233,6 +234,7 @@ public class CalendarView {
 		boolean emptyBox;
 		JLabel date;
 		int day = 1;
+		int fontSize = HomeView.getSettings().getFontSize();
 
 		for(int i = 0; i<numofPanels; i++) {
 			emptyBox = getEmptyBoxBoolean(day, dayOfWeekStart, maxDaysInMonth, i);
@@ -247,7 +249,7 @@ public class CalendarView {
 			}
 			else {
 				date = new JLabel("" + day);
-				date.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+				date.setFont(new Font("Lucida Grande", Font.BOLD, fontSize + 5));
 				if(todayDate(current, day)) {
 					date.setForeground(Color.RED);
 				}
@@ -257,7 +259,9 @@ public class CalendarView {
 				panel.add(date);
 				if(itemDate.containsKey(day)) {
 					for (Item item : itemDate.get(day)) {
-						panel.add(new JLabel(item.getName()));
+						JLabel itemName = new JLabel (item.getName());
+						itemName.setFont(new Font("Lucida Grande", Font.PLAIN, fontSize));
+						panel.add(itemName);
 					}
 				}
 				day++;
