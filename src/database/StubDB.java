@@ -1,13 +1,19 @@
 package database;
 
+import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import domain.logic.Container;
 import domain.logic.FoodFreshness;
 import domain.logic.FoodGroup;
 import domain.logic.GenericTag;
 import domain.logic.Item;
+import domain.logic.recipe.DailyLimitExceededException;
+import domain.logic.recipe.Ingredient;
+import domain.logic.recipe.RateLimitPerMinuteExceededException;
+import domain.logic.recipe.Recipe;
 
 public class StubDB extends DB {
 
@@ -15,6 +21,11 @@ public class StubDB extends DB {
 	public HashMap<String, Item> itemMap = new HashMap<String, Item>();
 	public HashMap<String, String> storageTipMap = new HashMap<String, String>();
 	public ArrayList<String> groceryList = new ArrayList<String>();
+
+	private Map<Integer, Recipe> recipesMap = new HashMap<>();
+	private Map<Integer, Set<Ingredient>> recipeIngredientsMap = new HashMap<>();
+	private Map<Integer, Map<Integer, String>> recipeInstructionsMap = new HashMap<>();
+
 
 	/**
 	 * Inserts a new container into the database
@@ -297,5 +308,65 @@ public class StubDB extends DB {
 			}
 		}
 		return nearExpiryOrFreshItems;
+	}
+
+	/**
+	 * Saves a recipe to the stub database. This method stores the recipe object,
+	 * its used and missed ingredients, and detailed instructions.
+	 *
+	 * @param recipe The recipe to be saved. Assumes that the recipe's ID is unique.
+	 * @throws RuntimeException If an error occurs while fetching detailed instructions due to rate limits,
+	 *                          IO issues, or daily limits being exceeded.
+	 */
+	@Override
+	public void saveRecipeToDatabase(Recipe recipe) {
+		recipesMap.put(recipe.getId(), recipe);
+		Set<Ingredient> ingredients = new HashSet<>();
+		ingredients.addAll(recipe.getUsedIngredients());
+		ingredients.addAll(recipe.getMissedIngredients());
+		recipeIngredientsMap.put(recipe.getId(), ingredients);
+		try {
+			recipeInstructionsMap.put(recipe.getId(), new HashMap<>(recipe.getDetailedInstructions()));
+		} catch (RateLimitPerMinuteExceededException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (DailyLimitExceededException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Checks if a recipe is present in the stub database.
+	 *
+	 * @param recipeId The ID of the recipe to check.
+	 * @return {@code true} if the recipe is present, {@code false} otherwise.
+	 */
+	@Override
+	public boolean isRecipeInDatabase(int recipeId) {
+		return recipesMap.containsKey(recipeId);
+	}
+
+	/**
+	 * Retrieves all starred (saved) recipes from stub database.
+	 *
+	 * @return A list of all saved recipes.
+	 */
+	@Override
+	public List<Recipe> getAllStarredRecipes() {
+		return new ArrayList<>(recipesMap.values());
+	}
+
+	/**
+	 * Removes a starred (saved) recipe from the stub database.
+	 * This operation also removes any associated ingredients and instructions.
+	 *
+	 * @param recipe The recipe to remove. The recipe's ID is used to identify the recipe.
+	 */
+	@Override
+	public void removeStarredRecipe(Recipe recipe) {
+		recipesMap.remove(recipe.getId());
+		recipeIngredientsMap.remove(recipe.getId());
+		recipeInstructionsMap.remove(recipe.getId());
 	}
 }

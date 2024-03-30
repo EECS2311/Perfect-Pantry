@@ -1,5 +1,7 @@
 package gui;
 
+import domain.logic.recipe.DailyLimitExceededException;
+import domain.logic.recipe.RateLimitPerMinuteExceededException;
 import domain.logic.recipe.Recipe;
 import domain.logic.recipe.RecipeUtility;
 
@@ -8,6 +10,8 @@ import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * A GUI component that displays detailed view of a recipe, including ingredients, instructions, and an image.
@@ -69,9 +73,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
     private void updateDetailsArea() {
         if (recipe != null) {
             StringBuilder htmlContent = new StringBuilder("<html><head><style>body { font-family: Arial, sans-serif; }</style></head><body>");
-
             htmlContent.append("<h1>").append(recipe.getTitle()).append("</h1>");
-
             htmlContent.append("<img src='").append(recipe.getImage()).append("' style='width: 200px; height: auto;'><br>");
 
             htmlContent.append("<h3>Ingredients:</h3><ul>");
@@ -81,17 +83,26 @@ public class RecipeDetailView extends JPanel implements ActionListener {
                 recipe.getMissedIngredients().forEach(ingredient -> htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>"));
             }
 
-            htmlContent.append("<h2>Instructions:</h2>");
-            if (recipe.getDetailedInstructions().isEmpty()) {
-                htmlContent.append("<p>No instructions available</p>");
-            } else {
-                htmlContent.append("<ol>");
-                recipe.getDetailedInstructions().forEach((step, instruction) -> htmlContent.append("<li>").append(instruction).append("</li>"));
-                htmlContent.append("</ol>");
+            try {
+                Map<Integer, String> instructions = recipe.getDetailedInstructions();
+                if (instructions.isEmpty()) {
+                    htmlContent.append("<p>No instructions available</p>");
+                } else {
+                    htmlContent.append("<h2>Instructions:</h2><ol>");
+                    instructions.forEach((step, instruction) -> htmlContent.append("<li>").append(instruction).append("</li>"));
+                    htmlContent.append("</ol>");
+                }
+            } catch (IOException e) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Failed to load recipe instructions due to a network error.", "Network Error", JOptionPane.ERROR_MESSAGE));
+            } catch (DailyLimitExceededException e) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Daily API limit exceeded. Please try again later.", "API Limit Error", JOptionPane.WARNING_MESSAGE));
+            } catch (RateLimitPerMinuteExceededException e) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "API requests are too frequent. Please wait a moment before trying again.", "API Limit Error", JOptionPane.WARNING_MESSAGE));
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "An unexpected error occurred while loading recipe instructions.", "Error", JOptionPane.ERROR_MESSAGE));
             }
 
             htmlContent.append("</ol></body></html>");
-
             detailsArea.setText(htmlContent.toString());
         }
     }

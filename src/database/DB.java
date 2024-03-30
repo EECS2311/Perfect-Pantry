@@ -565,8 +565,7 @@ public class DB {
 		}
 		return itemNames;
 	}
-
-
+  
 	/**
 	 * Retrieves settings for the program
 	 * 
@@ -636,23 +635,36 @@ public class DB {
 		}
 	}
 
+	/**
+	 * Saves a recipe and its associated details into the database. This includes inserting the recipe's basic information,
+	 * the ingredients used, and detailed instructions. If any of the ingredients do not exist in the database, they are added.
+	 * The method manages database transactions manually to ensure data consistency, including rolling back transactions in
+	 * case of errors.
+	 *
+	 * @param recipe The Recipe object containing all the information to be saved to the database.
+	 */
 	public void saveRecipeToDatabase(Recipe recipe) {
 		Connection conn = init();
 		if (conn != null) {
 			try {
-				conn.setAutoCommit(false); // Disable auto-commit to manage transactions manually
+				conn.setAutoCommit(false);
+
+				Map<Integer, String> detailedInstructions;
+				try {
+					detailedInstructions = recipe.getDetailedInstructions();
+				} catch (Exception e) {
+					System.err.println("Failed to get detailed instructions: " + e.getMessage());
+					detailedInstructions = new HashMap<>();
+				}
 
 				String insertRecipeSQL = "INSERT INTO recipes (id, title, image_url) VALUES (?, ?, ?)";
 				try (PreparedStatement pstmt = conn.prepareStatement(insertRecipeSQL)) {
 					pstmt.setInt(1, recipe.getId());
 					pstmt.setString(2, recipe.getTitle());
 					pstmt.setString(3, recipe.getImage());
-
-					// Execute the update without expecting a returning id
 					pstmt.executeUpdate();
 				}
 
-				// Use recipe.getId() directly as recipeId is now directly provided by Recipe class
 				for (Ingredient ingredient : recipe.getUsedIngredients()) {
 					int ingredientId = getOrInsertIngredient(conn, ingredient);
 					linkRecipeIngredient(conn, recipe.getId(), ingredientId, ingredient.getAmount(), true);
@@ -662,20 +674,18 @@ public class DB {
 					linkRecipeIngredient(conn, recipe.getId(), ingredientId, ingredient.getAmount(), false);
 				}
 
-				// Insert Detailed Instructions
 				String insertInstructionSQL = "INSERT INTO detailed_instructions (recipe_id, step_number, instruction) VALUES (?, ?, ?)";
 				try (PreparedStatement pstmt = conn.prepareStatement(insertInstructionSQL)) {
-					for (Map.Entry<Integer, String> entry : recipe.getDetailedInstructions().entrySet()) {
-						pstmt.setInt(1, recipe.getId()); // Direct use of recipe.getId()
+					for (Map.Entry<Integer, String> entry : detailedInstructions.entrySet()) {
+						pstmt.setInt(1, recipe.getId());
 						pstmt.setInt(2, entry.getKey());
 						pstmt.setString(3, entry.getValue());
 						pstmt.executeUpdate();
 					}
 				}
 
-				conn.commit(); // Commit transaction
+				conn.commit();
 			} catch (SQLException e) {
-				// Handle exceptions by rolling back the transaction
 				try {
 					if (conn != null) conn.rollback();
 				} catch (SQLException ex) {
@@ -683,10 +693,9 @@ public class DB {
 				}
 				e.printStackTrace();
 			} finally {
-				// Ensure the connection is closed properly
 				try {
 					if (conn != null) {
-						conn.setAutoCommit(true); // Re-enable autoCommit
+						conn.setAutoCommit(true);
 						conn.close();
 					}
 				} catch (SQLException e) {
@@ -696,18 +705,26 @@ public class DB {
 		}
 	}
 
+	/**
+	 * Checks if an ingredient exists in the database by its ID. If it does not exist, the ingredient is inserted into
+	 * the database. This method is utilized by saveRecipeToDatabase to ensure all ingredients of a recipe are present
+	 * in the database before linking them to the recipe.
+	 *
+	 * @param conn The database connection to be used for the query.
+	 * @param ingredient The ingredient to check or insert into the database.
+	 * @return The ID of the ingredient, either found or newly inserted.
+	 * @throws SQLException if there is a problem accessing the database.
+	 */
 	private int getOrInsertIngredient(Connection conn, Ingredient ingredient) throws SQLException {
-		// Check if the ingredient exists by ID
 		String checkIngredientSQL = "SELECT id FROM ingredients WHERE id = ?";
 		try (PreparedStatement pstmt = conn.prepareStatement(checkIngredientSQL)) {
 			pstmt.setInt(1, ingredient.getId());
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				return ingredient.getId(); // Ingredient exists, return its ID
+				return ingredient.getId();
 			}
 		}
 
-		// Ingredient does not exist, insert it with the provided ID
 		String insertIngredientSQL = "INSERT INTO ingredients (id, name, unit, image_url, original) VALUES (?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = conn.prepareStatement(insertIngredientSQL)) {
 			pstmt.setInt(1, ingredient.getId());
@@ -717,11 +734,21 @@ public class DB {
 			pstmt.setString(5, ingredient.getOriginal());
 			pstmt.executeUpdate();
 		}
-		return ingredient.getId(); // Return the provided ingredient's ID
+		return ingredient.getId();
 	}
 
+	/**
+	 * Links an ingredient to a recipe in the database with the specified amount and usage status. This method is called by
+	 * saveRecipeToDatabase for each ingredient in the recipe to be saved.
+	 *
+	 * @param conn The database connection to be used for the operation.
+	 * @param recipeId The ID of the recipe to which the ingredient is to be linked.
+	 * @param ingredientId The ID of the ingredient to be linked to the recipe.
+	 * @param amount The amount of the ingredient used in the recipe.
+	 * @param isUsed Boolean indicating whether the ingredient is used or missed in the recipe.
+	 * @throws SQLException if there is a problem accessing the database.
+	 */
 	private void linkRecipeIngredient(Connection conn, int recipeId, int ingredientId, double amount, boolean isUsed) throws SQLException {
-		// Insert into recipe_ingredients table
 		String sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, is_used) VALUES (?, ?, ?, ?)";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, recipeId);
@@ -732,6 +759,12 @@ public class DB {
 		}
 	}
 
+	/**
+	 * Checks if a recipe is present in the database by its ID.
+	 *
+	 * @param recipeId The ID of the recipe to check.
+	 * @return true if the recipe exists in the database; false otherwise.
+	 */
 	public boolean isRecipeInDatabase(int recipeId) {
 		Connection conn = init();
 		if (conn != null) {
@@ -742,7 +775,7 @@ public class DB {
 					ResultSet rs = pstmt.executeQuery();
 					if (rs.next()) {
 						int count = rs.getInt(1);
-						return count > 0; // Return true if the recipe exists, false otherwise
+						return count > 0;
 					}
 				}
 			} catch (SQLException e) {
@@ -757,16 +790,21 @@ public class DB {
 				}
 			}
 		}
-		return false; // Return false if the recipe is not found or if any exception occurs
+		return false;
 	}
 
+	/**
+	 * Retrieves all recipes marked as starred from the database. This method fetches the basic recipe information,
+	 * their ingredients, and detailed instructions.
+	 *
+	 * @return A list of starred Recipe objects.
+	 */
 	public List<Recipe> getAllStarredRecipes() {
 		List<Recipe> recipes = new ArrayList<>();
 		Connection conn = init();
 		if (conn != null) {
 			try {
 				List<Integer> recipeIds = new ArrayList<>();
-				// Retrieve all recipes
 				String selectRecipesSQL = "SELECT * FROM recipes";
 				try (Statement stmt = conn.createStatement();
 					 ResultSet rsRecipes = stmt.executeQuery(selectRecipesSQL)) {
@@ -779,18 +817,16 @@ public class DB {
 						Recipe recipe = new Recipe(recipeId, title, imageUrl);
 						recipe.setFetchedStep(true);
 						recipes.add(recipe);
-						recipeIds.add(recipeId); // Collect recipe IDs for bulk ingredient and instruction retrieval
+						recipeIds.add(recipeId);
 					}
 				}
 
-				// Bulk fetch ingredients and instructions
 				Map<Integer, List<Ingredient>> ingredientsMap = getAllIngredientsForRecipes(conn, recipeIds);
 				Map<Integer, Map<Integer, String>> instructionsMap = getAllDetailedInstructionsForRecipes(conn, recipeIds);
 
-				// Associate fetched data with recipes
 				for (Recipe recipe : recipes) {
 					recipe.setUsedIngredients(ingredientsMap.getOrDefault(recipe.getId(), new ArrayList<>()));
-					recipe.setMissedIngredients(new ArrayList<>()); // Assuming you need to adjust how to differentiate used/missed
+					recipe.setMissedIngredients(new ArrayList<>());
 					recipe.setDetailedInstructions(instructionsMap.getOrDefault(recipe.getId(), new HashMap<>()));
 				}
 			} catch (SQLException e) {
@@ -808,6 +844,16 @@ public class DB {
 		return recipes;
 	}
 
+	/**
+	 * Retrieves a mapping of recipe IDs to lists of Ingredient objects for a given list of recipe IDs. This method queries
+	 * the database to find all ingredients associated with each recipe ID provided. It's used to efficiently fetch ingredients
+	 * for multiple recipes in one go, especially useful for operations that need to aggregate recipe data.
+	 *
+	 * @param conn The database connection to be used for the query.
+	 * @param recipeIds A list of recipe IDs for which to retrieve associated ingredients.
+	 * @return A map where each key is a recipe ID and each value is a list of Ingredient objects associated with that recipe.
+	 * @throws SQLException If there is an error accessing the database.
+	 */
 	private Map<Integer, List<Ingredient>> getAllIngredientsForRecipes(Connection conn, List<Integer> recipeIds) throws SQLException {
 		Map<Integer, List<Ingredient>> recipeIngredientsMap = new HashMap<>();
 		if (recipeIds.isEmpty()) {
@@ -838,6 +884,19 @@ public class DB {
 		}
 		return recipeIngredientsMap;
 	}
+
+	/**
+	 * Retrieves a mapping of recipe IDs to their detailed instructions for a given list of recipe IDs. This method is designed
+	 * to fetch the step-by-step instructions for multiple recipes in a single database query, optimizing data retrieval for
+	 * operations that involve displaying or processing recipes in bulk.
+	 *
+	 * Each recipe's instructions are represented as a map, where the key is the step number and the value is the instruction text.
+	 *
+	 * @param conn The database connection to be used for the query.
+	 * @param recipeIds A list of recipe IDs for which to retrieve detailed instructions.
+	 * @return A map where each key is a recipe ID and each value is another map, mapping step numbers to instruction texts for that recipe.
+	 * @throws SQLException If there is an error accessing the database.
+	 */
 	private Map<Integer, Map<Integer, String>> getAllDetailedInstructionsForRecipes(Connection conn, List<Integer> recipeIds) throws SQLException {
 		Map<Integer, Map<Integer, String>> recipeInstructionsMap = new HashMap<>();
 		if (recipeIds.isEmpty()) {
@@ -863,11 +922,17 @@ public class DB {
 		return recipeInstructionsMap;
 	}
 
+	/**
+	 * Removes a starred recipe and its associated details from the database. This includes deleting the recipe's
+	 * basic information, ingredients linkage, and detailed instructions from their respective tables.
+	 *
+	 * @param recipe The Recipe object to be removed from the database.
+	 */
 	public void removeStarredRecipe(Recipe recipe) {
 		Connection conn = init();
 		if (conn != null) {
 			try {
-				conn.setAutoCommit(false); // Disable auto-commit to manage transactions manually
+				conn.setAutoCommit(false);
 
 				String deleteRecipeSQL = "DELETE FROM recipes WHERE id = ?";
 				try (PreparedStatement pstmt = conn.prepareStatement(deleteRecipeSQL)) {
@@ -908,6 +973,14 @@ public class DB {
 		}
 	}
 
+	/**
+	 * Retrieves a list of food group names from items stored in a specified container or all containers if none is specified.
+	 * If the 'container' parameter is null, the method returns food group names from all items. Otherwise, it returns
+	 * food group names from items in the specified container.
+	 *
+	 * @param container The name of the container from which to retrieve food group names, or null to retrieve from all containers.
+	 * @return An ArrayList of strings containing the names of food groups.
+	 */
 	public ArrayList<String> getTotalCount(String container) {
 		
 		Connection conn = init();

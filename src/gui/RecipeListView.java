@@ -13,6 +13,8 @@ import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import domain.logic.recipe.DailyLimitExceededException;
+import domain.logic.recipe.RateLimitPerMinuteExceededException;
 import domain.logic.recipe.Recipe;
 import domain.logic.recipe.RecipeUtility;
 
@@ -24,13 +26,12 @@ public class RecipeListView extends JPanel implements ActionListener {
     protected static RecipeListView instance;
     protected JButton backButton = new JButton("Back to Home");
     protected JPanel recipesPanel = new JPanel();
-    protected static Recipe wow = new Recipe(640352, "Cranberry Apple Crisp", "https://spoonacular.com/recipeImages/640352-312x231.jpg");
-    protected static Set<String> ingredients = new HashSet<>();
+    private static Recipe wow = new Recipe(640352, "Cranberry Apple Crisp", "https://spoonacular.com/recipeImages/640352-312x231.jpg");
+    private static Set<String> ingredients = new HashSet<>();
     private List<Recipe> recipes = new ArrayList<>(); // Instance variable
     protected JScrollPane scrollPane;
     protected static RecipeDetailView recipeDetailView = RecipeDetailView.getInstance(wow);
     private JLabel titleLabel = new JLabel("Recipes");
-
 
     /**
      * constructor for initializing the RecipeListView panel with a back button,
@@ -77,16 +78,19 @@ public class RecipeListView extends JPanel implements ActionListener {
 
         recipesPanel.add(titleLabel);
 
-        if (recipes.isEmpty()) {
-            JLabel emptyMessageLabel = new JLabel("Start adding non-expire food to your pantry to see recipes.");
-            emptyMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center alignment for BoxLayout
-            recipesPanel.add(emptyMessageLabel);
-        } else {
-            for (Recipe recipe : recipes) {
-                JPanel recipePanel = createRecipePanel(recipe);
-                recipesPanel.add(recipePanel);
+
+            if (recipes.isEmpty()) {
+                JLabel emptyMessageLabel = new JLabel("Start adding non-expire food to your pantry to see recipes.");
+                emptyMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center alignment for BoxLayout
+                recipesPanel.add(emptyMessageLabel);
+            } else {
+                for (Recipe recipe : recipes) {
+                    JPanel recipePanel = createRecipePanel(recipe);
+                    recipesPanel.add(recipePanel);
+                }
             }
-        }
+
+
 
         recipesPanel.revalidate();
         recipesPanel.repaint();
@@ -198,10 +202,18 @@ public class RecipeListView extends JPanel implements ActionListener {
         if (visible) {
             HomeView.getFrame().getContentPane().removeAll();
 
-            RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
-
-            this.addActionListeners();
-            this.displayRecipes();
+            try {
+                RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
+                this.addActionListeners();
+                this.displayRecipes();
+            } catch (DailyLimitExceededException e) {
+                JOptionPane.showMessageDialog(this, "You have reached the daily limit for API requests. Please try again tomorrow.", "API Limit Reached", JOptionPane.ERROR_MESSAGE);
+            } catch (RateLimitPerMinuteExceededException e) {
+                JOptionPane.showMessageDialog(this, "Too many requests. Please wait a minute before trying again.", "Rate Limit Exceeded", JOptionPane.WARNING_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
 
             // Add this view
             HomeView.getFrame().add(this);
