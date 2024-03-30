@@ -308,4 +308,22 @@ public class HomeView implements ActionListener {
 	public static Settings getSettings() {
 		return setting;
 	}
+// Add item from home view 
+	
+		private JButton addItemButton = new JButton("Add Item");
+		{
+		
+		    
+		    addItemButton.addActionListener(e -> openAddItemDialog());
+		    homePanel.add(addItemButton);
+		    addItemButton.setBounds(240, 350, 250, 40);  // Adjust the positioning as needed
+		    
+		    
+		}
+
+		private void openAddItemDialog() {
+		    Additemhome dialog = new Additemhome(frame);
+		    dialog.setVisible(true);
+		}
+
 }
