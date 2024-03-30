@@ -25,8 +25,6 @@ public class SettingsView  implements ActionListener{
 
 	JLabel notifStatus = new JLabel();
 
-	JLabel fontSizeLabel = new JLabel("Fontsize");
-
 	JButton decrease = new JButton("-");
 
 	JLabel fontSizeCurrent = new JLabel();
@@ -51,7 +49,7 @@ public class SettingsView  implements ActionListener{
 
 	public void setSettingsViewVisibility(boolean b) {
 		if(b) {
-			this.homePanel.add(settings);
+			this.homePanel.add(settings, 0);
 
 			settings.setBounds(10, 60, 200, 300);
 			settings.setBackground(Color.PINK);
@@ -68,7 +66,6 @@ public class SettingsView  implements ActionListener{
 
 			setNotifStatus();
 
-			settings.add(fontSizeLabel, BorderLayout.CENTER);
 			settings.add(decrease, BorderLayout.WEST);
 			settings.add(fontSizeCurrent, BorderLayout.CENTER);
 			settings.add(increase, BorderLayout.EAST);
@@ -112,7 +109,12 @@ public class SettingsView  implements ActionListener{
 			HomeView.getSettings().setFontSize(n);
 			Font f = new Font("Lucida Grande", Font.PLAIN, n);
 			fontSizeCurrent.setText(Integer.toString(n));
-			fontSizeCurrent.setFont(f);;
+			fontSizeCurrent.setFont(f);
+			close.setFont(f);
+			notifOn.setFont(f);
+			notifStatus.setFont(f);
+			decrease.setFont(f);
+			increase.setFont(f);
 
 			settings.setSize(settings.getPreferredSize());
 			settings.repaint();
