@@ -92,10 +92,10 @@ public class HomeView implements ActionListener {
 	private static HomeView home;
 
 	public static void main(String[] args) {
+		setting = new Settings();
 		// initialise other views
 		SeeContainersView m = new SeeContainersView();
 		GroceryListView g = new GroceryListView();
-
 		home = new HomeView();
 	}
 
@@ -105,7 +105,7 @@ public class HomeView implements ActionListener {
 	public HomeView() {
 		String[] settings = data.getSettings();
 		boolean notificationOn = Boolean.parseBoolean(settings[1]);
-		setting = new Settings();
+
 		// Initialize frame
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
