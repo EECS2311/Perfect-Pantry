@@ -26,13 +26,12 @@ public class RecipeListView extends JPanel implements ActionListener {
     protected static RecipeListView instance;
     protected JButton backButton = new JButton("Back to Home");
     protected JPanel recipesPanel = new JPanel();
-    protected static Recipe wow = new Recipe(640352, "Cranberry Apple Crisp", "https://spoonacular.com/recipeImages/640352-312x231.jpg");
-    protected static Set<String> ingredients = new HashSet<>();
+    private static Recipe wow = new Recipe(640352, "Cranberry Apple Crisp", "https://spoonacular.com/recipeImages/640352-312x231.jpg");
+    private static Set<String> ingredients = new HashSet<>();
     private List<Recipe> recipes = new ArrayList<>(); // Instance variable
     protected JScrollPane scrollPane;
     protected static RecipeDetailView recipeDetailView = RecipeDetailView.getInstance(wow);
     private JLabel titleLabel = new JLabel("Recipes");
-
 
     /**
      * constructor for initializing the RecipeListView panel with a back button,

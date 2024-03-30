@@ -54,7 +54,6 @@ public class StarredRecipeListView extends RecipeListView {
                 recipesPanel.add(recipePanel);
             }
         }
-
         recipesPanel.revalidate();
         recipesPanel.repaint();
         scrollPane.revalidate();
@@ -118,12 +117,9 @@ public class StarredRecipeListView extends RecipeListView {
         recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
         recipeButton.setFocusable(false);
         recipeButton.addActionListener(e -> showRecipeDetails(recipe));
-
-
         detailsPanel.add(recipeButton, BorderLayout.CENTER);
 
         recipePanel.add(detailsPanel, BorderLayout.CENTER);
-
         recipesPanel.add(recipePanel);
         return recipePanel;
     }
@@ -140,9 +136,6 @@ public class StarredRecipeListView extends RecipeListView {
         int opt = JOptionPane.showConfirmDialog(HomeView.getFrame(), "Delete Recipe \"" + recipe.getTitle() + "\"?", "Confirmation", JOptionPane.YES_NO_OPTION);
         if (opt == JOptionPane.YES_OPTION) {
             HomeView.data.removeStarredRecipe(recipe);
-//            recipesPanel.remove(recipePanel);
-//            recipesPanel.revalidate();
-//            recipesPanel.repaint();
             displayRecipes();
         }
     }
