@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 import domain.logic.Settings;
 
-public class SettingsView extends Settings {
+public class SettingsView  {
 
 	JPanel settings = new JPanel();
 
@@ -55,7 +55,7 @@ public class SettingsView extends Settings {
 		settings.add(northPanel, BorderLayout.NORTH);
 		notifOn.setSize(150, 20);
 		notifOn.addActionListener(e -> {
-			setNotificationBoolean(!getNotificationBoolean());
+			HomeView.getSettings().setNotificationBoolean(!HomeView.getSettings().getNotificationBoolean());
 			setNotifStatus();
 		});
 
@@ -65,16 +65,16 @@ public class SettingsView extends Settings {
 
 		settings.add(decrease, BorderLayout.WEST);
 		decrease.addActionListener(e -> {
-			int fontSize = getFontSize() - 1;
+			int fontSize = HomeView.getSettings().getFontSize() - 1;
 			setFontSizeCurrent(fontSize);
 		});
 
 		settings.add(fontSizeCurrent, BorderLayout.CENTER);
-		setFontSizeCurrent(getFontSize());
+		setFontSizeCurrent(HomeView.getSettings().getFontSize());
 
 		settings.add(increase, BorderLayout.EAST);
 		increase.addActionListener(e -> {
-			int fontSize = getFontSize() + 1;
+			int fontSize = HomeView.getSettings().getFontSize() + 1;
 			setFontSizeCurrent(fontSize);
 		});
 		
@@ -90,7 +90,7 @@ public class SettingsView extends Settings {
 	}
 
 	public void setNotifStatus() {
-		boolean notifBool = getNotificationBoolean();
+		boolean notifBool = HomeView.getSettings().getNotificationBoolean();
 		if(notifBool) {
 			notifStatus.setText("On");
 		}
@@ -103,16 +103,17 @@ public class SettingsView extends Settings {
 
 	public void setFontSizeCurrent(int n) {
 		if(n >= lowestFontSize && n <= highestFontSize) {
-			setFontSize(n);
+			HomeView.getSettings().setFontSize(n);
 			Font f = new Font("Lucida Grande", Font.PLAIN, n);
 			fontSizeCurrent.setText(Integer.toString(n));
 			fontSizeCurrent.setFont(f);;
 			
 			settings.setSize(settings.getPreferredSize());
 			settings.repaint();
-			
+						
 		}
 	}
+
 
 
 }

@@ -21,6 +21,7 @@ import database.StubDB;
 import domain.logic.Container;
 import domain.logic.ContainerUtility;
 import domain.logic.ItemUtility;
+import domain.logic.Settings;
 
 /**
  * The main GUI frame for the application, serving as the entry point for user
@@ -81,6 +82,8 @@ public class HomeView implements ActionListener {
 	private JButton recipeListButton = new JButton("Recipe List");
 	
 	private JButton settingsButton = new JButton("Settings");
+	
+	private static Settings setting;
 
 
 	/**
@@ -102,7 +105,7 @@ public class HomeView implements ActionListener {
 	public HomeView() {
 		String[] settings = data.getSettings();
 		boolean notificationOn = Boolean.parseBoolean(settings[1]);
-
+		setting = new Settings();
 		// Initialize frame
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Close on exit
 		frame.setVisible(true);
@@ -266,5 +269,9 @@ public class HomeView implements ActionListener {
 	 */
 	public static ConcurrentHashMap<JButton, Container> getContainerMap() {
 		return containerMap;
+	}
+	
+	public static Settings getSettings() {
+		return setting;
 	}
 }
