@@ -114,6 +114,16 @@ public class RecipeApiClient {
         return stepsMap;
     }
 
+    /**
+     * Checks the HTTP response code from the connection and throws specific exceptions
+     * based on the type of error code received. This method helps in identifying and
+     * handling API usage limits such as rate limits per minute and daily limits.
+     *
+     * @param connection The HttpURLConnection instance from which the response code is retrieved.
+     * @throws RateLimitPerMinuteExceededException if the API's rate limit per minute has been exceeded.
+     * @throws DailyLimitExceededException if the API's daily limit has been exceeded.
+     * @throws IOException if there is an issue retrieving the response code from the connection.
+     */
     private static void checkResponseCode(HttpURLConnection connection) throws RateLimitPerMinuteExceededException, DailyLimitExceededException, IOException {
         int responseCode = connection.getResponseCode();
         if (responseCode == rateLimitErrorCode) {

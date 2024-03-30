@@ -34,7 +34,8 @@ import domain.logic.ItemUtility;
 /**
  * Represents a panel that displays a list of items within a container. It
  * provides functionalities to add and remove items, and update item properties
- * directly from the table.
+ * directly from the table. It also supports color coding of items based on freshness
+ * or food group, and includes a right-click menu for item management.
  */
 public class ItemsListView extends JPanel {
 	private DefaultTableModel tableModel;
@@ -47,7 +48,7 @@ public class ItemsListView extends JPanel {
 	private TableRowSorter<TableModel> sorter;
 
 	private boolean colourCodingEnabled = true;
-	private ColorCodingMode colorCodingMode = ColorCodingMode.BY_FRESHNESS; // Default mode
+	private ColorCodingMode colorCodingMode = ColorCodingMode.BY_FRESHNESS;
 
 	private HomeView home;
 
@@ -57,9 +58,8 @@ public class ItemsListView extends JPanel {
 	/**
 	 * Constructs an ItemsListView panel associated with a specific container.
 	 *
-	 * @param home      The reference to the Home GUI, allowing for interaction with
-	 *                  the main application frame.
-	 * @param container The container whose items are to be displayed and managed.
+	 * @param home      The HomeView instance, providing a reference to the main application frame for interaction.
+	 * @param container The Container instance whose items are to be displayed and managed in this panel.
 	 */
 	public ItemsListView(HomeView home, Container container) {
 		this.home = home;
@@ -199,11 +199,9 @@ public class ItemsListView extends JPanel {
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
-		// Initialize items and assign food freshness
 		ItemUtility.assignFoodFreshness(this.getC());
 		ItemUtility.initItems(container, tableModel);
 
-		// Init the right click popup menu
 		popup = new JPopupMenu();
 		removeItem = new JMenuItem("Delete Item");
 		editQty = new JMenuItem("Update Quantity");
@@ -326,7 +324,6 @@ public class ItemsListView extends JPanel {
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
 			if (itemName.equals(tableModel.getValueAt(i, 0))) {
 
-				// Remove the row from the table model
 				tableModel.removeRow(i);
 
 				break;
@@ -368,7 +365,7 @@ public class ItemsListView extends JPanel {
 				colorCodingMode = ColorCodingMode.OFF;
 				break;
 		}
-		table.repaint(); // Refresh table to apply new color coding
+		table.repaint();
 	}
 
 	public Container getC() {
