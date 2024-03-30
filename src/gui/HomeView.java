@@ -93,6 +93,7 @@ public class HomeView implements ActionListener {
 
 	public static void main(String[] args) {
 		setting = new Settings();
+		
 		// initialise other views
 		SeeContainersView m = new SeeContainersView();
 		GroceryListView g = new GroceryListView();
@@ -103,6 +104,7 @@ public class HomeView implements ActionListener {
 	 * Launches the application and initializes the main GUI components.
 	 */
 	public HomeView() {
+		SettingsView s = new SettingsView(homePanel);
 		String[] settings = data.getSettings();
 		boolean notificationOn = Boolean.parseBoolean(settings[1]);
 
@@ -239,7 +241,7 @@ public class HomeView implements ActionListener {
 		} else if (source == recipeListButton) {
 			RecipeListView.getInstance().setRecipeListViewVisibility(true);
 		} else if(source == settingsButton) {
-			new SettingsView(homePanel);
+			SettingsView.getSettingsView().setSettingsViewVisibility(true);
 		}
 
 	}

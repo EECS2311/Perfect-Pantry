@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -13,7 +15,7 @@ import javax.swing.JPanel;
 
 import domain.logic.Settings;
 
-public class SettingsView  {
+public class SettingsView  implements ActionListener{
 
 	JPanel settings = new JPanel();
 
@@ -30,62 +32,66 @@ public class SettingsView  {
 	JLabel fontSizeCurrent = new JLabel();
 
 	JButton increase = new JButton("+");
-	
+
 	JPanel homePanel;
 
 	int lowestFontSize = 10;
 
 	int highestFontSize = 50;
+
+	private static SettingsView settingsView;
 	
+	JPanel northPanel = new JPanel();
+
 
 	public SettingsView(JPanel homePanel) {
+		settingsView = this;
 		this.homePanel = homePanel;
-		this.homePanel.add(settings);
-		settings.setBounds(10, 60, 200, 300);
-		settings.setBackground(Color.PINK);
-		settings.setLayout(new BorderLayout(8, 20));
-		settings.setBackground(new Color(253, 241, 203));
-		settings.setBorder(BorderFactory.createLineBorder(Color.black));
+	}
 
-		JPanel northPanel = new JPanel();
-		northPanel.setBackground(new Color(253, 241, 203));
-		northPanel.add(notifOn);
-		northPanel.add(notifStatus);
-		
-		settings.add(northPanel, BorderLayout.NORTH);
-		notifOn.setSize(150, 20);
-		notifOn.addActionListener(e -> {
-			HomeView.getSettings().setNotificationBoolean(!HomeView.getSettings().getNotificationBoolean());
+	public void setSettingsViewVisibility(boolean b) {
+		if(b) {
+			this.homePanel.add(settings);
+
+			settings.setBounds(10, 60, 200, 300);
+			settings.setBackground(Color.PINK);
+			settings.setLayout(new BorderLayout(8, 20));
+			settings.setBackground(new Color(253, 241, 203));
+			settings.setBorder(BorderFactory.createLineBorder(Color.black));
+
+			northPanel.setBackground(new Color(253, 241, 203));
+			northPanel.add(notifOn);
+			northPanel.add(notifStatus);
+
+			settings.add(northPanel, BorderLayout.NORTH);
+			notifOn.setSize(150, 20);
+
 			setNotifStatus();
-		});
 
-		setNotifStatus();
+			settings.add(fontSizeLabel, BorderLayout.CENTER);
+			settings.add(decrease, BorderLayout.WEST);
+			settings.add(fontSizeCurrent, BorderLayout.CENTER);
+			settings.add(increase, BorderLayout.EAST);
+			settings.add(close, BorderLayout.SOUTH);
 
-		settings.add(fontSizeLabel, BorderLayout.CENTER);
-
-		settings.add(decrease, BorderLayout.WEST);
-		decrease.addActionListener(e -> {
-			int fontSize = HomeView.getSettings().getFontSize() - 1;
-			setFontSizeCurrent(fontSize);
-		});
-
-		settings.add(fontSizeCurrent, BorderLayout.CENTER);
-		setFontSizeCurrent(HomeView.getSettings().getFontSize());
-
-		settings.add(increase, BorderLayout.EAST);
-		increase.addActionListener(e -> {
-			int fontSize = HomeView.getSettings().getFontSize() + 1;
-			setFontSizeCurrent(fontSize);
-		});
-		
-		settings.add(close, BorderLayout.SOUTH);
-		close.addActionListener(e ->{
+			setFontSizeCurrent(HomeView.getSettings().getFontSize());
+			settings.setSize(settings.getPreferredSize());
+			
+			close.addActionListener(this);
+			notifOn.addActionListener(this);
+			decrease.addActionListener(this);
+			increase.addActionListener(this);
+			
+			settings.setVisible(true);
+		}
+		else {
 			settings.setVisible(false);
-		});
+			close.removeActionListener(this);
+			notifOn.removeActionListener(this);
+			decrease.removeActionListener(this);
+			increase.removeActionListener(this);
 		
-		settings.setSize(settings.getPreferredSize());
-
-
+		}
 
 	}
 
@@ -107,10 +113,40 @@ public class SettingsView  {
 			Font f = new Font("Lucida Grande", Font.PLAIN, n);
 			fontSizeCurrent.setText(Integer.toString(n));
 			fontSizeCurrent.setFont(f);;
-			
+
 			settings.setSize(settings.getPreferredSize());
 			settings.repaint();
-						
+
+		}
+	}
+
+	public static SettingsView getSettingsView() {
+		return settingsView;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == notifOn) {
+			HomeView.getSettings().setNotificationBoolean(!HomeView.getSettings().getNotificationBoolean());
+			setNotifStatus();
+
+		}
+
+		else if (e.getSource() == decrease) {
+			int fontSize = HomeView.getSettings().getFontSize() - 1;
+			setFontSizeCurrent(fontSize);
+
+		}
+
+		else if (e.getSource() == increase) {
+			int fontSize = HomeView.getSettings().getFontSize() + 1;
+			setFontSizeCurrent(fontSize);
+		}
+
+		else if (e.getSource() == close) {
+			setSettingsViewVisibility(false);
+			
+
 		}
 	}
 
