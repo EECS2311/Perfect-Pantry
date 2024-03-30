@@ -4,9 +4,11 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,15 +38,15 @@ public class RecipeApiClient {
      * @param numberOfRecipes  the number of recipes to return
      * @return a list of Recipe objects
      */
-    public static List<Recipe> findRecipesByIngredients(String ingredients, int numberOfRecipes) {
+    public static List<Recipe> findRecipesByIngredients(String ingredients, int numberOfRecipes) throws IOException, RateLimitPerMinuteExceededException, DailyLimitExceededException {
         String urlString = String.format(
                 "https://api.spoonacular.com/recipes/findByIngredients?ingredients=%s&number=%d&apiKey=%s",
                 ingredients, numberOfRecipes, apiKey
         );
 
-        try {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            checkResponseCode(connection);
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/json");
 
@@ -58,9 +60,7 @@ public class RecipeApiClient {
 
             Type listType = new TypeToken<List<Recipe>>(){}.getType();
             return gson.fromJson(response.toString(), listType);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         return null;
     }
 
@@ -70,7 +70,7 @@ public class RecipeApiClient {
      * @param recipeId the unique identifier of the recipe
      * @return a map of steps for the recipe
      */
-    public static Map<Integer, String> getRecipeInstructions(int recipeId) {
+    public static Map<Integer, String> getRecipeInstructions(int recipeId) throws IOException {
         String urlString = String.format(
                 "https://api.spoonacular.com/recipes/%d/analyzedInstructions?stepBreakdown=true&apiKey=%s",
                 recipeId, apiKey
@@ -78,7 +78,6 @@ public class RecipeApiClient {
 
         Map<Integer, String> stepsMap = new HashMap<>();
 
-        try {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -109,10 +108,18 @@ public class RecipeApiClient {
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         return stepsMap;
     }
+
+    private static void checkResponseCode(HttpURLConnection connection) throws RateLimitPerMinuteExceededException, DailyLimitExceededException, IOException {
+        int responseCode = connection.getResponseCode();
+        if (responseCode == 429) { // 429 is the typical rate limit error code
+            throw new RateLimitPerMinuteExceededException();
+        } else if (responseCode == 402) { // Assuming 403 for daily limit exceeded
+            throw new DailyLimitExceededException();
+        }
+    }
+
 }
