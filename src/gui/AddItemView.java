@@ -19,6 +19,11 @@ public class AddItemView extends JPanel {
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
     private JButton viewCalendar = new JButton("View Calendar");
+    private JLabel itemName = new JLabel("Item Name:");
+    private JLabel quantity = new JLabel("Quantity:");
+    private JLabel expire = new JLabel("Expiration Date (dd-MMM-yyyy):");
+
+
 
     private ItemsListView itemsListPanel;
 
@@ -30,37 +35,17 @@ public class AddItemView extends JPanel {
     public AddItemView(ItemsListView itemsListPanel) {
         this.itemsListPanel = itemsListPanel; // Initialize the reference
         
-        Settings s = new Settings();
-        Font font = new Font("Dialog", Font.PLAIN, s.getFontSize());
-
         setLayout(new FlowLayout());
-        JLabel itemName = new JLabel("Item Name:");
-        itemName.setFont(font);
         add(itemName);
-      
         add(itemNameField);
-        itemNameField.setFont(font);
-        
-        JLabel quantity = new JLabel("Quantity:");
-        quantity.setFont(font);
         add(quantity);
-        
-        itemQuantityField.setFont(font);
         add(itemQuantityField);
-        
-        JLabel expire = new JLabel("Expiration Date (dd-MMM-yyyy):");
-        expire.setFont(font);
         add(expire);
-        
-        itemExpiryField.setFont(font);
         add(itemExpiryField);
-        
-        addButton.setFont(font);
         add(addButton);
-//        add(viewCalendar);
 
+        addFonts();
         addButton.addActionListener(e -> addItem());
-//        viewCalendar.addActionListener(e -> new CalendarView());
     }
 
     /**
@@ -95,6 +80,19 @@ public class AddItemView extends JPanel {
             itemQuantityField.setText("");
             itemExpiryField.setText("");
         }
+    }
+    
+    public void addFonts() {
+        Font font = new Font("Dialog", Font.PLAIN, HomeView.getSettings().getFontSize());
+
+        itemName.setFont(font);
+        itemNameField.setFont(font);
+        quantity.setFont(font);
+        itemQuantityField.setFont(font);        
+        expire.setFont(font);
+        itemExpiryField.setFont(font);        
+        addButton.setFont(font);
+    	
     }
 
     /**
