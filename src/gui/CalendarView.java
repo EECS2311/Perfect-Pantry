@@ -80,7 +80,7 @@ public class CalendarView {
 	/**
 	 * Font for month
 	 */
-	private Font monthFont = new Font("Lucida Grande", Font.BOLD, 30);
+	private Font monthFont = new Font("Lucida Grande", Font.BOLD, 35);
 
 	/**
 	 * Button to see next month of calendar
@@ -128,9 +128,11 @@ public class CalendarView {
 		mainPanel.setLayout(null);
 
 		topBar.setLayout(new FlowLayout());
-		topBar.setBounds(0, 0, frame.getWidth(), 50);
 		topBar.setBackground(new Color(253, 241, 203));
-		mainPanel.add(topBar);
+		JScrollPane scrollTopBar = new JScrollPane(topBar);
+		scrollTopBar.setBounds(0, 0, frame.getWidth(), 50);
+		
+		mainPanel.add(scrollTopBar);
 
 		month.setFont(monthFont);
 		topBar.add(month);
@@ -139,6 +141,13 @@ public class CalendarView {
 		topBar.add(previousMonth);
 		topBar.add(actualCurrentMonth);
 		topBar.add(nextMonth);
+		
+		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+		Exit.setFont(f);
+		previousMonth.setFont(f);
+		actualCurrentMonth.setFont(f);
+		nextMonth.setFont(f);
+		
 
 		weekdayBar.setBounds(0, 50, frame.getWidth(), 30);
 		weekdayBar.setLayout(new GridLayout(0, 7));
