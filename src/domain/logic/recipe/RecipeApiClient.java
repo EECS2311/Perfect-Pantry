@@ -1,23 +1,26 @@
 package domain.logic.recipe;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * The client for accessing the recipe API using Spoonacular's API.
  */
 public class RecipeApiClient {
-    private static String apiKey = SpoonacularApi.SpoonacularApiKey;
+    private static String apiKey = "04c280ac7ee0454b9f68eb830ee86de7";
     private static Gson gson = new Gson();
 
     /**
