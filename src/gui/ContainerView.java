@@ -122,6 +122,7 @@ public class ContainerView implements ActionListener {
 		
 		Font font = new Font("Dialog", Font.PLAIN, HomeView.getSettings().getFontSize());
 		addItemPanel.addFonts();
+		itemsListPanel.addFonts();
 		viewCalendar.setFont(font);
 		
 		back.setFont(font);

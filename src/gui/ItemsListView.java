@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -240,6 +241,12 @@ public class ItemsListView extends JPanel {
 		sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
 
+	}
+	
+	public void addFonts() {
+		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+		table.setFont(f);
+		table.setRowHeight(table.getRowHeight()+10);
 	}
 
 	// Code adapted from docs.oracle.com for SwingUI table component
