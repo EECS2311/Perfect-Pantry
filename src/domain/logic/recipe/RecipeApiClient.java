@@ -21,6 +21,9 @@ import java.util.Map;
 public class RecipeApiClient {
     private static String apiKey = SpoonacularApi.SpoonacularApiKey;
     private static Gson gson = new Gson();
+    private static int rateLimitErrorCode = 429;
+    private static int dailyLimitErrorCode = 402;
+
 
     /**
      * Sets the API key for all Spoonacular API requests.
@@ -44,24 +47,22 @@ public class RecipeApiClient {
                 ingredients, numberOfRecipes, apiKey
         );
 
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            checkResponseCode(connection);
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Content-Type", "application/json");
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        checkResponseCode(connection);
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Content-Type", "application/json");
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
 
-            Type listType = new TypeToken<List<Recipe>>(){}.getType();
-            return gson.fromJson(response.toString(), listType);
-
-        return null;
+        Type listType = new TypeToken<List<Recipe>>(){}.getType();
+        return gson.fromJson(response.toString(), listType);
     }
 
     /**
@@ -70,7 +71,7 @@ public class RecipeApiClient {
      * @param recipeId the unique identifier of the recipe
      * @return a map of steps for the recipe
      */
-    public static Map<Integer, String> getRecipeInstructions(int recipeId) throws IOException {
+    public static Map<Integer, String> getRecipeInstructions(int recipeId) throws IOException, RateLimitPerMinuteExceededException, DailyLimitExceededException {
         String urlString = String.format(
                 "https://api.spoonacular.com/recipes/%d/analyzedInstructions?stepBreakdown=true&apiKey=%s",
                 recipeId, apiKey
@@ -78,36 +79,38 @@ public class RecipeApiClient {
 
         Map<Integer, String> stepsMap = new HashMap<>();
 
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Content-Type", "application/json");
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        checkResponseCode(connection);
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Content-Type", "application/json");
 
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(response.toString());
-            if (element.isJsonArray()) {
-                JsonArray instructionsArray = element.getAsJsonArray();
-                for (JsonElement instructionElement : instructionsArray) {
-                    JsonObject instructionObject = instructionElement.getAsJsonObject();
-                    if (instructionObject.has("steps") && instructionObject.get("steps").isJsonArray()) {
-                        JsonArray stepsArray = instructionObject.get("steps").getAsJsonArray();
-                        for (JsonElement stepElement : stepsArray) {
-                            JsonObject stepObject = stepElement.getAsJsonObject();
-                            int number = stepObject.get("number").getAsInt();
-                            String step = stepObject.get("step").getAsString();
-                            stepsMap.put(number, step);
-                        }
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(response.toString());
+        if (element.isJsonArray()) {
+            JsonArray instructionsArray = element.getAsJsonArray();
+            for (JsonElement instructionElement : instructionsArray) {
+                JsonObject instructionObject = instructionElement.getAsJsonObject();
+                if (instructionObject.has("steps") && instructionObject.get("steps").isJsonArray()) {
+                    JsonArray stepsArray = instructionObject.get("steps").getAsJsonArray();
+                    for (JsonElement stepElement : stepsArray) {
+                        JsonObject stepObject = stepElement.getAsJsonObject();
+                        int number = stepObject.get("number").getAsInt();
+                        String step = stepObject.get("step").getAsString();
+                        stepsMap.put(number, step);
                     }
                 }
             }
+        }
 
 
         return stepsMap;
@@ -115,9 +118,9 @@ public class RecipeApiClient {
 
     private static void checkResponseCode(HttpURLConnection connection) throws RateLimitPerMinuteExceededException, DailyLimitExceededException, IOException {
         int responseCode = connection.getResponseCode();
-        if (responseCode == 429) { // 429 is the typical rate limit error code
+        if (responseCode == rateLimitErrorCode) {
             throw new RateLimitPerMinuteExceededException();
-        } else if (responseCode == 402) { // Assuming 403 for daily limit exceeded
+        } else if (responseCode == dailyLimitErrorCode) {
             throw new DailyLimitExceededException();
         }
     }

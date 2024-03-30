@@ -1,5 +1,6 @@
 package domain.logic.recipe;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -43,7 +44,7 @@ public class Recipe {
      *
      * @return a map of step numbers to instruction descriptions
      */
-    public Map<Integer, String> getDetailedInstructions() {
+    public Map<Integer, String> getDetailedInstructions() throws RateLimitPerMinuteExceededException, IOException, DailyLimitExceededException {
         if (!fetchedStep) {
             detailedInstructions = RecipeApiClient.getRecipeInstructions(this.id);
             fetchedStep = true;

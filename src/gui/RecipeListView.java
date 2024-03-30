@@ -13,6 +13,8 @@ import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import domain.logic.recipe.DailyLimitExceededException;
+import domain.logic.recipe.RateLimitPerMinuteExceededException;
 import domain.logic.recipe.Recipe;
 import domain.logic.recipe.RecipeUtility;
 
@@ -77,15 +79,26 @@ public class RecipeListView extends JPanel implements ActionListener {
 
         recipesPanel.add(titleLabel);
 
-        if (recipes.isEmpty()) {
-            JLabel emptyMessageLabel = new JLabel("Start adding non-expire food to your pantry to see recipes.");
-            emptyMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center alignment for BoxLayout
-            recipesPanel.add(emptyMessageLabel);
-        } else {
-            for (Recipe recipe : recipes) {
-                JPanel recipePanel = createRecipePanel(recipe);
-                recipesPanel.add(recipePanel);
+        try {
+            RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
+
+            if (recipes.isEmpty()) {
+                JLabel emptyMessageLabel = new JLabel("Start adding non-expire food to your pantry to see recipes.");
+                emptyMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center alignment for BoxLayout
+                recipesPanel.add(emptyMessageLabel);
+            } else {
+                for (Recipe recipe : recipes) {
+                    JPanel recipePanel = createRecipePanel(recipe);
+                    recipesPanel.add(recipePanel);
+                }
             }
+
+        } catch (DailyLimitExceededException e) {
+            JOptionPane.showMessageDialog(this, "You have reached the daily limit for recipe lookups. Please try again tomorrow.", "Limit Reached", JOptionPane.ERROR_MESSAGE);
+        } catch (RateLimitPerMinuteExceededException e) {
+            JOptionPane.showMessageDialog(this, "Too many requests have been made in a short period. Please wait a moment and try again.", "Rate Limit Exceeded", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred while fetching recipes.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         recipesPanel.revalidate();
@@ -198,7 +211,6 @@ public class RecipeListView extends JPanel implements ActionListener {
         if (visible) {
             HomeView.getFrame().getContentPane().removeAll();
 
-            RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
 
             this.addActionListeners();
             this.displayRecipes();

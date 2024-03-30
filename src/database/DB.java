@@ -573,17 +573,22 @@ public class DB {
 			try {
 				conn.setAutoCommit(false); // Disable auto-commit to manage transactions manually
 
+				Map<Integer, String> detailedInstructions;
+				try {
+					detailedInstructions = recipe.getDetailedInstructions();
+				} catch (Exception e) {
+					System.err.println("Failed to get detailed instructions: " + e.getMessage());
+					detailedInstructions = new HashMap<>(); // Empty instructions as fallback
+				}
+
 				String insertRecipeSQL = "INSERT INTO recipes (id, title, image_url) VALUES (?, ?, ?)";
 				try (PreparedStatement pstmt = conn.prepareStatement(insertRecipeSQL)) {
 					pstmt.setInt(1, recipe.getId());
 					pstmt.setString(2, recipe.getTitle());
 					pstmt.setString(3, recipe.getImage());
-
-					// Execute the update without expecting a returning id
 					pstmt.executeUpdate();
 				}
 
-				// Use recipe.getId() directly as recipeId is now directly provided by Recipe class
 				for (Ingredient ingredient : recipe.getUsedIngredients()) {
 					int ingredientId = getOrInsertIngredient(conn, ingredient);
 					linkRecipeIngredient(conn, recipe.getId(), ingredientId, ingredient.getAmount(), true);
@@ -593,20 +598,18 @@ public class DB {
 					linkRecipeIngredient(conn, recipe.getId(), ingredientId, ingredient.getAmount(), false);
 				}
 
-				// Insert Detailed Instructions
 				String insertInstructionSQL = "INSERT INTO detailed_instructions (recipe_id, step_number, instruction) VALUES (?, ?, ?)";
 				try (PreparedStatement pstmt = conn.prepareStatement(insertInstructionSQL)) {
-					for (Map.Entry<Integer, String> entry : recipe.getDetailedInstructions().entrySet()) {
-						pstmt.setInt(1, recipe.getId()); // Direct use of recipe.getId()
+					for (Map.Entry<Integer, String> entry : detailedInstructions.entrySet()) {
+						pstmt.setInt(1, recipe.getId());
 						pstmt.setInt(2, entry.getKey());
 						pstmt.setString(3, entry.getValue());
 						pstmt.executeUpdate();
 					}
 				}
 
-				conn.commit(); // Commit transaction
+				conn.commit();
 			} catch (SQLException e) {
-				// Handle exceptions by rolling back the transaction
 				try {
 					if (conn != null) conn.rollback();
 				} catch (SQLException ex) {
@@ -617,7 +620,7 @@ public class DB {
 				// Ensure the connection is closed properly
 				try {
 					if (conn != null) {
-						conn.setAutoCommit(true); // Re-enable autoCommit
+						conn.setAutoCommit(true);
 						conn.close();
 					}
 				} catch (SQLException e) {
