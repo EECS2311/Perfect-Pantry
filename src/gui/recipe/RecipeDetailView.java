@@ -29,6 +29,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
 
     private JButton starRecipeButton = new JButton("Star Recipe");
 
+    protected static Font customFont = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
 
     /**
      * Private constructor to initialize the detail view with a recipe.
@@ -45,6 +46,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
 
         scrollPane = new JScrollPane(detailsArea);
         add(scrollPane, BorderLayout.CENTER);
+
         starRecipeButton.addActionListener(this);
         add(starRecipeButton, BorderLayout.SOUTH);
     }
@@ -74,21 +76,24 @@ public class RecipeDetailView extends JPanel implements ActionListener {
      */
     private void updateDetailsArea() {
         if (recipe != null) {
-            StringBuilder htmlContent = new StringBuilder("<html><head><style>body { font-family: Arial, sans-serif; }</style></head><body>");
-            htmlContent.append("<h1>").append(recipe.getTitle()).append("</h1>");
+            StringBuilder htmlContent = new StringBuilder("<html><head><style>body { font-family: ").append(customFont.getFamily()).append("; font-size: ").append(customFont.getSize()).append("pt; }</style></head><body>");
+            htmlContent.append("<b>").append(recipe.getTitle()).append("</b><br>");
             htmlContent.append("<img src='").append(recipe.getImage()).append("' style='width: 200px; height: auto;'><br>");
 
-            htmlContent.append("<h3>Ingredients:</h3><ul>");
+            htmlContent.append("<b>Ingredients:</b><ul class='ingredients'>");
             recipe.getUsedIngredients().forEach(ingredient -> htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>"));
+            htmlContent.append("</ul>");
+
             if (!recipe.getMissedIngredients().isEmpty()) {
-                htmlContent.append("<h3>Missing Ingredients:</h3><ul>");
+                htmlContent.append("<b>Missing Ingredients:</b><ul class='ingredients'>");
                 recipe.getMissedIngredients().forEach(ingredient -> htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>"));
+                htmlContent.append("</ul>");
             }
 
             try {
                 Map<Integer, String> instructions = recipe.getDetailedInstructions();
                 if (instructions.isEmpty()) {
-                    htmlContent.append("<p>No instructions available</p>");
+                    htmlContent.append("No instructions available");
                 } else {
                     htmlContent.append("<h2>Instructions:</h2><ol>");
                     instructions.forEach((step, instruction) -> htmlContent.append("<li>").append(instruction).append("</li>"));
@@ -115,7 +120,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
      */
     public void setTextArea(Recipe recipe) {
         this.recipe = recipe;
-        updateDetailsArea();
+         updateDetailsArea();
         this.revalidate();
         this.repaint();
     }
@@ -148,7 +153,9 @@ public class RecipeDetailView extends JPanel implements ActionListener {
         if (visible) {
             frame.getContentPane().removeAll();
             RecipeDetailView recipeDetailView = RecipeDetailView.getInstance();
-
+            customFont = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+            backButton.setFont(customFont);
+            starRecipeButton.setFont(customFont);
             HomeView.getFrame().add(recipeDetailView);
         } else {
             frame.getContentPane().removeAll();
