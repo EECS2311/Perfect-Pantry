@@ -11,13 +11,33 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+/**
+ * CustomColorCodedTable extends JTable to implement color coding of rows based
+ * on the freshness or food group of the items displayed.
+ */
 public class CustomColorCodedTable extends JTable {
     private ColorCodingMode colorCodingMode = ColorCodingMode.BY_FRESHNESS;
 
+    /**
+     * Constructs a CustomColorCodedTable with the specified table model.
+     *
+     * @param model the table model to be used by this table
+     */
     public CustomColorCodedTable(DefaultTableModel model) {
         super(model);
     }
 
+
+    /**
+     * Prepares the renderer for each cell in the table. Depending on the
+     * colorCodingMode, cells will be color-coded based on their freshness or
+     * food group value.
+     *
+     * @param renderer the TableCellRenderer to prepare
+     * @param row      the row of the cell to render, where 0 is the first row
+     * @param column   the column of the cell to render, where 0 is the first column
+     * @return the Component under the given rendering
+     */
     @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
         Component c = super.prepareRenderer(renderer, row, column);
@@ -94,11 +114,22 @@ public class CustomColorCodedTable extends JTable {
         return c;
     }
 
+    /**
+     * Sets the color coding mode of the table to either color by freshness,
+     * food group, or turn off color coding.
+     *
+     * @param mode the ColorCodingMode to set
+     */
     public void setColorCodingMode(ColorCodingMode mode) {
         this.colorCodingMode = mode;
         this.repaint();
     }
 
+    /**
+     * Gets the current color coding mode of the table.
+     *
+     * @return the current ColorCodingMode
+     */
     public ColorCodingMode getColorCodingMode() {
         return this.colorCodingMode;
     }
