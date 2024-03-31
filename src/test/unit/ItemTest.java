@@ -14,10 +14,10 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.GenericTag;
-import domain.logic.Item;
+import domain.logic.item.FoodFreshness;
+import domain.logic.item.FoodGroup;
+import domain.logic.item.GenericTag;
+import domain.logic.item.Item;
 
 class ItemTest {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");

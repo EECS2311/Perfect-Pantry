@@ -10,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import database.DB;
-import domain.logic.Container;
-import domain.logic.Item;
+import domain.logic.container.Container;
+import domain.logic.item.Item;
 
 class ItemDBTest {
 
@@ -94,7 +94,7 @@ class ItemDBTest {
 		data.addItem(container, "Feta", item);
 
 		assertNotNull(data.getItem(container, "Feta"));
-		data.removeItem(container, "Feta", item);
+		data.removeItem(container, "Feta");
 
 		assertTrue(data.getItem(container, "Feta") == null);
 

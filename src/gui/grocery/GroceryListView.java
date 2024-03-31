@@ -1,4 +1,4 @@
-package gui;
+package gui.grocery;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -29,6 +30,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import database.DB;
+import gui.home.HomeView;
 
 public class GroceryListView extends JPanel implements ActionListener {
 	// Data model and components
@@ -55,6 +57,11 @@ public class GroceryListView extends JPanel implements ActionListener {
     JButton addButton = new JButton("Add Item");
     JButton backButton = new JButton("Back");
     JButton exportButton = new JButton("Export to .txt");
+    
+    /**
+     * BoxLayout of buttonsPanel
+     */
+    private JPanel boxLayoutButtonsPanel = new JPanel();
 
     /**
 	 * Launches the application and initializes the main GUI components.
@@ -88,8 +95,8 @@ public class GroceryListView extends JPanel implements ActionListener {
 
         // Set positions and sizes of components
         tablePanel.setBounds(10, 80, 800, 300);
-        buttonsPanel.setBounds(10, 400, 600, 50);
-        topPanel.setBounds(10, 0, 600, 100);
+        buttonsPanel.setBounds(10, 400, 800, 200);
+        topPanel.setBounds(10, 0, 800, 100);
         titleLabel.setBounds(300, 0, 600, 100);
         titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
         backButton.setBounds(20, 20, 80, 30);
@@ -103,7 +110,7 @@ public class GroceryListView extends JPanel implements ActionListener {
         };
         // Create a JTable with the specified table model
         table = new JTable(tableModel);
-
+        
         // Set the cell renderer for the table
         table.setDefaultRenderer(Object.class, new StrikeThroughRenderer(table.getFont(), crossedOffItems));
 
@@ -115,18 +122,48 @@ public class GroceryListView extends JPanel implements ActionListener {
 
         // Add the scroll pane to the table panel
         tablePanel.add(scrollPane);
+        
+        boxLayoutButtonsPanel.setLayout(new BoxLayout(boxLayoutButtonsPanel, BoxLayout.Y_AXIS));
 
         // Set the position of buttons and add text field
-        addItemLabel.setBounds(20, 0, 80, 30);
-        addItemTextField.setBounds(90, 0, 150, 30);
-        addButton.setBounds(235, 0, 100, 30);
-        exportButton.setBounds(450, 0, 140, 30);
+        boxLayoutButtonsPanel.add(addItemLabel);
+        boxLayoutButtonsPanel.add(addItemTextField);
+        boxLayoutButtonsPanel.add(addButton);
+        
+        JScrollPane scrollBoxLayout = new JScrollPane(boxLayoutButtonsPanel);
+        boxLayoutButtonsPanel.setBackground(new Color(253, 241, 203));
+        scrollBoxLayout.setBounds(10, 0, 300, 150);
+        exportButton.setBounds(500, 0, 140, 30);
         
         //Add buttons and add text field to the buttons panel
-        buttonsPanel.add(addItemLabel);
-        buttonsPanel.add(addButton);
         buttonsPanel.add(exportButton);
-        buttonsPanel.add(addItemTextField);
+        buttonsPanel.add(scrollBoxLayout);
+
+    }
+    
+    /**
+     * sets fonts of components and resizes if needed
+     */
+    public void addFonts() {
+    	Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+    	
+        table.setFont(f);
+        table.setRowHeight(f.getSize() + 5);
+        table.setDefaultRenderer(Object.class, new StrikeThroughRenderer(f, crossedOffItems));
+
+        backButton.setFont(f);
+        int width = (int) (f.getSize() *5);
+        backButton.setBounds(20, 20, width, f.getSize());
+        
+        exportButton.setFont(f);
+        width = (int) (f.getSize() *7.5);
+        exportButton.setBounds(400, 0, width, f.getSize() + 10);
+        
+        addItemLabel.setFont(f);
+        addItemTextField.setFont(f);
+        addButton.setFont(f);
+        
+
     }
 
     /**
@@ -145,6 +182,7 @@ public class GroceryListView extends JPanel implements ActionListener {
             // Refresh the table
             refreshTable();
 
+            
             //Add all panels
             HomeView.getFrame().add(viewOfAllPanel);
 
@@ -166,6 +204,7 @@ public class GroceryListView extends JPanel implements ActionListener {
                 }
             });
 
+            addFonts();
 
             // Set visibility to true
             viewOfAllPanel.setVisible(true);

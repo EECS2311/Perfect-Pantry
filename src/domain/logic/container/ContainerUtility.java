@@ -1,4 +1,4 @@
-package domain.logic;
+package domain.logic.container;
 
 import java.awt.Font;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import javax.swing.JButton;
 
 import database.DB;
-import gui.HomeView;
+import gui.home.HomeView;
 
 /**
  * Utility class for operations related to containers in the inventory DB system.
@@ -135,5 +135,6 @@ public class ContainerUtility {
 		}
 
 	}
+	
 
 }

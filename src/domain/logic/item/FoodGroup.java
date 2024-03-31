@@ -1,4 +1,4 @@
-package domain.logic;
+package domain.logic.item;
 
 /**
  * Represents the food group categories.

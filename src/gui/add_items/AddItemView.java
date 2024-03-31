@@ -1,12 +1,15 @@
-package gui;
+package gui.add_items;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import domain.logic.Item;
+
 import database.DB;
-import domain.logic.Container;
-import domain.logic.ItemUtility;
+import domain.logic.container.Container;
+import domain.logic.home.Settings;
+import domain.logic.item.Item;
+import domain.logic.item.ItemUtility;
+import gui.home.HomeView;
 
 /**
  * A JPanel subclass that provides a user interface for adding items with name, quantity, and expiration date.
@@ -17,7 +20,11 @@ public class AddItemView extends JPanel {
     private JTextField itemQuantityField = new JTextField(5);
     private JTextField itemExpiryField = new JTextField(10);
     private JButton addButton = new JButton("Add Item");
-    private JButton viewCalendar = new JButton("View Calendar");
+    private JLabel itemName = new JLabel("Item Name:");
+    private JLabel quantity = new JLabel("Quantity (int >= 1):");
+    private JLabel expire = new JLabel("Expiration Date (dd-MMM-yyyy):");
+
+
 
     private ItemsListView itemsListPanel;
 
@@ -28,19 +35,18 @@ public class AddItemView extends JPanel {
      */
     public AddItemView(ItemsListView itemsListPanel) {
         this.itemsListPanel = itemsListPanel; // Initialize the reference
-
+        
         setLayout(new FlowLayout());
-        add(new JLabel("Item Name:"));
+        add(itemName);
         add(itemNameField);
-        add(new JLabel("Quantity:"));
+        add(quantity);
         add(itemQuantityField);
-        add(new JLabel("Expiration Date (dd-MMM-yyyy):"));
+        add(expire);
         add(itemExpiryField);
         add(addButton);
-//        add(viewCalendar);
 
+        addFonts();
         addButton.addActionListener(e -> addItem());
-//        viewCalendar.addActionListener(e -> new CalendarView());
     }
 
     /**
@@ -58,7 +64,7 @@ public class AddItemView extends JPanel {
                 (errorMsg) -> JOptionPane.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE));
 
         if (isValid) {
-            Item item = Item.getInstance(name, Integer.parseInt(quantityStr), expiryDate);
+            Item item = Item.getInstance(name, Integer.parseInt(quantityStr.trim()), expiryDate);
 
             // Assume itemsListPanel.getC() gets a context or container where items are to be added
             boolean addedToData = HomeView.data.addItem(itemsListPanel.getC(), item.getName(), item);
@@ -75,6 +81,22 @@ public class AddItemView extends JPanel {
             itemQuantityField.setText("");
             itemExpiryField.setText("");
         }
+    }
+    
+    /**
+     * Adds fonts to components
+     */
+    public void addFonts() {
+        Font font = new Font("Dialog", Font.PLAIN, HomeView.getSettings().getFontSize());
+
+        itemName.setFont(font);
+        itemNameField.setFont(font);
+        quantity.setFont(font);
+        itemQuantityField.setFont(font);        
+        expire.setFont(font);
+        itemExpiryField.setFont(font);        
+        addButton.setFont(font);
+    	
     }
 
     /**

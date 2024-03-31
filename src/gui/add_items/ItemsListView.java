@@ -1,8 +1,9 @@
-package gui;
+package gui.add_items;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,17 +25,19 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import database.DB;
-import domain.logic.Container;
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.GenericTag;
-import domain.logic.Item;
-import domain.logic.ItemUtility;
+import domain.logic.container.Container;
+import domain.logic.item.FoodFreshness;
+import domain.logic.item.FoodGroup;
+import domain.logic.item.GenericTag;
+import domain.logic.item.Item;
+import domain.logic.item.ItemUtility;
+import gui.home.HomeView;
 
 /**
  * Represents a panel that displays a list of items within a container. It
  * provides functionalities to add and remove items, and update item properties
- * directly from the table.
+ * directly from the table. It also supports color coding of items based on freshness
+ * or food group, and includes a right-click menu for item management.
  */
 public class ItemsListView extends JPanel {
 	private DefaultTableModel tableModel;
@@ -47,6 +50,7 @@ public class ItemsListView extends JPanel {
 	private TableRowSorter<TableModel> sorter;
 
 	private boolean colourCodingEnabled = true;
+	private ColorCodingMode colorCodingMode = ColorCodingMode.BY_FRESHNESS;
 
 	private HomeView home;
 
@@ -56,9 +60,8 @@ public class ItemsListView extends JPanel {
 	/**
 	 * Constructs an ItemsListView panel associated with a specific container.
 	 *
-	 * @param home      The reference to the Home GUI, allowing for interaction with
-	 *                  the main application frame.
-	 * @param container The container whose items are to be displayed and managed.
+	 * @param home      The HomeView instance, providing a reference to the main application frame for interaction.
+	 * @param container The Container instance whose items are to be displayed and managed in this panel.
 	 */
 	public ItemsListView(HomeView home, Container container) {
 		this.home = home;
@@ -97,43 +100,79 @@ public class ItemsListView extends JPanel {
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
-				if(colourCodingEnabled){
-					if (!isRowSelected(row)) {
-						// Dynamically find the index of the 'Food Freshness' column
-						int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
+				if (!isRowSelected(row)) {
+					switch (colorCodingMode) {
+						case BY_FRESHNESS:
+							// Dynamically find the index of the 'Food Freshness' column
+							int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
 
-						// Retrieve the value from the correct column, regardless of its position
-						Object freshnessValue = getValueAt(row, freshnessCol);
-						String freshness = "";
+							// Retrieve the value from the correct column, regardless of its position
+							Object freshnessValue = getValueAt(row, freshnessCol);
+							String freshness = "";
 
-						// Check the type of the freshness value and convert it to String appropriately
-						if (freshnessValue instanceof GenericTag) {
-							freshness = ((GenericTag<FoodFreshness>) freshnessValue).toString();
-						} else if (freshnessValue != null) {
-							freshness = freshnessValue.toString();
-						}
+							// Check the type of the freshness value and convert it to String appropriately
+							if (freshnessValue instanceof GenericTag) {
+								freshness = ((GenericTag<FoodFreshness>) freshnessValue).toString();
+							} else if (freshnessValue != null) {
+								freshness = freshnessValue.toString();
+							}
 
-						// Apply background color based on the freshness string
-						switch (freshness) {
-							case "Expired":
-								c.setBackground(new Color(252, 156, 156));
-								break;
-							case "Near_Expiry":
-								c.setBackground(new Color(236, 236, 127));
-								break;
-							case "Fresh":
-								c.setBackground(new Color(145, 252, 145));
-								break;
-							default:
-								c.setBackground(Color.WHITE);
-								break;
-						}
-					} else {
-						// If row is selected, use default selection background
+							switch (freshness) {
+								case "Expired":
+									c.setBackground(new Color(252, 156, 156));
+									break;
+								case "Near_Expiry":
+									c.setBackground(new Color(236, 236, 127));
+									break;
+								case "Fresh":
+									c.setBackground(new Color(145, 252, 145));
+									break;
+								default:
+									c.setBackground(Color.WHITE);
+									break;
+							}
+							break;
+						case BY_FOOD_GROUP:
+							int foodGroupCol = table.getColumnModel().getColumnIndex("Food Group");
+							Object foodGroupValue = getValueAt(row, foodGroupCol);
+
+							String foodGroup = "";
+
+							if (foodGroupValue instanceof GenericTag) {
+								foodGroup = ((GenericTag<FoodGroup>) foodGroupValue).toString();
+							} else if (foodGroupValue != null) {
+								foodGroup = foodGroupValue.toString();
+							}
+
+							switch (foodGroup) {
+								case "Grain":
+									c.setBackground(new Color(255, 235, 156));
+									break;
+								case "Protein":
+									c.setBackground(new Color(252, 156, 156));
+									break;
+								case "Vegetable":
+									c.setBackground(new Color(193,219,155));
+									break;
+								case "Fruit":
+									c.setBackground(new Color(195, 177, 225));
+									break;
+								case "Dairy":
+									c.setBackground(new Color(207,219,231));
+									break;
+								default:
+									c.setBackground(Color.WHITE);
+									break;
+							}
+							break;
+
+						case OFF:
+							c.setBackground(Color.WHITE);
+							break;
 					}
 				}else {
 					if (!isRowSelected(row)) {
-						c.setBackground(Color.WHITE); // Default background for non-selected rows when toggled off
+						c.setBackground(Color.WHITE);
 					}
 				}
 				return c;
@@ -158,14 +197,13 @@ public class ItemsListView extends JPanel {
 		});
 
 		table.getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
+		table.getTableHeader().setReorderingAllowed(false);
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
-		// Initialize items and assign food freshness
 		ItemUtility.assignFoodFreshness(this.getC());
 		ItemUtility.initItems(container, tableModel);
 
-		// Init the right click popup menu
 		popup = new JPopupMenu();
 		removeItem = new JMenuItem("Delete Item");
 		editQty = new JMenuItem("Update Quantity");
@@ -195,7 +233,7 @@ public class ItemsListView extends JPanel {
 			int row = table.getSelectedRow();
 
 			if (row != -1) {
-				String name = tableModel.getValueAt(row, 0).toString();
+				String name = table.getValueAt(row, 0).toString();
 				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
 					this.removeItem(name);
 				}
@@ -208,7 +246,7 @@ public class ItemsListView extends JPanel {
 			int row = table.getSelectedRow();
 
 			if (row != -1) {
-				String name = tableModel.getValueAt(row, 0).toString();
+				String name = table.getValueAt(row, 0).toString();
 				String sTip = ItemUtility.retrieveStorageTip(name);
 
 				if (sTip != null) {
@@ -228,10 +266,10 @@ public class ItemsListView extends JPanel {
 
 			int row = table.getSelectedRow();
 			if (row != -1) {
-				String name = tableModel.getValueAt(row, 0).toString();
+				String name = table.getValueAt(row, 0).toString();
 				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
 						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-							tableModel.setValueAt(val, row, 1);
+							table.setValueAt(val, row, 1);
 						});
 				ItemUtility.initItems(this.getC(), tableModel);
 			}
@@ -240,6 +278,15 @@ public class ItemsListView extends JPanel {
 		sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
 
+	}
+	
+	/**
+	 * Adds fonts to components
+	 */
+	public void addFonts() {
+		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+		table.setFont(f);
+		table.setRowHeight(table.getRowHeight()+10);
 	}
 
 	// Code adapted from docs.oracle.com for SwingUI table component
@@ -288,7 +335,6 @@ public class ItemsListView extends JPanel {
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
 			if (itemName.equals(tableModel.getValueAt(i, 0))) {
 
-				// Remove the row from the table model
 				tableModel.removeRow(i);
 
 				break;
@@ -319,7 +365,17 @@ public class ItemsListView extends JPanel {
 	 * is repainted after toggling to reflect the change immediately.
 	 */
 	public void toggleColourCoding() {
-		colourCodingEnabled = !colourCodingEnabled;
+		switch (colorCodingMode) {
+			case OFF:
+				colorCodingMode = ColorCodingMode.BY_FRESHNESS;
+				break;
+			case BY_FRESHNESS:
+				colorCodingMode = ColorCodingMode.BY_FOOD_GROUP;
+				break;
+			case BY_FOOD_GROUP:
+				colorCodingMode = ColorCodingMode.OFF;
+				break;
+		}
 		table.repaint();
 	}
 

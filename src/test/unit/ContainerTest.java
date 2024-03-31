@@ -11,8 +11,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import domain.logic.Container;
-import domain.logic.Item;
+import domain.logic.container.Container;
+import domain.logic.item.Item;
 
 public class ContainerTest {
 

@@ -1,7 +1,8 @@
-package gui;
+package gui.add_items;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -11,10 +12,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import database.DB;
-import domain.logic.Container;
+import domain.logic.container.Container;
+import gui.home.HomeView;
 
 /**
  * Represents the GUI view for a container. It allows users to interact with a
@@ -66,6 +69,8 @@ public class ContainerView implements ActionListener {
 		addItemPanel = new AddItemView(itemsListPanel);
 		addItemPanel.add(viewCalendar);
 		viewCalendar.addActionListener(this);
+		
+		JScrollPane scrollAddItemPanel = new JScrollPane(addItemPanel);
 
 		back.addActionListener(this);
 		filter.addActionListener(this);
@@ -79,11 +84,14 @@ public class ContainerView implements ActionListener {
 		buttonPanel.add(foodFreshnessFilter);
 		buttonPanel.add(filter);
 		buttonPanel.add(toggleColorCodingButton);
+		
+		JScrollPane scrollButtonPanel = new JScrollPane(buttonPanel);
 
-
-		containerView.add(buttonPanel, BorderLayout.NORTH); // Add the button panel to the top of the main panel
+		containerView.add(scrollButtonPanel, BorderLayout.NORTH); // Add the button panel to the top of the main panel
 		containerView.add(itemsListPanel, BorderLayout.CENTER); // Add the items list panel to the center
-		containerView.add(addItemPanel, BorderLayout.SOUTH); // Add the add item panel to the bottom
+		containerView.add(scrollAddItemPanel, BorderLayout.SOUTH);
+		
+		addFonts();
 	}
 
 	/**
@@ -98,6 +106,7 @@ public class ContainerView implements ActionListener {
 		if (isVisible) {
 			frame.getContentPane().removeAll(); // Clear the frame's content pane
 			frame.getContentPane().add(containerView); // Add this container view
+			addFonts();
 		} else {
 			frame.getContentPane().removeAll(); // Clear the frame's content pane
 			home.setHomeViewVisibility(true); // Reinitialize home GUI components
@@ -108,6 +117,26 @@ public class ContainerView implements ActionListener {
 		// Instead of toggling JFrame visibility, ensure the content pane is correctly
 		// updated
 	}
+	
+	/**
+	 * Adds fonts to components
+	 */
+	public void addFonts() {
+		
+		Font font = new Font("Dialog", Font.PLAIN, HomeView.getSettings().getFontSize());
+		addItemPanel.addFonts();
+		itemsListPanel.addFonts();
+		viewCalendar.setFont(font);
+		
+		back.setFont(font);
+		filter.setFont(font);
+		itemFilterText.setFont(font);
+		foodGroupFilter.setFont(font);
+		foodFreshnessFilter.setFont(font);
+		toggleColorCodingButton.setFont(font);
+		
+	}
+
 
 	/**
 	 * Handles action events triggered by GUI components (e.g., buttons). This

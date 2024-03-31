@@ -1,11 +1,18 @@
-package gui;
+package gui.recipe;
 
+import domain.logic.recipe.DailyLimitExceededException;
+import domain.logic.recipe.RateLimitPerMinuteExceededException;
 import domain.logic.recipe.Recipe;
+import domain.logic.recipe.RecipeUtility;
+import gui.home.HomeView;
 
 import javax.swing.*;
+import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * A GUI component that displays detailed view of a recipe, including ingredients, instructions, and an image.
@@ -19,6 +26,9 @@ public class RecipeDetailView extends JPanel implements ActionListener {
 
     private static RecipeDetailView instance;
 
+    private JButton starRecipeButton = new JButton("Star Recipe");
+
+
     /**
      * Private constructor to initialize the detail view with a recipe.
      * @param recipe The recipe to display.
@@ -30,10 +40,12 @@ public class RecipeDetailView extends JPanel implements ActionListener {
         add(backButton, BorderLayout.NORTH);
         detailsArea.setEditable(false);
         detailsArea.setBackground(new Color(253, 241, 203));
-        detailsArea.setContentType("text/html"); // Set content type to HTML
+        detailsArea.setContentType("text/html");
 
         scrollPane = new JScrollPane(detailsArea);
         add(scrollPane, BorderLayout.CENTER);
+        starRecipeButton.addActionListener(this);
+        add(starRecipeButton, BorderLayout.SOUTH);
     }
 
     /**
@@ -62,26 +74,36 @@ public class RecipeDetailView extends JPanel implements ActionListener {
     private void updateDetailsArea() {
         if (recipe != null) {
             StringBuilder htmlContent = new StringBuilder("<html><head><style>body { font-family: Arial, sans-serif; }</style></head><body>");
-
-            // Title
             htmlContent.append("<h1>").append(recipe.getTitle()).append("</h1>");
-
-            // Image
             htmlContent.append("<img src='").append(recipe.getImage()).append("' style='width: 200px; height: auto;'><br>");
 
-            // Ingredients
-            htmlContent.append("<h3>Available Ingredients:</h3><ul>");
+            htmlContent.append("<h3>Ingredients:</h3><ul>");
             recipe.getUsedIngredients().forEach(ingredient -> htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>"));
             if (!recipe.getMissedIngredients().isEmpty()) {
                 htmlContent.append("<h3>Missing Ingredients:</h3><ul>");
                 recipe.getMissedIngredients().forEach(ingredient -> htmlContent.append("<li>").append(ingredient.getOriginal()).append("</li>"));
             }
 
-            // Instructions
-            htmlContent.append("<h2>Instructions:</h2><ol>");
-            recipe.getDetailedInstructions().forEach((step, instruction) -> htmlContent.append("<li>").append(instruction).append("</li>"));
-            htmlContent.append("</ol></body></html>");
+            try {
+                Map<Integer, String> instructions = recipe.getDetailedInstructions();
+                if (instructions.isEmpty()) {
+                    htmlContent.append("<p>No instructions available</p>");
+                } else {
+                    htmlContent.append("<h2>Instructions:</h2><ol>");
+                    instructions.forEach((step, instruction) -> htmlContent.append("<li>").append(instruction).append("</li>"));
+                    htmlContent.append("</ol>");
+                }
+            } catch (IOException e) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Failed to load recipe instructions due to a network error.", "Network Error", JOptionPane.ERROR_MESSAGE));
+            } catch (DailyLimitExceededException e) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Daily API limit exceeded. Please try again later.", "API Limit Error", JOptionPane.WARNING_MESSAGE));
+            } catch (RateLimitPerMinuteExceededException e) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "API requests are too frequent. Please wait a moment before trying again.", "API Limit Error", JOptionPane.WARNING_MESSAGE));
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "An unexpected error occurred while loading recipe instructions.", "Error", JOptionPane.ERROR_MESSAGE));
+            }
 
+            htmlContent.append("</ol></body></html>");
             detailsArea.setText(htmlContent.toString());
         }
     }
@@ -91,7 +113,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
      * @param recipe The recipe to display.
      */
     public void setTextArea(Recipe recipe) {
-        this.recipe = recipe; // Update the recipe instance
+        this.recipe = recipe;
         updateDetailsArea();
         this.revalidate();
         this.repaint();
@@ -104,10 +126,15 @@ public class RecipeDetailView extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == backButton) {
-//          RecipeListView.showListView();
             HomeView.getHomeView().setHomeViewVisibility(true);
             setRecipeDetailViewVisibility(false);
             HomeView.getFrame().remove(this);
+        }
+        else if (e.getSource() == starRecipeButton) {
+            boolean isRecipeExists = RecipeUtility.verifySaveRecipeToDatabase(recipe);
+            if (!isRecipeExists) {
+                JOptionPane.showMessageDialog(this, "This recipe is already saved.");
+            }
         }
     }
 

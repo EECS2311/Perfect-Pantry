@@ -7,11 +7,11 @@ import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import domain.logic.FoodGroup;
-import domain.logic.FoodFreshness;
-import domain.logic.GenericTag;
-import domain.logic.TagUtility;
-import domain.logic.Tag;
+import domain.logic.item.FoodFreshness;
+import domain.logic.item.FoodGroup;
+import domain.logic.item.GenericTag;
+import domain.logic.item.Tag;
+import domain.logic.item.TagUtility;
 
 
 class TagsTest {
