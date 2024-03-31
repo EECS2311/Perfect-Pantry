@@ -1,13 +1,14 @@
 package gui.recipe;
 
+import javax.swing.*;
+import javax.swing.text.Utilities;
+
 import domain.logic.recipe.DailyLimitExceededException;
 import domain.logic.recipe.RateLimitPerMinuteExceededException;
 import domain.logic.recipe.Recipe;
 import domain.logic.recipe.RecipeUtility;
 import gui.home.HomeView;
 
-import javax.swing.*;
-import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

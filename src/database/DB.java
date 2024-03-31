@@ -7,6 +7,15 @@ import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import database.info;
+import domain.logic.container.Container;
+import domain.logic.item.FoodFreshness;
+import domain.logic.item.FoodGroup;
+import domain.logic.item.GenericTag;
+import domain.logic.item.Item;
+import domain.logic.recipe.Ingredient;
+import domain.logic.recipe.Recipe;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,14 +26,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import domain.logic.container.Container;
-import domain.logic.item.FoodFreshness;
-import domain.logic.item.FoodGroup;
-import domain.logic.item.GenericTag;
-import domain.logic.item.Item;
-import domain.logic.recipe.Ingredient;
-import domain.logic.recipe.Recipe;
 
 /**
  * The {@code DB} class represents a simple database for storing and managing

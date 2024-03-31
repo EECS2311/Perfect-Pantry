@@ -1,9 +1,9 @@
 package demo;
 
-import domain.logic.recipe.*;
-
 import java.io.IOException;
 import java.util.List;
+
+import domain.logic.recipe.*;
 
 public class RecipeApiClientDemo {
     public static void main(String[] args) {
