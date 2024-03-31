@@ -46,7 +46,6 @@ public class RecipeListView extends JPanel implements ActionListener {
         titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Set up recipesPanel with BoxLayout for vertical stacking of components
         recipesPanel.setLayout(new BoxLayout(recipesPanel, BoxLayout.Y_AXIS));
         recipesPanel.setBackground(new Color(245, 223, 162));
         recipesPanel.add(titleLabel);
@@ -82,7 +81,7 @@ public class RecipeListView extends JPanel implements ActionListener {
 
             if (recipes.isEmpty()) {
                 JLabel emptyMessageLabel = new JLabel("Start adding non-expire food to your pantry to see recipes.");
-                emptyMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center alignment for BoxLayout
+                emptyMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 recipesPanel.add(emptyMessageLabel);
             } else {
                 for (Recipe recipe : recipes) {
