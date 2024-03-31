@@ -65,7 +65,6 @@ public class StarredRecipeListView extends RecipeListView {
     @Override
     public JPanel createRecipePanel(Recipe recipe) {
         JPanel recipePanel = new JPanel(new BorderLayout(5, 0));
-        // Create popup menu
         JPopupMenu popup = createPopupMenu(recipe, recipePanel);
         recipePanel.setComponentPopupMenu(popup);
 
@@ -86,7 +85,7 @@ public class StarredRecipeListView extends RecipeListView {
                 try {
                     ImageIcon imageIcon = get();
                     imageLabel.setIcon(imageIcon);
-                    imageLabel.setText(""); // Remove the "Loading image..." text
+                    imageLabel.setText("");
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                     imageLabel.setText("Failed to load image");
@@ -129,12 +128,12 @@ public class StarredRecipeListView extends RecipeListView {
     private JPopupMenu createPopupMenu(Recipe recipe, JPanel recipePanel) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem deleteRecipeBtn = new JMenuItem("Delete Recipe");
-        deleteRecipeBtn.addActionListener(e -> deleteRecipe(recipe, recipePanel));
+        deleteRecipeBtn.addActionListener(e -> deleteRecipe(recipe));
         popup.add(deleteRecipeBtn);
         return popup;
     }
 
-    private void deleteRecipe(Recipe recipe, JPanel recipePanel) {
+    private void deleteRecipe(Recipe recipe) {
         int opt = JOptionPane.showConfirmDialog(HomeView.getFrame(), "Delete Recipe \"" + recipe.getTitle() + "\"?", "Confirmation", JOptionPane.YES_NO_OPTION);
         if (opt == JOptionPane.YES_OPTION) {
             HomeView.data.removeStarredRecipe(recipe);
