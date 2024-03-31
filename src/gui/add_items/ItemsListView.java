@@ -41,12 +41,6 @@ import gui.home.HomeView;
  * or food group, and includes a right-click menu for item management.
  */
 public class ItemsListView extends JPanel {
-	private static final int NOT_VALID_COLUMN = 1;
-	private static final int NAME_COLUMN = 0;
-	private static final int QUANTITY_COLUMN = 1;
-	private static final int EXPIRY_DATE_COLUMN = 2;
-	private static final int FOOD_GROUP_COLUMN = 3;
-	private static final int FOOD_FRESHNESS_COLUMN = 4;
 	private DefaultTableModel tableModel;
 	private JTable table;
 	private JPopupMenu popup;
@@ -80,28 +74,7 @@ public class ItemsListView extends JPanel {
 		
 		setLayout(new BorderLayout());
 
-		tableModel = new DefaultTableModel() {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != NAME_COLUMN && column != QUANTITY_COLUMN && column != EXPIRY_DATE_COLUMN && column != FOOD_FRESHNESS_COLUMN;
-			}
-
-			@Override
-			public Class<?> getColumnClass(int columnIndex) {
-				switch (columnIndex) {
-				case NAME_COLUMN | EXPIRY_DATE_COLUMN:
-					return String.class;
-				case QUANTITY_COLUMN:
-					return Integer.class;
-				case FOOD_GROUP_COLUMN:
-					return FoodGroup.class;
-				case FOOD_FRESHNESS_COLUMN:
-					return FoodFreshness.class;
-				default:
-					return Object.class;
-				}
-			}
-		};
+		tableModel = new CustomTableModel();
 
 		table = new JTable(tableModel) {
 
@@ -197,13 +170,13 @@ public class ItemsListView extends JPanel {
 			if (e.getType() == TableModelEvent.UPDATE) {
 				int row = e.getFirstRow();
 				int column = e.getColumn();
-				if (column == FOOD_GROUP_COLUMN) {
+				if (column == CustomTableModel.FOOD_GROUP_COLUMN) {
 					updateItemFromTable(row, column);
 				}
 			}
 		});
 
-		table.getColumnModel().getColumn(FOOD_GROUP_COLUMN).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
+		table.getColumnModel().getColumn(CustomTableModel.FOOD_GROUP_COLUMN).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
 		table.getTableHeader().setReorderingAllowed(false);
 
 		add(new JScrollPane(getTable()), BorderLayout.CENTER);
@@ -241,8 +214,8 @@ public class ItemsListView extends JPanel {
 
 			int row = getTable().getSelectedRow();
 
-			if (row != NOT_VALID_COLUMN) {
-				String name = table.getValueAt(row, NAME_COLUMN).toString();
+			if (row != CustomTableModel.NOT_VALID_COLUMN) {
+				String name = table.getValueAt(row, CustomTableModel.NAME_COLUMN).toString();
 				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
 					this.removeItem(name);
 				}
@@ -254,8 +227,8 @@ public class ItemsListView extends JPanel {
 
 			int row = getTable().getSelectedRow();
 
-			if (row != NOT_VALID_COLUMN) {
-				String name = table.getValueAt(row, NAME_COLUMN).toString();
+			if (row != CustomTableModel.NOT_VALID_COLUMN) {
+				String name = table.getValueAt(row, CustomTableModel.NAME_COLUMN).toString();
 				String sTip = ItemUtility.retrieveStorageTip(name);
 
 				if (sTip != null) {
@@ -273,11 +246,11 @@ public class ItemsListView extends JPanel {
 
 			String val = JOptionPane.showInputDialog(HomeView.getFrame(), "Edit Quantity", "Enter a new Value", 3);
 			int row = table.getSelectedRow();
-			if (row != NOT_VALID_COLUMN) {
-				String name = table.getValueAt(row, NAME_COLUMN).toString();
+			if (row != CustomTableModel.NOT_VALID_COLUMN) {
+				String name = table.getValueAt(row, CustomTableModel.NAME_COLUMN).toString();
 				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
 						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-							table.setValueAt(val, row, QUANTITY_COLUMN);
+							table.setValueAt(val, row, CustomTableModel.QUANTITY_COLUMN);
 						});
 				ItemUtility.initItems(this.getC(), tableModel);
 			}
@@ -354,7 +327,7 @@ public class ItemsListView extends JPanel {
 	public void removeItem(String itemName) {
 		// Iterate through the table to find the row with the given item name
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
-			if (itemName.equals(tableModel.getValueAt(i, NAME_COLUMN))) {
+			if (itemName.equals(tableModel.getValueAt(i, CustomTableModel.NAME_COLUMN))) {
 
 				tableModel.removeRow(i);
 
@@ -370,7 +343,7 @@ public class ItemsListView extends JPanel {
 	 * @param column The column index of the property that was changed.
 	 */
 	private void updateItemFromTable(int row, int column) {
-		String itemName = (String) table.getModel().getValueAt(row, NAME_COLUMN);
+		String itemName = (String) table.getModel().getValueAt(row, CustomTableModel.NAME_COLUMN);
 		Object newValue = table.getModel().getValueAt(row, column);
 
 		ItemUtility.updateItemFoodGroupTag(getC(), itemName, newValue, column);
