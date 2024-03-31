@@ -24,6 +24,7 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.postgresql:postgresql:42.7.2'
+    runtimeOnly 'org.postgresql:postgresql'
 }
 
 testing {
@@ -45,12 +46,18 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'src.gui.HomeView'
+    mainClass = 'gui.HomeView'
 }
 
 jar {
 	manifest {
 		attributes 'Main-Class': 'gui.HomeView'
 	}
+}
+
+task start (type: JavaExec){
+    description = "get started run"
+    main = 'gui.HomeView'
+    classpath = sourceSets.main.runtimeClasspath
 }
 
