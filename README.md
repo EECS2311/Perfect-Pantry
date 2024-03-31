@@ -30,6 +30,6 @@ public class info {
 }
 ```
 3. `RecipeApiClient` uses gson 2.10.1 contained in `lib` folder. It is an external library that does JSON parsing. You will need to add this jar file to your build path (Eclipse) or project structure (IntelliJ).
-4. Run the DBDef.sql queries in the database package. The init.sql queries are optional (if you want to setup some default values.
+4. Run the the following queries that are located in the database package... DB_drop.sql > DB_init.sql > DB_populate.sql (in this order)
 5. Install JDBC for postgreSQL and put it on your buildpath.
 6. src/gui/HomeView -> Run
