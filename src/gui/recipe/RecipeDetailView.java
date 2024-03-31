@@ -29,6 +29,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
 
     private JButton starRecipeButton = new JButton("Star Recipe");
 
+    private static Font customFont = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
 
     /**
      * Private constructor to initialize the detail view with a recipe.
@@ -45,6 +46,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
 
         scrollPane = new JScrollPane(detailsArea);
         add(scrollPane, BorderLayout.CENTER);
+
         starRecipeButton.addActionListener(this);
         add(starRecipeButton, BorderLayout.SOUTH);
     }
@@ -74,7 +76,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
      */
     private void updateDetailsArea() {
         if (recipe != null) {
-            StringBuilder htmlContent = new StringBuilder("<html><head><style>body { font-family: Arial, sans-serif; }</style></head><body>");
+            StringBuilder htmlContent = new StringBuilder("<html><head><style>body { font-family: ").append(customFont.getFamily()).append("; font-size: ").append(customFont.getSize()).append("pt; }</style></head><body>");
             htmlContent.append("<h1>").append(recipe.getTitle()).append("</h1>");
             htmlContent.append("<img src='").append(recipe.getImage()).append("' style='width: 200px; height: auto;'><br>");
 
@@ -115,7 +117,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
      */
     public void setTextArea(Recipe recipe) {
         this.recipe = recipe;
-        updateDetailsArea();
+         updateDetailsArea();
         this.revalidate();
         this.repaint();
     }
@@ -148,7 +150,9 @@ public class RecipeDetailView extends JPanel implements ActionListener {
         if (visible) {
             frame.getContentPane().removeAll();
             RecipeDetailView recipeDetailView = RecipeDetailView.getInstance();
-
+            customFont = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+            backButton.setFont(customFont);
+            starRecipeButton.setFont(customFont);
             HomeView.getFrame().add(recipeDetailView);
         } else {
             frame.getContentPane().removeAll();
