@@ -54,6 +54,8 @@ public class SeeContainersView implements ActionListener{
 	 * Button to go from container view to home
 	 */
 	private JButton viewOfContainer2HomeButton = new JButton("Back");
+	
+	private JButton allItemsButton = new JButton("All Items");
 
 	/**
 	 * Popup for edit or deleting container button
@@ -113,6 +115,9 @@ public class SeeContainersView implements ActionListener{
 			viewOfContainer2HomeButton.addActionListener(this);
 			viewOfContainer2HomeButton.setFont(font);
 			
+			allItemsButton.addActionListener(this);
+			allItemsButton.setFont(font);
+			
 			HomeView.getFrame().add(viewOfContainerPanel);
 			viewOfContainerPanel.setLayout(null);
 			viewOfContainerPanel.setBackground(new Color(253, 241, 203));
@@ -120,6 +125,7 @@ public class SeeContainersView implements ActionListener{
 			backPanel.setBackground(new Color(253, 241, 203));
 			backPanel.setLayout(new FlowLayout());
 			backPanel.add(viewOfContainer2HomeButton);
+			backPanel.add(allItemsButton);
 			
 			backScrollPanel.setBounds(0, 0, 800, 50);
 			viewOfContainerPanel.add(backScrollPanel);
@@ -174,6 +180,7 @@ public class SeeContainersView implements ActionListener{
 			renameContainerBtn.removeActionListener(this);
 			removeContainerBtn.removeActionListener(this);
 			viewOfContainer2HomeButton.removeActionListener(this);
+			allItemsButton.removeActionListener(this);
 			viewOfContainerPanel.setVisible(false);
 
 		}
@@ -243,7 +250,12 @@ public class SeeContainersView implements ActionListener{
 
 		else if(source == removeContainerBtn) {
 			removeContainer(buttonPressed);
+		} 
+		
+		else if (source == allItemsButton) {
+			AllItemsView.setAllItemsViewVisibility(true);
 		}
+		
 		else {
 			Container c = HomeView.getContainerMap().get(source); // This will return null if the button is not found
 			if (c != null) {
