@@ -72,8 +72,8 @@ public class ActionListenerManager {
     public void attachCustomTagListener(JMenuItem customTag) {
         ActionListener listener = e -> {
             int row = table.getSelectedRow();
-            if (row != -1) {
-                String name = table.getValueAt(row, 0).toString();
+            if (row != CustomTableModel.NOT_VALID_COLUMN) {
+                String name = table.getValueAt(row, CustomTableModel.NAME_COLUMN).toString();
                 Item item = data.getItem(itemsListView.getC(), name);
                 if (item != null) {
                     domain.logic.customTag.CustomTag customTagHandler = new domain.logic.customTag.CustomTag(data);
