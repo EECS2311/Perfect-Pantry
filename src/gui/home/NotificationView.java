@@ -1,4 +1,4 @@
-package gui;
+package gui.home;
 
 import java.util.List;
 
@@ -7,11 +7,11 @@ import javax.swing.JOptionPane;
 
 import database.DB; 
 
-public class Notification extends JFrame {
+public class NotificationView extends JFrame {
 
 
 
-    public Notification() {
+    public NotificationView() {
    
         displayExpiringItemsNotification();
     }

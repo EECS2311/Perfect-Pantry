@@ -1,4 +1,4 @@
-package domain.logic;
+package domain.logic.item;
 
 /**
  * Defines a common interface for tagging entities with a display name.

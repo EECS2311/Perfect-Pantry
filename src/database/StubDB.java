@@ -2,18 +2,24 @@ package database;
 
 import java.io.IOException;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import domain.logic.Container;
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.GenericTag;
-import domain.logic.Item;
+import domain.logic.container.Container;
+import domain.logic.item.FoodFreshness;
+import domain.logic.item.FoodGroup;
+import domain.logic.item.GenericTag;
+import domain.logic.item.Item;
 import domain.logic.recipe.DailyLimitExceededException;
 import domain.logic.recipe.Ingredient;
 import domain.logic.recipe.RateLimitPerMinuteExceededException;
 import domain.logic.recipe.Recipe;
+
 
 public class StubDB extends DB {
 

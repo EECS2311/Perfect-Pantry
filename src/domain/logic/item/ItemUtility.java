@@ -1,4 +1,4 @@
-package domain.logic;
+package domain.logic.item;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +10,8 @@ import java.util.function.Consumer;
 import javax.swing.table.DefaultTableModel;
 
 import database.DB;
-import gui.HomeView;
+import domain.logic.container.Container;
+import gui.home.HomeView;
 
 /**
  * Utility class for operations related to items in the inventory such as

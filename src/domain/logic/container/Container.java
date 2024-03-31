@@ -1,12 +1,13 @@
-package domain.logic;
+package domain.logic.container;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import gui.ContainerView;
-import gui.HomeView;
+import domain.logic.item.Item;
+import gui.add_items.ContainerView;
+import gui.home.HomeView;
 
 /**
  * Represents a container that can hold multiple items. A container has a name

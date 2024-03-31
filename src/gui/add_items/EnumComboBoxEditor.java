@@ -1,8 +1,9 @@
-package gui;
-
-import domain.logic.Tag;
+package gui.add_items;
 
 import javax.swing.*;
+
+import domain.logic.item.Tag;
+
 import java.util.HashMap;
 import java.util.Map;
 

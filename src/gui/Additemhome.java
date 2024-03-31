@@ -1,12 +1,20 @@
 package gui;
 
-import javax.swing.*;
-import domain.logic.Item;
-import domain.logic.Container;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.GridLayout;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import domain.logic.container.Container;
+import domain.logic.item.Item;
+import gui.home.HomeView;
 
 public class Additemhome extends JDialog {
     private JTextField itemNameField = new JTextField(10);

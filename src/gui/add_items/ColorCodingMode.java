@@ -1,4 +1,4 @@
-package gui;
+package gui.add_items;
 
 /**
  * Enum representing the different modes of color coding in the GUI. Color coding can be turned off,

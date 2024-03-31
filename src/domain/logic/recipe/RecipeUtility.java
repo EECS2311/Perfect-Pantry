@@ -1,10 +1,10 @@
 package domain.logic.recipe;
 
-import gui.HomeView;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+
+import gui.home.HomeView;
 
 /**
  * Utility class for managing recipes, including checking for ingredient updates and finding recipes lazily.

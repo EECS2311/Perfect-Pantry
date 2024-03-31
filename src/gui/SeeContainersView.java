@@ -18,9 +18,10 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.FontUIResource;
 
-import domain.logic.Container;
-import domain.logic.ContainerUtility;
-import domain.logic.Settings;
+import domain.logic.container.Container;
+import domain.logic.container.ContainerUtility;
+import domain.logic.home.Settings;
+import gui.home.HomeView;
 
 /**
  * The GUI which shows the list of Containers the user made,

@@ -1,4 +1,4 @@
-package gui;
+package gui.add_items;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,12 +25,13 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import database.DB;
-import domain.logic.Container;
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.GenericTag;
-import domain.logic.Item;
-import domain.logic.ItemUtility;
+import domain.logic.container.Container;
+import domain.logic.item.FoodFreshness;
+import domain.logic.item.FoodGroup;
+import domain.logic.item.GenericTag;
+import domain.logic.item.Item;
+import domain.logic.item.ItemUtility;
+import gui.home.HomeView;
 
 /**
  * Represents a panel that displays a list of items within a container. It

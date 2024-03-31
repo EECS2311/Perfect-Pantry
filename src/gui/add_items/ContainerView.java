@@ -1,4 +1,4 @@
-package gui;
+package gui.add_items;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -16,7 +16,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import database.DB;
-import domain.logic.Container;
+import domain.logic.container.Container;
+import gui.home.HomeView;
 
 /**
  * Represents the GUI view for a container. It allows users to interact with a
