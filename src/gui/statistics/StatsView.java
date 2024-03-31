@@ -1,4 +1,4 @@
-package gui;
+package gui.statistics;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -15,6 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import gui.home.HomeView;
+
 public class StatsView extends JPanel implements ItemListener {
 
 	private static StatsView instance;
@@ -22,9 +24,9 @@ public class StatsView extends JPanel implements ItemListener {
 	private JLabel title;
 	private JButton backButton;
 	private JComboBox containerSelect;
-	private StatsRectangle st;
-	StatsDesc d1;
-	StatsDesc dx;
+	private StatsRectangleView st;
+	StatsDescView d1;
+	StatsDescView dx;
 	JLabel b1;
 	JLabel bx;
 	List<String> containers;
@@ -53,10 +55,10 @@ public class StatsView extends JPanel implements ItemListener {
 		containerSelect = new JComboBox(containers.toArray(new String[0]));
 		allItems = HomeView.data.getTotalCount(null);
 		totalItemCount = allItems.size();
-		st = new StatsRectangle(containers.get(0));
-		d1 = new StatsDesc(220);
+		st = new StatsRectangleView(containers.get(0));
+		d1 = new StatsDescView(220);
 		d1.setDesc(allItems);
-		dx = new StatsDesc(450);
+		dx = new StatsDescView(450);
 		dx.setDesc(HomeView.data.getTotalCount(containers.get(0)));
 	
 

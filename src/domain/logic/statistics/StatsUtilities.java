@@ -1,4 +1,4 @@
-package domain.logic;
+package domain.logic.statistics;
 
 import java.util.ArrayList;
 

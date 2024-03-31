@@ -1,4 +1,4 @@
-package gui;
+package gui.recipe;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +17,7 @@ import domain.logic.recipe.DailyLimitExceededException;
 import domain.logic.recipe.RateLimitPerMinuteExceededException;
 import domain.logic.recipe.Recipe;
 import domain.logic.recipe.RecipeUtility;
+import gui.home.HomeView;
 
 /**
  * A panel that displays a list of recipes, allowing users to browse through them.

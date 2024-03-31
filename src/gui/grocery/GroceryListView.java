@@ -1,4 +1,4 @@
-package gui;
+package gui.grocery;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -30,6 +30,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import database.DB;
+import gui.home.HomeView;
 
 public class GroceryListView extends JPanel implements ActionListener {
 	// Data model and components

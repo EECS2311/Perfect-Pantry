@@ -1,4 +1,4 @@
-package gui;
+package gui.add_items;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -17,9 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import domain.logic.Container;
-import domain.logic.Item;
-import domain.logic.Settings;
+import domain.logic.container.Container;
+import domain.logic.home.Settings;
+import domain.logic.item.Item;
+import gui.home.HomeView;
 
 public class CalendarView {
 	/**

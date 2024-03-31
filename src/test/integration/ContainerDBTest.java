@@ -17,8 +17,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import database.DB;
-import domain.logic.Container;
-import domain.logic.ContainerUtility;
+import domain.logic.container.Container;
+import domain.logic.container.ContainerUtility;
 
 class ContainerDBTest {
 

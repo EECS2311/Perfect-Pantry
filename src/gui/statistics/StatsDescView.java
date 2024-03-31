@@ -1,4 +1,4 @@
-package gui;
+package gui.statistics;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import domain.logic.StatsUtilities;
+import domain.logic.statistics.StatsUtilities;
 
-public class StatsDesc extends JPanel {
+public class StatsDescView extends JPanel {
 
 	JLabel protein;
 	JLabel vegetable;
@@ -18,7 +18,7 @@ public class StatsDesc extends JPanel {
 	JLabel dairy;
 	private final int LEFT_EDGE = 100;
 
-	public StatsDesc(int yLevel) {
+	public StatsDescView(int yLevel) {
 		setLayout(new GridLayout(1, 5, 7, 0));
 
 		protein = new JLabel();
