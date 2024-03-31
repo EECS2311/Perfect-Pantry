@@ -69,3 +69,10 @@ CREATE TABLE detailed_instructions (
    PRIMARY KEY (recipe_id, step_number)
 
 );
+
+CREATE TABLE item_tags (
+    item_name VARCHAR(50),
+    tag VARCHAR(50),
+    FOREIGN KEY (item_name) REFERENCES item(name) ON DELETE CASCADE,
+    PRIMARY KEY (item_name, tag)
+);

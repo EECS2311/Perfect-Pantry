@@ -1,11 +1,11 @@
 package test.unit;
 
-import domain.logic.recipe.Ingredient;
-import domain.logic.recipe.Recipe;
-
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import domain.logic.recipe.Ingredient;
+import domain.logic.recipe.Recipe;
 
 import java.util.List;
 

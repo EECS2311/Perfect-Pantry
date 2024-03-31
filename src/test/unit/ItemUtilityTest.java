@@ -1,10 +1,12 @@
 package test.unit;
 
-import domain.logic.Container;
-import domain.logic.Item;
-import domain.logic.ItemUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import domain.logic.container.Container;
+import domain.logic.item.Item;
+import domain.logic.item.ItemUtility;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.function.Consumer;
 
