@@ -131,63 +131,12 @@ public class ItemsListView extends JPanel {
 
 		});
 
-		removeItem.addActionListener(e -> {
+		ActionListenerManager actionListenerManager = new ActionListenerManager(table, tableModel, data, this);
 
-			int row = getTable().getSelectedRow();
-
-			if (row != CustomTableModel.NOT_VALID_COLUMN) {
-				String name = table.getValueAt(row, CustomTableModel.NAME_COLUMN).toString();
-				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
-					this.removeItem(name);
-				}
-
-			}
-
-		});
-		generateTip.addActionListener(e -> {
-
-			int row = getTable().getSelectedRow();
-
-			if (row != CustomTableModel.NOT_VALID_COLUMN) {
-				String name = table.getValueAt(row, CustomTableModel.NAME_COLUMN).toString();
-				String sTip = ItemUtility.retrieveStorageTip(name);
-
-				if (sTip != null) {
-					JOptionPane.showMessageDialog(HomeView.getFrame(),
-							"<html><body><p style='width:300px;'>" + sTip + "</p></body></html>",
-							name + " - Storage Tip", JOptionPane.PLAIN_MESSAGE);
-				} else {
-					JOptionPane.showMessageDialog(HomeView.getFrame(), "No Storage Tips Available",
-							"NoStorageTipsError", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-
-		});
-		editQty.addActionListener(e -> {
-
-			String val = JOptionPane.showInputDialog(HomeView.getFrame(), "Edit Quantity", "Enter a new Value", 3);
-			int row = table.getSelectedRow();
-			if (row != CustomTableModel.NOT_VALID_COLUMN) {
-				String name = table.getValueAt(row, CustomTableModel.NAME_COLUMN).toString();
-				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
-						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-							table.setValueAt(val, row, CustomTableModel.QUANTITY_COLUMN);
-						});
-				ItemUtility.initItems(this.getC(), tableModel);
-			}
-		});
-		
-		// ActionListener for the "Add Custom Tag" menu item
-		customTag.addActionListener(e -> {
-		    int row = getTable().getSelectedRow();
-		    if (row != -1) {
-		        String name = getTable().getValueAt(row, 0).toString();
-		        Item item = data.getItem(this.getC(),name);
-		        if (item != null) {
-		        	customTagHandler.handleCustomTag(item, this);
-		        }
-		    }
-		});
+		actionListenerManager.attachRemoveItemListener(removeItem);
+		actionListenerManager.attachGenerateTipListener(generateTip);
+		actionListenerManager.attachEditQtyListener(editQty);
+		actionListenerManager.attachCustomTagListener(customTag);
 
 		sorter = new TableRowSorter<TableModel>(getTable().getModel());
 		getTable().setRowSorter(sorter);
