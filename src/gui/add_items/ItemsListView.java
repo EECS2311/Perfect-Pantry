@@ -40,6 +40,12 @@ import gui.home.HomeView;
  * or food group, and includes a right-click menu for item management.
  */
 public class ItemsListView extends JPanel {
+	private static final int NOT_VALID_COLUMN = 1;
+	private static final int NAME_COLUMN = 0;
+	private static final int QUANTITY_COLUMN = 1;
+	private static final int EXPIRY_DATE_COLUMN = 2;
+	private static final int FOOD_GROUP_COLUMN = 3;
+	private static final int FOOD_FRESHNESS_COLUMN = 4;
 	private DefaultTableModel tableModel;
 	private JTable table;
 	private JPopupMenu popup;
@@ -72,25 +78,24 @@ public class ItemsListView extends JPanel {
 		tableModel = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				// Make columns 0, 1, 2, and 4 not editable
-				return column != 0 && column != 1 && column != 2 && column != 4;
+				return column != NAME_COLUMN && column != QUANTITY_COLUMN && column != EXPIRY_DATE_COLUMN && column != FOOD_FRESHNESS_COLUMN;
 			}
 
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
 				switch (columnIndex) {
-				case 0:
-					return String.class;
-				case 1:
-					return Integer.class;
-				case 2:
-					return String.class;
-				case 3:
-					return FoodGroup.class;
-				case 4:
-					return FoodFreshness.class;
-				default:
-					return Object.class;
+					case NAME_COLUMN:
+						return String.class;
+					case QUANTITY_COLUMN:
+						return Integer.class;
+					case EXPIRY_DATE_COLUMN:
+						return String.class;
+					case FOOD_GROUP_COLUMN:
+						return FoodGroup.class;
+					case FOOD_FRESHNESS_COLUMN:
+						return FoodFreshness.class;
+					default:
+						return Object.class;
 				}
 			}
 		};
@@ -103,14 +108,11 @@ public class ItemsListView extends JPanel {
 				if (!isRowSelected(row)) {
 					switch (colorCodingMode) {
 						case BY_FRESHNESS:
-							// Dynamically find the index of the 'Food Freshness' column
 							int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
 
-							// Retrieve the value from the correct column, regardless of its position
 							Object freshnessValue = getValueAt(row, freshnessCol);
 							String freshness = "";
 
-							// Check the type of the freshness value and convert it to String appropriately
 							if (freshnessValue instanceof GenericTag) {
 								freshness = ((GenericTag<FoodFreshness>) freshnessValue).toString();
 							} else if (freshnessValue != null) {
@@ -179,7 +181,6 @@ public class ItemsListView extends JPanel {
 			}
 		};
 
-		// Define table columns
 		tableModel.addColumn("Name");
 		tableModel.addColumn("Quantity");
 		tableModel.addColumn("Expiry Date (yyyy-mm-dd)");
@@ -190,13 +191,13 @@ public class ItemsListView extends JPanel {
 			if (e.getType() == TableModelEvent.UPDATE) {
 				int row = e.getFirstRow();
 				int column = e.getColumn();
-				if (column == 3) { // Include Food Freshness column from manual updates
+				if (column == FOOD_GROUP_COLUMN) {
 					updateItemFromTable(row, column);
 				}
 			}
 		});
 
-		table.getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
+		table.getColumnModel().getColumn(FOOD_GROUP_COLUMN).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
 		table.getTableHeader().setReorderingAllowed(false);
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -232,8 +233,8 @@ public class ItemsListView extends JPanel {
 
 			int row = table.getSelectedRow();
 
-			if (row != -1) {
-				String name = table.getValueAt(row, 0).toString();
+			if (row != NOT_VALID_COLUMN) {
+				String name = table.getValueAt(row, NAME_COLUMN).toString();
 				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
 					this.removeItem(name);
 				}
@@ -245,8 +246,8 @@ public class ItemsListView extends JPanel {
 
 			int row = table.getSelectedRow();
 
-			if (row != -1) {
-				String name = table.getValueAt(row, 0).toString();
+			if (row != NOT_VALID_COLUMN) {
+				String name = table.getValueAt(row, NAME_COLUMN).toString();
 				String sTip = ItemUtility.retrieveStorageTip(name);
 
 				if (sTip != null) {
@@ -265,11 +266,11 @@ public class ItemsListView extends JPanel {
 			String val = JOptionPane.showInputDialog(HomeView.getFrame(), "Edit Quantity", "Enter a new Value", 3);
 
 			int row = table.getSelectedRow();
-			if (row != -1) {
-				String name = table.getValueAt(row, 0).toString();
+			if (row != NOT_VALID_COLUMN) {
+				String name = table.getValueAt(row, NAME_COLUMN).toString();
 				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
 						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-							table.setValueAt(val, row, 1);
+							table.setValueAt(val, row, QUANTITY_COLUMN);
 						});
 				ItemUtility.initItems(this.getC(), tableModel);
 			}
@@ -277,7 +278,6 @@ public class ItemsListView extends JPanel {
 
 		sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
-
 	}
 	
 	/**
@@ -333,7 +333,7 @@ public class ItemsListView extends JPanel {
 	public void removeItem(String itemName) {
 		// Iterate through the table to find the row with the given item name
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
-			if (itemName.equals(tableModel.getValueAt(i, 0))) {
+			if (itemName.equals(tableModel.getValueAt(i, NAME_COLUMN))) {
 
 				tableModel.removeRow(i);
 
@@ -349,7 +349,7 @@ public class ItemsListView extends JPanel {
 	 * @param column The column index of the property that was changed.
 	 */
 	private void updateItemFromTable(int row, int column) {
-		String itemName = (String) table.getModel().getValueAt(row, 0);
+		String itemName = (String) table.getModel().getValueAt(row, NAME_COLUMN);
 		Object newValue = table.getModel().getValueAt(row, column);
 
 		// Call the new ItemUtility update method
