@@ -25,7 +25,6 @@ public class StarredRecipeListView extends RecipeListView {
 
     private StarredRecipeListView() {
         super();
-        titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
     }
 
     public static StarredRecipeListView getInstance() {
@@ -47,6 +46,7 @@ public class StarredRecipeListView extends RecipeListView {
 
         if (starredRecipes.isEmpty()) {
             JLabel emptyMessageLabel = new JLabel("No starred recipes. Start exploring and star your favorites!");
+            emptyMessageLabel.setFont(customFont);
             emptyMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
             recipesPanel.add(emptyMessageLabel);
         } else {
@@ -103,8 +103,8 @@ public class StarredRecipeListView extends RecipeListView {
         JPanel detailsPanel = new JPanel(new BorderLayout());
         detailsPanel.setBackground(new Color(245, 223, 162));
 
-        JButton recipeButton = new JButton("<html><body style='text-align:left;'>"
-                + "<h3>" + recipe.getTitle() + "</h3>"
+        JButton recipeButton = new JButton("<html><body style='text-align:left; font-family: " + customFont.getFamily() + "; font-size: " + customFont.getSize() + "pt;'>"
+                + "<b>" + recipe.getTitle() + "</b><br>"
                 + "<br><b>Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
                 + "</body></html>");
         recipeButton.addMouseListener(new MouseAdapter() {
@@ -118,6 +118,7 @@ public class StarredRecipeListView extends RecipeListView {
         recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
         recipeButton.setFocusable(false);
         recipeButton.addActionListener(e -> showRecipeDetails(recipe));
+        recipeButton.setFont(customFont);
         detailsPanel.add(recipeButton, BorderLayout.CENTER);
 
         recipePanel.add(detailsPanel, BorderLayout.CENTER);
@@ -151,11 +152,10 @@ public class StarredRecipeListView extends RecipeListView {
         JFrame frame = HomeView.getFrame();
         frame.getContentPane().removeAll();
         if (visible) {
-
             StarredRecipeListView recipeListView = StarredRecipeListView.getInstance();
-
+            customFont = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+            titleLabel.setFont(customFont);
             HomeView.getFrame().add(recipeListView);
-
             recipeListView.displayRecipes();
         } else {
             HomeView.getHomeView().setHomeViewVisibility(true);

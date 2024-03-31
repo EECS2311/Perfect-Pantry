@@ -33,6 +33,7 @@ public class RecipeListView extends JPanel implements ActionListener {
     protected JScrollPane scrollPane;
     protected static RecipeDetailView recipeDetailView = RecipeDetailView.getInstance(wow);
     private JLabel titleLabel = new JLabel("Recipes");
+    protected static Font customFont = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
 
     /**
      * constructor for initializing the RecipeListView panel with a back button,
@@ -43,10 +44,8 @@ public class RecipeListView extends JPanel implements ActionListener {
         backButton.addActionListener(this);
         add(backButton, BorderLayout.NORTH);
 
-        titleLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Set up recipesPanel with BoxLayout for vertical stacking of components
         recipesPanel.setLayout(new BoxLayout(recipesPanel, BoxLayout.Y_AXIS));
         recipesPanel.setBackground(new Color(245, 223, 162));
         recipesPanel.add(titleLabel);
@@ -82,7 +81,8 @@ public class RecipeListView extends JPanel implements ActionListener {
 
             if (recipes.isEmpty()) {
                 JLabel emptyMessageLabel = new JLabel("Start adding non-expire food to your pantry to see recipes.");
-                emptyMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center alignment for BoxLayout
+                emptyMessageLabel.setFont(customFont);
+                emptyMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 recipesPanel.add(emptyMessageLabel);
             } else {
                 for (Recipe recipe : recipes) {
@@ -109,10 +109,8 @@ public class RecipeListView extends JPanel implements ActionListener {
     protected JPanel createRecipePanel(Recipe recipe) {
         JPanel recipePanel = new JPanel(new BorderLayout(5, 0));
 
-        // Placeholder label for the image
         JLabel imageLabel = new JLabel("Loading image...");
 
-        // Load image in the background
         new SwingWorker<ImageIcon, Void>() {
             @Override
             protected ImageIcon doInBackground() throws Exception {
@@ -137,7 +135,6 @@ public class RecipeListView extends JPanel implements ActionListener {
         recipePanel.add(imageLabel, BorderLayout.WEST);
         recipePanel.setBackground(new Color(245, 223, 162));
 
-        // Convert ingredient lists to HTML list format
         String usedIngredientsList = recipe.getUsedIngredients().stream()
                 .map(ingredient -> "<li>" + ingredient.getName() + "</li>")
                 .reduce("", (a, b) -> a + b);
@@ -151,20 +148,19 @@ public class RecipeListView extends JPanel implements ActionListener {
         JPanel detailsPanel = new JPanel(new BorderLayout());
         detailsPanel.setBackground(new Color(245, 223, 162));
 
-        // use HTML for list formatting
-        JButton recipeButton = new JButton("<html><body style='text-align:left;'>"
-                + "<h3>" + recipe.getTitle() + "</h3>"
+        JButton recipeButton = new JButton("<html><body style='text-align:left; font-family: " + customFont.getFamily() + "; font-size: " + customFont.getSize() + "pt;'>"
+                + "<b>" + recipe.getTitle() + "</b><br>"
                 + "<br><b>Available Ingredients:</b> <ul>" + usedIngredientsList + "</ul>"
                 + "<br><b>Missing Ingredients:</b> <ul>" + missedIngredientsList + "</ul>"
                 + "</body></html>");
         recipeButton.setHorizontalAlignment(SwingConstants.LEFT);
         recipeButton.setFocusable(false);
         recipeButton.addActionListener(e -> showRecipeDetails(recipe));
+        recipeButton.setFont(customFont);
 
         detailsPanel.add(recipeButton, BorderLayout.CENTER);
 
         recipePanel.add(detailsPanel, BorderLayout.CENTER);
-
         recipesPanel.add(recipePanel);
         return recipePanel;
     }
@@ -202,7 +198,9 @@ public class RecipeListView extends JPanel implements ActionListener {
     public void setRecipeListViewVisibility(boolean visible) {
         if (visible) {
             HomeView.getFrame().getContentPane().removeAll();
-
+            customFont = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+            backButton.setFont(customFont);
+            titleLabel.setFont(customFont);
             try {
                 RecipeUtility.findRecipesLazyLoad(ingredients, recipes);
                 this.addActionListeners();
@@ -216,7 +214,7 @@ public class RecipeListView extends JPanel implements ActionListener {
                 e.printStackTrace();
             }
 
-            // Add this view
+
             HomeView.getFrame().add(this);
             this.setVisible(true);
         } else {
@@ -225,7 +223,6 @@ public class RecipeListView extends JPanel implements ActionListener {
             HomeView.getFrame().getContentPane().remove(this);
         }
 
-        // Repaint and validate to reflect changes
         HomeView.getFrame().revalidate();
         HomeView.getFrame().repaint();
         HomeView.getHomeView().setHomeViewVisibility(!visible);
