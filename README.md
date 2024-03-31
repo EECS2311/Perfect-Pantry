@@ -37,3 +37,12 @@ To setup gradle:
 7. In the terminal, run `./gradlew build` (Linux/OSX) or `./gradlew.bat build` (Windows)
 8. Run `./gradlew start` (Linux/OSX) or `./gradlew.bat start` (Windows) to run the program.
 
+# Features
+
+* Create containers representing pantry storage that keeps track of which items are in which compartment the ingredient/item is in
+* Store, sort, and filter items inside of containers with specific information such as expiration date, food freshness, and food group
+Help to reduce food waste:
+* Receive notifications when items are close to expiration
+* View recipes that include ingredients that are in your containers
+* Visual calendar display of all items on the days that they expire
+ 
