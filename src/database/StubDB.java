@@ -31,6 +31,7 @@ public class StubDB extends DB {
 	private Map<Integer, Recipe> recipesMap = new HashMap<>();
 	private Map<Integer, Set<Ingredient>> recipeIngredientsMap = new HashMap<>();
 	private Map<Integer, Map<Integer, String>> recipeInstructionsMap = new HashMap<>();
+	private String[] settings = {"14", "true"};
 
 
 	/**
@@ -314,6 +315,33 @@ public class StubDB extends DB {
 			}
 		}
 		return nearExpiryOrFreshItems;
+	}
+	
+	/**
+	 * Retrieves settings for the program
+	 * 
+	 * @return a array representing the settings for the program
+	 */
+	public String[] getSettings(){
+
+		return this.settings;
+	}
+	
+	/**
+	 * Updates the fontSize of font in the database
+	 * @param n The fontSize 
+	 */
+	public void setFontsize(int n) {
+		this.settings[0] = String.valueOf(n);
+	}
+	
+	/**
+	 * Sets whether or not opening the application will give the notifications and saves it in database
+	 * 
+	 * @param b Boolean value, true if notifcation should be on, false otherwise
+	 */
+	public void setNotificationBoolean(boolean b) {
+		this.settings[1] = String.valueOf(b);
 	}
 
 	/**
