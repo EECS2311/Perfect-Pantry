@@ -3,6 +3,7 @@ package gui.home;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
@@ -85,15 +87,21 @@ public class HomeView implements ActionListener {
 	private JButton groceryListButton = new JButton("Grocery List");
 
 	private JButton recipeListButton = new JButton("Recipe List");
-	
+
 
 	private JButton settingsButton = new JButton("Settings");
-	
+
 	private static Settings setting;
 
 	private JButton statisticsButton = new JButton("Statistics");
 
 	private JButton starredRecipeListButton = new JButton("Starred Recipes");
+
+	private JPanel buttonsPanel = new JPanel();
+
+	private JScrollPane scrollButtonsPanel  = new JScrollPane(buttonsPanel);
+
+	private JButton addItemButton = new JButton("Add Item");
 
 
 	/**
@@ -103,7 +111,7 @@ public class HomeView implements ActionListener {
 
 	public static void main(String[] args) {
 		setting = new Settings();
-		
+
 		// initialise other views
 		SeeContainersView m = new SeeContainersView();
 		GroceryListView g = new GroceryListView();
@@ -194,31 +202,41 @@ public class HomeView implements ActionListener {
 			viewContainers.setBackground(new Color(76, 183, 242));
 			viewContainers.setBounds(240, 300, 250, 40);
 
-			homePanel.add(groceryListButton);
+			homePanel.add(scrollButtonsPanel);
+			scrollButtonsPanel.setBounds(570, 10, 200, 150);
+			buttonsPanel.setLayout(new GridLayout(4, 1));
+			buttonsPanel.setBackground(new Color(253, 241, 203));
+
+			buttonsPanel.add(groceryListButton);
 			groceryListButton.setBackground(new Color(76, 183, 242));
 			groceryListButton.setBounds(570, 10, 200, 40);
 
-			homePanel.add(recipeListButton);
+			buttonsPanel.add(recipeListButton);
 			recipeListButton.setBackground(new Color(76, 183, 242));
 			recipeListButton.setBounds(570, 60, 200, 40);
 			recipeListButton.addActionListener(this);
-			
+
 
 			homePanel.add(settingsButton);
 			settingsButton.setBackground(new Color(76, 183, 242));
-			settingsButton.setBounds(10, 10, 200, 40);
+			settingsButton.setBounds(10, 10, 205, 60);
 			settingsButton.addActionListener(this);
 
-      		homePanel.add(starredRecipeListButton);
+			buttonsPanel.add(starredRecipeListButton);
 			starredRecipeListButton.setBackground(new Color(76, 183, 242));
 			starredRecipeListButton.setBounds(570, 100, 200, 40);
 			starredRecipeListButton.addActionListener(this);
-      
-			homePanel.add(statisticsButton);
+
+			buttonsPanel.add(statisticsButton);
 			statisticsButton.setBackground(new Color(76, 183, 242));
 			statisticsButton.setBounds(570, 150, 200, 40); // Adjust the positioning as needed
 			statisticsButton.addActionListener(this);
 
+			homePanel.add(addItemButton);
+			addItemButton.addActionListener(e -> openAddItemDialog());
+			addItemButton.setBounds(240, 350, 250, 40);  // Adjust the positioning as needed
+
+			addFonts();
 
 			homePanel.setVisible(true);
 		}
@@ -232,9 +250,59 @@ public class HomeView implements ActionListener {
 			settingsButton.removeActionListener(this);
 			starredRecipeListButton.removeActionListener(this);
 			statisticsButton.removeActionListener(this);
+			addItemButton.removeActionListener(this);
 
 			homePanel.setVisible(false);
 		}
+	}
+
+	/**
+	 * Add fonts to components
+	 */
+	public void addFonts() {
+		Font f = new Font("Lucida Grande", Font.PLAIN, getSettings().getFontSize());
+		settingsButton.setFont(f);
+		groceryListButton.setFont(f);
+		recipeListButton.setFont(f);
+		starredRecipeListButton.setFont(f);
+		statisticsButton.setFont(f);
+		
+		newContainerText.setFont(f);
+		viewContainers.setFont(f);
+		createContainer.setFont(f);
+		addItemButton.setFont(f);
+		
+		updateBounds(f.getSize());
+		
+	}
+	
+	/**
+	 * Update bounds of components depending on font size
+	 * @param size The current font size
+	 */
+	public void updateBounds(int size) {
+		
+		if(size >=30) {
+			newContainerText.setBounds(160, 250, 410, 60);
+			createContainer.setBounds(570, 250, 200, 60);
+			viewContainers.setBounds(160, 310, 410, 60);
+			addItemButton.setBounds(160, 380, 410, 60);
+		}
+		else if(size >= 22) {
+			newContainerText.setBounds(240, 250, 250, 40);
+			createContainer.setBounds(500, 250, 110, 40);
+			viewContainers.setBounds(240, 300, 250, 40);
+			addItemButton.setBounds(240, 350, 250, 40);
+		}
+		
+		else {
+			newContainerText.setBounds(240, 250, 250, 40);
+			createContainer.setBounds(500, 250, 80, 40);
+			viewContainers.setBounds(240, 300, 250, 40);
+			addItemButton.setBounds(240, 350, 250, 40);
+			
+		}
+		
 	}
 
 	/**
@@ -282,7 +350,7 @@ public class HomeView implements ActionListener {
 			StatsView.getInstance().setStatsViewVisibility(true);
 		}
 	}
-	
+
 	/**
 	 * Provides access to the main application frame.
 	 *
@@ -309,26 +377,16 @@ public class HomeView implements ActionListener {
 	public static ConcurrentHashMap<JButton, Container> getContainerMap() {
 		return containerMap;
 	}
-	
+
 	public static Settings getSettings() {
 		return setting;
 	}
-// Add item from home view 
-	
-		private JButton addItemButton = new JButton("Add Item");
-		{
-		
-		    
-		    addItemButton.addActionListener(e -> openAddItemDialog());
-		    homePanel.add(addItemButton);
-		    addItemButton.setBounds(240, 350, 250, 40);  // Adjust the positioning as needed
-		    
-		    
-		}
 
-		private void openAddItemDialog() {
-		    Additemhome dialog = new Additemhome(frame);
-		    dialog.setVisible(true);
-		}
+
+
+	private void openAddItemDialog() {
+		Additemhome dialog = new Additemhome(frame);
+		dialog.setVisible(true);
+	}
 
 }
