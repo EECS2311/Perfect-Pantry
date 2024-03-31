@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,13 +27,13 @@ import javax.swing.table.TableRowSorter;
 
 import database.DB;
 import domain.logic.container.Container;
+import domain.logic.customTag.CustomTag;
 import domain.logic.item.FoodFreshness;
 import domain.logic.item.FoodGroup;
 import domain.logic.item.GenericTag;
 import domain.logic.item.Item;
 import domain.logic.item.ItemUtility;
 import gui.home.HomeView;
-
 /**
  * Represents a panel that displays a list of items within a container. It
  * provides functionalities to add and remove items, and update item properties
@@ -46,6 +47,7 @@ public class ItemsListView extends JPanel {
 	private JMenuItem removeItem;
 	private JMenuItem editQty;
 	private JMenuItem generateTip;
+	private JMenuItem customTag;
 
 	private TableRowSorter<TableModel> sorter;
 
@@ -56,6 +58,7 @@ public class ItemsListView extends JPanel {
 
 	private DB data;
 	private Container container;
+	private CustomTag customTagHandler;
 
 	/**
 	 * Constructs an ItemsListView panel associated with a specific container.
@@ -67,6 +70,8 @@ public class ItemsListView extends JPanel {
 		this.home = home;
 		this.data = home.data;
 		this.container = container;
+		this.customTagHandler = new CustomTag(data);
+		
 		setLayout(new BorderLayout());
 
 		tableModel = new DefaultTableModel() {
@@ -104,7 +109,7 @@ public class ItemsListView extends JPanel {
 					switch (colorCodingMode) {
 						case BY_FRESHNESS:
 							// Dynamically find the index of the 'Food Freshness' column
-							int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
+							int freshnessCol = getTable().getColumnModel().getColumnIndex("Food Freshness");
 
 							// Retrieve the value from the correct column, regardless of its position
 							Object freshnessValue = getValueAt(row, freshnessCol);
@@ -133,7 +138,7 @@ public class ItemsListView extends JPanel {
 							}
 							break;
 						case BY_FOOD_GROUP:
-							int foodGroupCol = table.getColumnModel().getColumnIndex("Food Group");
+							int foodGroupCol = getTable().getColumnModel().getColumnIndex("Food Group");
 							Object foodGroupValue = getValueAt(row, foodGroupCol);
 
 							String foodGroup = "";
@@ -185,6 +190,7 @@ public class ItemsListView extends JPanel {
 		tableModel.addColumn("Expiry Date (yyyy-mm-dd)");
 		tableModel.addColumn("Food Group");
 		tableModel.addColumn("Food Freshness");
+		tableModel.addColumn("Custom Tag");
 
 		tableModel.addTableModelListener(e -> {
 			if (e.getType() == TableModelEvent.UPDATE) {
@@ -196,10 +202,10 @@ public class ItemsListView extends JPanel {
 			}
 		});
 
-		table.getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
-		table.getTableHeader().setReorderingAllowed(false);
+		getTable().getColumnModel().getColumn(3).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
+		getTable().getTableHeader().setReorderingAllowed(false);
 
-		add(new JScrollPane(table), BorderLayout.CENTER);
+		add(new JScrollPane(getTable()), BorderLayout.CENTER);
 
 		ItemUtility.assignFoodFreshness(this.getC());
 		ItemUtility.initItems(container, tableModel);
@@ -208,21 +214,23 @@ public class ItemsListView extends JPanel {
 		removeItem = new JMenuItem("Delete Item");
 		editQty = new JMenuItem("Update Quantity");
 		generateTip = new JMenuItem("Storage Tip");
+		customTag = new JMenuItem("Add Custom Tag (Enter Blank String to Remove)");
 
 		popup.add(removeItem);
 		popup.add(editQty);
 		popup.add(generateTip);
+		popup.add(customTag);
 
-		table.setComponentPopupMenu(popup);
-		table.addMouseListener(new MouseAdapter() {
+		getTable().setComponentPopupMenu(popup);
+		getTable().addMouseListener(new MouseAdapter() {
 
 			// Code Adapted from codejava.net
 			public void mouseClicked(MouseEvent e) {
 				Boolean b = SwingUtilities.isRightMouseButton(e);
 				if (b) {
 					Point p = e.getPoint();
-					int row = table.rowAtPoint(p);
-					table.setRowSelectionInterval(row, row);
+					int row = getTable().rowAtPoint(p);
+					getTable().setRowSelectionInterval(row, row);
 				}
 			}
 
@@ -230,10 +238,10 @@ public class ItemsListView extends JPanel {
 
 		removeItem.addActionListener(e -> {
 
-			int row = table.getSelectedRow();
+			int row = getTable().getSelectedRow();
 
 			if (row != -1) {
-				String name = table.getValueAt(row, 0).toString();
+				String name = getTable().getValueAt(row, 0).toString();
 				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
 					this.removeItem(name);
 				}
@@ -243,10 +251,10 @@ public class ItemsListView extends JPanel {
 		});
 		generateTip.addActionListener(e -> {
 
-			int row = table.getSelectedRow();
+			int row = getTable().getSelectedRow();
 
 			if (row != -1) {
-				String name = table.getValueAt(row, 0).toString();
+				String name = getTable().getValueAt(row, 0).toString();
 				String sTip = ItemUtility.retrieveStorageTip(name);
 
 				if (sTip != null) {
@@ -264,29 +272,42 @@ public class ItemsListView extends JPanel {
 
 			String val = JOptionPane.showInputDialog(HomeView.getFrame(), "Edit Quantity", "Enter a new Value", 3);
 
-			int row = table.getSelectedRow();
+			int row = getTable().getSelectedRow();
 			if (row != -1) {
-				String name = table.getValueAt(row, 0).toString();
+				String name = getTable().getValueAt(row, 0).toString();
 				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
 						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-							table.setValueAt(val, row, 1);
+							getTable().setValueAt(val, row, 1);
 						});
 				ItemUtility.initItems(this.getC(), tableModel);
 			}
 		});
+		
+		// ActionListener for the "Add Custom Tag" menu item
+		customTag.addActionListener(e -> {
+		    int row = getTable().getSelectedRow();
+		    if (row != -1) {
+		        String name = getTable().getValueAt(row, 0).toString();
+		        Item item = data.getItem(this.getC(),name);
+		        if (item != null) {
+		        	customTagHandler.handleCustomTag(item, this);
+		        }
+		    }
+		});
 
-		sorter = new TableRowSorter<TableModel>(table.getModel());
-		table.setRowSorter(sorter);
+		sorter = new TableRowSorter<TableModel>(getTable().getModel());
+		getTable().setRowSorter(sorter);
 
 	}
+	
 	
 	/**
 	 * Adds fonts to components
 	 */
 	public void addFonts() {
 		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
-		table.setFont(f);
-		table.setRowHeight(table.getRowHeight()+10);
+		getTable().setFont(f);
+		getTable().setRowHeight(getTable().getRowHeight()+10);
 	}
 
 	// Code adapted from docs.oracle.com for SwingUI table component
@@ -318,11 +339,11 @@ public class ItemsListView extends JPanel {
 	 * @param item The item to be added.
 	 */
 	public void addItem(Item item) {
+		String customTags = "";
 		tableModel.addRow(
-				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null });
+				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null, customTags});
 		ItemUtility.assignFoodFreshness(this.getC());
 		ItemUtility.initItems(this.getC(), tableModel);
-
 	}
 
 	/**
@@ -349,8 +370,8 @@ public class ItemsListView extends JPanel {
 	 * @param column The column index of the property that was changed.
 	 */
 	private void updateItemFromTable(int row, int column) {
-		String itemName = (String) table.getModel().getValueAt(row, 0);
-		Object newValue = table.getModel().getValueAt(row, column);
+		String itemName = (String) getTable().getModel().getValueAt(row, 0);
+		Object newValue = getTable().getModel().getValueAt(row, column);
 
 		// Call the new ItemUtility update method
 		ItemUtility.updateItemFoodGroupTag(getC(), itemName, newValue, column);
@@ -376,10 +397,14 @@ public class ItemsListView extends JPanel {
 				colorCodingMode = ColorCodingMode.OFF;
 				break;
 		}
-		table.repaint();
+		getTable().repaint();
 	}
 
 	public Container getC() {
 		return container;
+	}
+
+	public JTable getTable() {
+		return table;
 	}
 }

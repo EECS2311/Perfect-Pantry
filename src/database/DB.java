@@ -1011,8 +1011,75 @@ public class DB {
 		
 		return null;
 	}
-
-
+	
+	/**
+	 * Inserts custom tags associated with an item into the database.
+	 *
+	 * @param itemName The name of the item.
+	 * @param tag     The list of custom tags to be inserted.
+	 */
+	public void insertItemTag(String itemName, String tag) {
+	    Connection conn = init();
+	    try {
+	        PreparedStatement ps = conn.prepareStatement("INSERT INTO item_tags (item_name, tag) VALUES (?, ?)");
+	        ps.setString(1, itemName);
+	        ps.setString(2, tag);
+	        ps.executeUpdate();
+	        conn.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	/**
+     * Retrieves the tag associated with a given item name from the database.
+     *
+     * @param itemName The name of the item.
+     * @return The tag associated with the item, or null if not found.
+     */
+    public String getItemTag(String itemName) {
+        String tag = null;
+        Connection conn = init();
+        try {
+            String query = "SELECT tag FROM item_tags WHERE item_name = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, itemName);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                tag = rs.getString("tag");
+            }
+            rs.close();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tag;
+    }
+    
+    /**
+     * Removes a tag associated with an item from the database.
+     *
+     * @param itemName The name of the item from which the tag is to be removed.
+     * @return true if the tag was successfully removed, false otherwise.
+     */
+    public boolean removeItemTag(String itemName) {
+        boolean success = false;
+        Connection conn = init();
+        try {
+        	String query = "DELETE FROM item_tags WHERE item_name = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, itemName);
+            int rowsAffected = pstmt.executeUpdate();
+            success = rowsAffected > 0;
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+	
 }
 
 

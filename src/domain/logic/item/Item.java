@@ -2,6 +2,7 @@ package domain.logic.item;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 import java.text.ParseException;
@@ -19,18 +20,23 @@ public class Item implements Comparable<Item>{
     private int quantity;
 
     private Date expiryDate;
+    
+    private String customTag;
 
     // Constructors are private to enforce the use of factory methods for instance creation.
     private Item(String name, int quantity, Date expiryDate){
         this(name, quantity);
         this.expiryDate = expiryDate;
+        customTag = "";
     }
     private Item(String name){
         this.name = name;
+        customTag = "";
     }
     private Item(String name, int quantity){
         this(name);
         this.quantity = quantity;
+        customTag = "";
     }
 
     /**
@@ -373,5 +379,20 @@ public class Item implements Comparable<Item>{
         if (this.name == null && other.name == null) return 0;
 
         return this.name.compareTo(other.name);
+    }
+    
+    // Method to add a custom tag to the item
+    public void addCustomTag(String tag) {
+        customTag = tag;
+    }
+
+    // Method to remove a custom tag from the item
+    public void removeCustomTag() {
+        customTag = "";
+    }
+
+    // Method to retrieve all custom tags associated with the item
+    public String getCustomTag() {
+        return customTag;
     }
 }
