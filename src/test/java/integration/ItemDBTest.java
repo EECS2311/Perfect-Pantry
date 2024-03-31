@@ -1,4 +1,6 @@
+
 package test.java.integration;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import main.java.database.DB;
 import main.java.domain.logic.container.Container;
 import main.java.domain.logic.item.Item;
+
 
 class ItemDBTest {
 
@@ -95,7 +98,6 @@ class ItemDBTest {
 
 		assertNotNull(data.getItem(container, "Feta"));
 		data.removeItem(container, "Feta");
-
 		assertTrue(data.getItem(container, "Feta") == null);
 
 	}

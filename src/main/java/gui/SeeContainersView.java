@@ -20,7 +20,6 @@ import javax.swing.plaf.FontUIResource;
 
 import main.java.domain.logic.container.Container;
 import main.java.domain.logic.container.ContainerUtility;
-import main.java.domain.logic.home.Settings;
 import main.java.gui.home.HomeView;
 
 /**

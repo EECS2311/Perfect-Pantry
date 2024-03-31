@@ -67,5 +67,4 @@ CREATE TABLE detailed_instructions (
    step_number INTEGER NOT NULL,
    instruction TEXT NOT NULL,
    PRIMARY KEY (recipe_id, step_number)
-
 );

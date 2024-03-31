@@ -1,9 +1,9 @@
+
 package test.java.unit;
 
 import org.junit.jupiter.api.Test;
 
 import main.java.domain.logic.recipe.Ingredient;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class IngredientTest {
@@ -46,4 +46,5 @@ class IngredientTest {
 
         assertTrue(ingredient1.equals(ingredient2));
     }
+
 }
