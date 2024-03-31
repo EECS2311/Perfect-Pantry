@@ -386,7 +386,7 @@ public class HomeView implements ActionListener {
 
 	private void openAddItemDialog() {
 		AddItemHomeView dialog = new AddItemHomeView(frame);
-		dialog.setVisible(true);
+	
 	}
 
 }
