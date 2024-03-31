@@ -155,8 +155,9 @@ public class ItemUtility {
 		List<Item> items = HomeView.data.retrieveItems(c);
 		tableModel.setRowCount(0);
 		for (Item item : items) {
+			String tag = HomeView.data.getItemTag(item.getName());
 			tableModel.addRow(new Object[] { item.getName(), item.getQuantity(), dateFormat(item.getExpiryDate()),
-					item.getFoodGroupTag(), item.getFoodFreshnessTag() });
+					item.getFoodGroupTag(), item.getFoodFreshnessTag(), tag });
 		}
 	}
 
@@ -252,4 +253,5 @@ public class ItemUtility {
 	    	   db.batchUpdateItemFreshness(c);
 	       }
 	}
+	
 }
