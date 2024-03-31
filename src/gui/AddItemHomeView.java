@@ -1,16 +1,21 @@
 package gui;
 
-import javax.swing.*;
-import domain.logic.Item;
-import domain.logic.ItemUtility;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.awt.GridLayout;
 import java.util.List;
 
-public class Additemhome extends JDialog {
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import domain.logic.item.Item;
+import domain.logic.item.ItemUtility;
+import gui.home.HomeView;
+
+public class AddItemHomeView extends JDialog {
     private JTextField itemNameField = new JTextField(10);
     private JComboBox<String> containerComboBox = new JComboBox<>(); // Changed to String type
     private JTextField expiryDateField = new JTextField(10);
@@ -19,7 +24,7 @@ public class Additemhome extends JDialog {
 
    // private ItemsListView itemsListPanel;
     
-    public Additemhome(JFrame owner) {
+    public AddItemHomeView(JFrame owner) {
         super(owner, "Add New Item", true);
         setLayout(new GridLayout(5, 2));
 
