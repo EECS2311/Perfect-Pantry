@@ -7,13 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import domain.logic.home.Settings;
 
 public class SettingsView  implements ActionListener{
 
@@ -95,7 +91,7 @@ public class SettingsView  implements ActionListener{
 		if(b) {
 			this.homePanel.add(settings, 0);
 
-			settings.setBounds(10, 60, 200, 300);
+			settings.setBounds(10, 80, 200, 300);
 			settings.setBackground(Color.PINK);
 			settings.setLayout(new BorderLayout(8, 20));
 			settings.setBackground(new Color(253, 241, 203));
@@ -169,6 +165,9 @@ public class SettingsView  implements ActionListener{
 
 			settings.setSize(settings.getPreferredSize());
 			settings.repaint();
+			HomeView.getHomeView().addFonts();
+			homePanel.repaint();
+			
 
 		}
 	}
