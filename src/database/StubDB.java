@@ -403,4 +403,11 @@ public class StubDB extends DB {
 		recipeIngredientsMap.remove(recipe.getId());
 		recipeInstructionsMap.remove(recipe.getId());
 	}
+
+	@Override
+	public void clearRecipesTable() {
+		recipesMap.clear();
+		recipeIngredientsMap.clear();
+		recipeInstructionsMap.clear();
+	}
 }
