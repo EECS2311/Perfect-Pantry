@@ -25,12 +25,12 @@ public class AddItemHomeView {
     private JButton addButton = new JButton("Add");
 	JDialog j;
 
-   // private ItemsListView itemsListPanel;
+   
     
     public AddItemHomeView(JFrame owner) {
     	
     	j = new JDialog(HomeView.getFrame(), "Add New Item");
-       // super(owner, "Add New Item", true);
+ 
         j.setLayout(new GridLayout(5, 2));
 
         j.add(new JLabel("Item Name:"));
