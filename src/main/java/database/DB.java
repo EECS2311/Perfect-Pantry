@@ -1,14 +1,30 @@
-package database;
+package main.java.database;
+
+
 
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import domain.logic.Container;
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.GenericTag;
-import domain.logic.Item;
+import main.java.domain.logic.container.Container;
+import main.java.domain.logic.item.FoodFreshness;
+import main.java.domain.logic.item.FoodGroup;
+import main.java.domain.logic.item.GenericTag;
+import main.java.domain.logic.item.Item;
+import main.java.domain.logic.recipe.Ingredient;
+import main.java.domain.logic.recipe.Recipe;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The {@code DB} class represents a simple database for storing and managing
@@ -200,7 +216,7 @@ public class DB {
 		try {
 			Statement s = conn.createStatement();
 			s.execute("INSERT INTO item(name, container, quantity, expiry) VALUES('" + name + "', " + "'" + c.getName()
-					+ "', " + "" + ite.getQuantity() + ", '" + "" + ite.getExpiryDate() + "')");
+			+ "', " + "" + ite.getQuantity() + ", '" + "" + ite.getExpiryDate() + "')");
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -213,23 +229,20 @@ public class DB {
 	/**
 	 * Removes an item from a specified container.
 	 *
-	 * @param c    The container from which the item will be removed.
-	 * @param name The name of the item to be removed.
+	 * @param container    The container from which the item will be removed.
+	 * @param itemName The name of the item to be removed.
 	 */
-	public void removeItem(Container c, String name, Item ite) {
+	public void removeItem(Container container, String itemName) {
 
 		Connection conn = init();
 
 		try {
 			Statement s = conn.createStatement();
-			s.execute(String.format("DELETE FROM item WHERE name='%s'", name));
+			s.execute(String.format("DELETE FROM item WHERE name='%s' AND container='%s'", itemName, container.getName()));
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		// Any method that calls removeItem() will ensure that the item exists.
-
 	}
 
 	/**
@@ -250,10 +263,10 @@ public class DB {
 			if (rs.next()) {
 				GenericTag<FoodGroup> fg = (rs.getString("fg") != null)
 						? GenericTag.fromString(FoodGroup.class, rs.getString("fg"))
-						: null;
+								: null;
 				GenericTag<FoodFreshness> fresh = (rs.getString("fresh") != null)
 						? GenericTag.fromString(FoodFreshness.class, rs.getString("fresh"))
-						: null;
+								: null;
 
 				conn.close();
 				return Item.getInstance(rs.getString("name"), fg, fresh, rs.getInt("quantity"), rs.getDate("expiry"));
@@ -420,11 +433,12 @@ public class DB {
 		}
 	}
 
+
+
 	/**
 	 * Retrieves all grocery items from the database.
 	 *
-	 * @return A 2D array containing all grocery items, where each row represents an
-	 *         item.
+	 * @return A 2D array containing all grocery items, where each row represents an item.
 	 */
 	public Object[][] getAllGroceryItems() {
 		Connection conn = init();
@@ -483,7 +497,6 @@ public class DB {
 		}
 
 	}
-
 	/**
 	 * Retrieves items that are close to expiring.
 	 *
@@ -494,25 +507,25 @@ public class DB {
 		Connection conn = init();
 
 		try {
-			// select items whose expiry date is within the next 7 days
+			//  select items whose expiry date is within the next 7 days
 			String sql = "SELECT name, container FROM item WHERE fresh = 'Near_Expiry'";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 
 			// Execute the query
 			ResultSet rs = pstmt.executeQuery();
-//
-			// Process the result set
+			//
+			//Process the result set
 			while (rs.next()) {
 				String itemName = rs.getString("name");
 				expiringItems.add(itemName + " - " + rs.getString("container"));
 			}
-//            while (rs.next()) {
-//                String itemName = rs.getString("name");
-//                String containerName = rs.getString("container");
-//                Date expiryDate = rs.getDate("expiry");
-//                expiringItems.add(itemName + " in " + containerName + " (Expiry: " + expiryDate + ")");
-//            }
-//
+			//            while (rs.next()) {
+			//                String itemName = rs.getString("name");
+			//                String containerName = rs.getString("container");
+			//                Date expiryDate = rs.getDate("expiry");
+			//                expiringItems.add(itemName + " in " + containerName + " (Expiry: " + expiryDate + ")");
+			//            }
+			//
 			// Close resources
 			rs.close();
 			pstmt.close();
@@ -527,8 +540,7 @@ public class DB {
 	/**
 	 * Retrieves the names of all items that are either Near Expiry or Fresh.
 	 *
-	 * @return A Set of Strings representing the names of items that are either near
-	 *         expiry or fresh.
+	 * @return A Set of Strings representing the names of items that are either near expiry or fresh.
 	 */
 	public Set<String> getNearExpiryOrFreshItemNames() {
 		Set<String> itemNames = new HashSet<>();
@@ -553,4 +565,455 @@ public class DB {
 		}
 		return itemNames;
 	}
+  
+	/**
+	 * Retrieves settings for the program
+	 * 
+	 * @return a array representing the settings for the program
+	 */
+	public String[] getSettings(){
+		String [] settings = new String [2];
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				String sql = "SELECT fontsize, notificationBoolean FROM settings";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				ResultSet rs = pstmt.executeQuery();
+
+				while(rs.next()) {
+					String font = rs.getString("fontsize").toLowerCase();
+					String notifBool = rs.getString("notificationBoolean").toLowerCase();
+
+					settings[0] = font;
+					settings[1] = notifBool;
+				}
+
+
+				rs.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return settings;
+	}
+	
+	/**
+	 * Updates the fontSize of font in the database
+	 * @param n The fontSize 
+	 */
+	public void setFontsize(int n) {
+		Connection conn = init();
+		try {
+			String query = "UPDATE settings SET fontsize = ? WHERE setting_type = 'User'";
+			PreparedStatement p = conn.prepareStatement(query);
+			p.setInt(1, n);
+			p.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Sets whether or not opening the application will give the notifications and saves it in database
+	 * 
+	 * @param b Boolean value, true if notifcation should be on, false otherwise
+	 */
+	public void setNotificationBoolean(boolean b) {
+		Connection conn = init();
+		try {
+			String query = "UPDATE settings SET notificationboolean = ? WHERE setting_type = 'User';";
+			PreparedStatement p = conn.prepareStatement(query);
+			p.setString(1, Boolean.toString(b));
+			p.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Saves a recipe and its associated details into the database. This includes inserting the recipe's basic information,
+	 * the ingredients used, and detailed instructions. If any of the ingredients do not exist in the database, they are added.
+	 * The method manages database transactions manually to ensure data consistency, including rolling back transactions in
+	 * case of errors.
+	 *
+	 * @param recipe The Recipe object containing all the information to be saved to the database.
+	 */
+	public void saveRecipeToDatabase(Recipe recipe) {
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				conn.setAutoCommit(false);
+
+				Map<Integer, String> detailedInstructions;
+				try {
+					detailedInstructions = recipe.getDetailedInstructions();
+				} catch (Exception e) {
+					System.err.println("Failed to get detailed instructions: " + e.getMessage());
+					detailedInstructions = new HashMap<>();
+				}
+
+				String insertRecipeSQL = "INSERT INTO recipes (id, title, image_url) VALUES (?, ?, ?)";
+				try (PreparedStatement pstmt = conn.prepareStatement(insertRecipeSQL)) {
+					pstmt.setInt(1, recipe.getId());
+					pstmt.setString(2, recipe.getTitle());
+					pstmt.setString(3, recipe.getImage());
+					pstmt.executeUpdate();
+				}
+
+				for (Ingredient ingredient : recipe.getUsedIngredients()) {
+					int ingredientId = getOrInsertIngredient(conn, ingredient);
+					linkRecipeIngredient(conn, recipe.getId(), ingredientId, ingredient.getAmount(), true);
+				}
+				for (Ingredient ingredient : recipe.getMissedIngredients()) {
+					int ingredientId = getOrInsertIngredient(conn, ingredient);
+					linkRecipeIngredient(conn, recipe.getId(), ingredientId, ingredient.getAmount(), false);
+				}
+
+				String insertInstructionSQL = "INSERT INTO detailed_instructions (recipe_id, step_number, instruction) VALUES (?, ?, ?)";
+				try (PreparedStatement pstmt = conn.prepareStatement(insertInstructionSQL)) {
+					for (Map.Entry<Integer, String> entry : detailedInstructions.entrySet()) {
+						pstmt.setInt(1, recipe.getId());
+						pstmt.setInt(2, entry.getKey());
+						pstmt.setString(3, entry.getValue());
+						pstmt.executeUpdate();
+					}
+				}
+
+				conn.commit();
+			} catch (SQLException e) {
+				try {
+					if (conn != null) conn.rollback();
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null) {
+						conn.setAutoCommit(true);
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Checks if an ingredient exists in the database by its ID. If it does not exist, the ingredient is inserted into
+	 * the database. This method is utilized by saveRecipeToDatabase to ensure all ingredients of a recipe are present
+	 * in the database before linking them to the recipe.
+	 *
+	 * @param conn The database connection to be used for the query.
+	 * @param ingredient The ingredient to check or insert into the database.
+	 * @return The ID of the ingredient, either found or newly inserted.
+	 * @throws SQLException if there is a problem accessing the database.
+	 */
+	private int getOrInsertIngredient(Connection conn, Ingredient ingredient) throws SQLException {
+		String checkIngredientSQL = "SELECT id FROM ingredients WHERE id = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(checkIngredientSQL)) {
+			pstmt.setInt(1, ingredient.getId());
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return ingredient.getId();
+			}
+		}
+
+		String insertIngredientSQL = "INSERT INTO ingredients (id, name, unit, image_url, original) VALUES (?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(insertIngredientSQL)) {
+			pstmt.setInt(1, ingredient.getId());
+			pstmt.setString(2, ingredient.getName());
+			pstmt.setString(3, ingredient.getUnit());
+			pstmt.setString(4, ingredient.getImage());
+			pstmt.setString(5, ingredient.getOriginal());
+			pstmt.executeUpdate();
+		}
+		return ingredient.getId();
+	}
+
+	/**
+	 * Links an ingredient to a recipe in the database with the specified amount and usage status. This method is called by
+	 * saveRecipeToDatabase for each ingredient in the recipe to be saved.
+	 *
+	 * @param conn The database connection to be used for the operation.
+	 * @param recipeId The ID of the recipe to which the ingredient is to be linked.
+	 * @param ingredientId The ID of the ingredient to be linked to the recipe.
+	 * @param amount The amount of the ingredient used in the recipe.
+	 * @param isUsed Boolean indicating whether the ingredient is used or missed in the recipe.
+	 * @throws SQLException if there is a problem accessing the database.
+	 */
+	private void linkRecipeIngredient(Connection conn, int recipeId, int ingredientId, double amount, boolean isUsed) throws SQLException {
+		String sql = "INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, is_used) VALUES (?, ?, ?, ?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, recipeId);
+			pstmt.setInt(2, ingredientId);
+			pstmt.setDouble(3, amount);
+			pstmt.setBoolean(4, isUsed);
+			pstmt.executeUpdate();
+		}
+	}
+
+	/**
+	 * Checks if a recipe is present in the database by its ID.
+	 *
+	 * @param recipeId The ID of the recipe to check.
+	 * @return true if the recipe exists in the database; false otherwise.
+	 */
+	public boolean isRecipeInDatabase(int recipeId) {
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				String checkRecipeSQL = "SELECT COUNT(*) FROM recipes WHERE id = ?";
+				try (PreparedStatement pstmt = conn.prepareStatement(checkRecipeSQL)) {
+					pstmt.setInt(1, recipeId);
+					ResultSet rs = pstmt.executeQuery();
+					if (rs.next()) {
+						int count = rs.getInt(1);
+						return count > 0;
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null) {
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Retrieves all recipes marked as starred from the database. This method fetches the basic recipe information,
+	 * their ingredients, and detailed instructions.
+	 *
+	 * @return A list of starred Recipe objects.
+	 */
+	public List<Recipe> getAllStarredRecipes() {
+		List<Recipe> recipes = new ArrayList<>();
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				List<Integer> recipeIds = new ArrayList<>();
+				String selectRecipesSQL = "SELECT * FROM recipes";
+				try (Statement stmt = conn.createStatement();
+					 ResultSet rsRecipes = stmt.executeQuery(selectRecipesSQL)) {
+
+					while (rsRecipes.next()) {
+						int recipeId = rsRecipes.getInt("id");
+						String title = rsRecipes.getString("title");
+						String imageUrl = rsRecipes.getString("image_url");
+
+						Recipe recipe = new Recipe(recipeId, title, imageUrl);
+						recipe.setFetchedStep(true);
+						recipes.add(recipe);
+						recipeIds.add(recipeId);
+					}
+				}
+
+				Map<Integer, List<Ingredient>> ingredientsMap = getAllIngredientsForRecipes(conn, recipeIds);
+				Map<Integer, Map<Integer, String>> instructionsMap = getAllDetailedInstructionsForRecipes(conn, recipeIds);
+
+				for (Recipe recipe : recipes) {
+					recipe.setUsedIngredients(ingredientsMap.getOrDefault(recipe.getId(), new ArrayList<>()));
+					recipe.setMissedIngredients(new ArrayList<>());
+					recipe.setDetailedInstructions(instructionsMap.getOrDefault(recipe.getId(), new HashMap<>()));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null) {
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return recipes;
+	}
+
+	/**
+	 * Retrieves a mapping of recipe IDs to lists of Ingredient objects for a given list of recipe IDs. This method queries
+	 * the database to find all ingredients associated with each recipe ID provided. It's used to efficiently fetch ingredients
+	 * for multiple recipes in one go, especially useful for operations that need to aggregate recipe data.
+	 *
+	 * @param conn The database connection to be used for the query.
+	 * @param recipeIds A list of recipe IDs for which to retrieve associated ingredients.
+	 * @return A map where each key is a recipe ID and each value is a list of Ingredient objects associated with that recipe.
+	 * @throws SQLException If there is an error accessing the database.
+	 */
+	private Map<Integer, List<Ingredient>> getAllIngredientsForRecipes(Connection conn, List<Integer> recipeIds) throws SQLException {
+		Map<Integer, List<Ingredient>> recipeIngredientsMap = new HashMap<>();
+		if (recipeIds.isEmpty()) {
+			return recipeIngredientsMap;
+		}
+
+		String inClause = recipeIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+		String selectIngredientsSQL =
+				"SELECT ri.recipe_id, i.id, i.name, ri.amount, i.unit, i.image_url, i.original " +
+						"FROM ingredients i " +
+						"JOIN recipe_ingredients ri ON i.id = ri.ingredient_id " +
+						"WHERE ri.recipe_id IN (" + inClause + ")";
+
+		try (Statement stmt = conn.createStatement();
+			 ResultSet rsIngredients = stmt.executeQuery(selectIngredientsSQL)) {
+			while (rsIngredients.next()) {
+				int recipeId = rsIngredients.getInt("recipe_id");
+				int id = rsIngredients.getInt("id");
+				String name = rsIngredients.getString("name");
+				double amount = rsIngredients.getDouble("amount");
+				String unit = rsIngredients.getString("unit");
+				String image = rsIngredients.getString("image_url");
+				String original = rsIngredients.getString("original");
+
+				Ingredient ingredient = new Ingredient(id, name, amount, unit, image, original);
+				recipeIngredientsMap.computeIfAbsent(recipeId, k -> new ArrayList<>()).add(ingredient);
+			}
+		}
+		return recipeIngredientsMap;
+	}
+
+	/**
+	 * Retrieves a mapping of recipe IDs to their detailed instructions for a given list of recipe IDs. This method is designed
+	 * to fetch the step-by-step instructions for multiple recipes in a single database query, optimizing data retrieval for
+	 * operations that involve displaying or processing recipes in bulk.
+	 *
+	 * Each recipe's instructions are represented as a map, where the key is the step number and the value is the instruction text.
+	 *
+	 * @param conn The database connection to be used for the query.
+	 * @param recipeIds A list of recipe IDs for which to retrieve detailed instructions.
+	 * @return A map where each key is a recipe ID and each value is another map, mapping step numbers to instruction texts for that recipe.
+	 * @throws SQLException If there is an error accessing the database.
+	 */
+	private Map<Integer, Map<Integer, String>> getAllDetailedInstructionsForRecipes(Connection conn, List<Integer> recipeIds) throws SQLException {
+		Map<Integer, Map<Integer, String>> recipeInstructionsMap = new HashMap<>();
+		if (recipeIds.isEmpty()) {
+			return recipeInstructionsMap;
+		}
+
+		String inClause = recipeIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+		String selectInstructionsSQL =
+				"SELECT recipe_id, step_number, instruction " +
+						"FROM detailed_instructions WHERE recipe_id IN (" + inClause + ") " +
+						"ORDER BY recipe_id, step_number";
+
+		try (Statement stmt = conn.createStatement();
+			 ResultSet rsInstructions = stmt.executeQuery(selectInstructionsSQL)) {
+			while (rsInstructions.next()) {
+				int recipeId = rsInstructions.getInt("recipe_id");
+				int stepNumber = rsInstructions.getInt("step_number");
+				String instruction = rsInstructions.getString("instruction");
+
+				recipeInstructionsMap.computeIfAbsent(recipeId, k -> new HashMap<>()).put(stepNumber, instruction);
+			}
+		}
+		return recipeInstructionsMap;
+	}
+
+	/**
+	 * Removes a starred recipe and its associated details from the database. This includes deleting the recipe's
+	 * basic information, ingredients linkage, and detailed instructions from their respective tables.
+	 *
+	 * @param recipe The Recipe object to be removed from the database.
+	 */
+	public void removeStarredRecipe(Recipe recipe) {
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				conn.setAutoCommit(false);
+
+				String deleteRecipeSQL = "DELETE FROM recipes WHERE id = ?";
+				try (PreparedStatement pstmt = conn.prepareStatement(deleteRecipeSQL)) {
+					pstmt.setInt(1, recipe.getId());
+					pstmt.executeUpdate();
+				}
+
+				String deleteRecipeIngredientsSQL = "DELETE FROM recipe_ingredients WHERE recipe_id = ?";
+				try (PreparedStatement pstmt = conn.prepareStatement(deleteRecipeIngredientsSQL)) {
+					pstmt.setInt(1, recipe.getId());
+					pstmt.executeUpdate();
+				}
+
+				String deleteInstructionsSQL = "DELETE FROM detailed_instructions WHERE recipe_id = ?";
+				try (PreparedStatement pstmt = conn.prepareStatement(deleteInstructionsSQL)) {
+					pstmt.setInt(1, recipe.getId());
+					pstmt.executeUpdate();
+				}
+
+				conn.commit();
+			} catch (SQLException e) {
+				try {
+					if (conn != null) conn.rollback();
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+				e.printStackTrace();
+			} finally {
+				try {
+					if (conn != null) {
+						conn.setAutoCommit(true);
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Retrieves a list of food group names from items stored in a specified container or all containers if none is specified.
+	 * If the 'container' parameter is null, the method returns food group names from all items. Otherwise, it returns
+	 * food group names from items in the specified container.
+	 *
+	 * @param container The name of the container from which to retrieve food group names, or null to retrieve from all containers.
+	 * @return An ArrayList of strings containing the names of food groups.
+	 */
+	public ArrayList<String> getTotalCount(String container) {
+		
+		Connection conn = init();
+		
+		try {
+			Statement s = conn.createStatement();
+			ResultSet result;
+			if (container == null){
+				result = s.executeQuery("SELECT * FROM item");
+			}
+			else {
+				result = s.executeQuery("Select * FROM item where container='" + container +"'");
+			}
+			
+			ArrayList<String> l = new ArrayList<String>();
+			while (result.next()) {
+				if (result.getString("fg") != null) {
+							l.add(result.getString("fg"));
+				}
+		
+			}
+			conn.close();
+			return l;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+
 }
+
+
+

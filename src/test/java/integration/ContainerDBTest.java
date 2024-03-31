@@ -1,4 +1,4 @@
-package integration;
+package test.java.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -16,9 +16,9 @@ import javax.swing.JButton;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import database.DB;
-import domain.logic.Container;
-import domain.logic.ContainerUtility;
+import main.java.database.DB;
+import main.java.domain.logic.container.Container;
+import main.java.domain.logic.container.ContainerUtility;
 
 class ContainerDBTest {
 

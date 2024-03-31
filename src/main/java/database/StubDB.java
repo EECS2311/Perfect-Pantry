@@ -1,13 +1,25 @@
-package database;
+package main.java.database;
 
+import java.io.IOException;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import domain.logic.Container;
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.GenericTag;
-import domain.logic.Item;
+import main.java.domain.logic.container.Container;
+import main.java.domain.logic.item.FoodFreshness;
+import main.java.domain.logic.item.FoodGroup;
+import main.java.domain.logic.item.GenericTag;
+import main.java.domain.logic.item.Item;
+import main.java.domain.logic.recipe.DailyLimitExceededException;
+import main.java.domain.logic.recipe.Ingredient;
+import main.java.domain.logic.recipe.RateLimitPerMinuteExceededException;
+import main.java.domain.logic.recipe.Recipe;
+
 
 public class StubDB extends DB {
 
@@ -15,6 +27,12 @@ public class StubDB extends DB {
 	public HashMap<String, Item> itemMap = new HashMap<String, Item>();
 	public HashMap<String, String> storageTipMap = new HashMap<String, String>();
 	public ArrayList<String> groceryList = new ArrayList<String>();
+
+	private Map<Integer, Recipe> recipesMap = new HashMap<>();
+	private Map<Integer, Set<Ingredient>> recipeIngredientsMap = new HashMap<>();
+	private Map<Integer, Map<Integer, String>> recipeInstructionsMap = new HashMap<>();
+	private String[] settings = {"14", "true"};
+
 
 	/**
 	 * Inserts a new container into the database
@@ -281,8 +299,7 @@ public class StubDB extends DB {
 	/**
 	 * Retrieves the names of all items that are either Near Expiry or Fresh.
 	 *
-	 * @return A Set of Strings representing the names of items that are either near
-	 *         expiry or fresh.
+	 * @return A Set of Strings representing the names of items that are either near expiry or fresh.
 	 */
 	@Override
 	public Set<String> getNearExpiryOrFreshItemNames() {
@@ -291,11 +308,99 @@ public class StubDB extends DB {
 		for (Map.Entry<String, Item> entry : itemMap.entrySet()) {
 			Item item = entry.getValue();
 			// Check if the item's freshness is either NEAR_EXPIRY or FRESH
-			if (item.getFoodFreshnessTag() != null && (item.getFoodFreshnessTag().getTag() == FoodFreshness.NEAR_EXPIRY
-					|| item.getFoodFreshnessTag().getTag() == FoodFreshness.FRESH)) {
+			if (item.getFoodFreshnessTag() != null &&
+					(item.getFoodFreshnessTag().getTag() == FoodFreshness.NEAR_EXPIRY ||
+							item.getFoodFreshnessTag().getTag()== FoodFreshness.FRESH)) {
 				nearExpiryOrFreshItems.add(entry.getKey());
 			}
 		}
 		return nearExpiryOrFreshItems;
+	}
+	
+	/**
+	 * Retrieves settings for the program
+	 * 
+	 * @return a array representing the settings for the program
+	 */
+	public String[] getSettings(){
+
+		return this.settings;
+	}
+	
+	/**
+	 * Updates the fontSize of font in the database
+	 * @param n The fontSize 
+	 */
+	public void setFontsize(int n) {
+		this.settings[0] = String.valueOf(n);
+	}
+	
+	/**
+	 * Sets whether or not opening the application will give the notifications and saves it in database
+	 * 
+	 * @param b Boolean value, true if notifcation should be on, false otherwise
+	 */
+	public void setNotificationBoolean(boolean b) {
+		this.settings[1] = String.valueOf(b);
+	}
+
+	/**
+	 * Saves a recipe to the stub database. This method stores the recipe object,
+	 * its used and missed ingredients, and detailed instructions.
+	 *
+	 * @param recipe The recipe to be saved. Assumes that the recipe's ID is unique.
+	 * @throws RuntimeException If an error occurs while fetching detailed instructions due to rate limits,
+	 *                          IO issues, or daily limits being exceeded.
+	 */
+	@Override
+	public void saveRecipeToDatabase(Recipe recipe) {
+		recipesMap.put(recipe.getId(), recipe);
+		Set<Ingredient> ingredients = new HashSet<>();
+		ingredients.addAll(recipe.getUsedIngredients());
+		ingredients.addAll(recipe.getMissedIngredients());
+		recipeIngredientsMap.put(recipe.getId(), ingredients);
+		try {
+			recipeInstructionsMap.put(recipe.getId(), new HashMap<>(recipe.getDetailedInstructions()));
+		} catch (RateLimitPerMinuteExceededException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (DailyLimitExceededException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Checks if a recipe is present in the stub database.
+	 *
+	 * @param recipeId The ID of the recipe to check.
+	 * @return {@code true} if the recipe is present, {@code false} otherwise.
+	 */
+	@Override
+	public boolean isRecipeInDatabase(int recipeId) {
+		return recipesMap.containsKey(recipeId);
+	}
+
+	/**
+	 * Retrieves all starred (saved) recipes from stub database.
+	 *
+	 * @return A list of all saved recipes.
+	 */
+	@Override
+	public List<Recipe> getAllStarredRecipes() {
+		return new ArrayList<>(recipesMap.values());
+	}
+
+	/**
+	 * Removes a starred (saved) recipe from the stub database.
+	 * This operation also removes any associated ingredients and instructions.
+	 *
+	 * @param recipe The recipe to remove. The recipe's ID is used to identify the recipe.
+	 */
+	@Override
+	public void removeStarredRecipe(Recipe recipe) {
+		recipesMap.remove(recipe.getId());
+		recipeIngredientsMap.remove(recipe.getId());
+		recipeInstructionsMap.remove(recipe.getId());
 	}
 }

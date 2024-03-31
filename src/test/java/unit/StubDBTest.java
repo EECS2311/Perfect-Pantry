@@ -1,10 +1,10 @@
-package unit;
+package test.java.unit;
 
 import org.junit.jupiter.api.Test;
 
-import database.StubDB;
-import domain.logic.Container;
-import domain.logic.Item;
+import main.java.database.StubDB;
+import main.java.domain.logic.container.Container;
+import main.java.domain.logic.item.Item;
 
 import static org.junit.jupiter.api.Assertions.*;
 

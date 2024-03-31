@@ -1,4 +1,4 @@
-package unit;
+package test.java.unit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,10 +14,10 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import domain.logic.FoodFreshness;
-import domain.logic.FoodGroup;
-import domain.logic.GenericTag;
-import domain.logic.Item;
+import main.java.domain.logic.item.FoodFreshness;
+import main.java.domain.logic.item.FoodGroup;
+import main.java.domain.logic.item.GenericTag;
+import main.java.domain.logic.item.Item;
 
 class ItemTest {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
@@ -26,7 +26,6 @@ class ItemTest {
 	Date date1, date2, expiredDate, nearExpiryDate;
 
 	GenericTag<FoodGroup> grain, diary, fruit, veg;
-
 	@BeforeEach
 	void init() throws ParseException {
 		date1 = sdf.parse("5-May-2024");
@@ -58,8 +57,7 @@ class ItemTest {
 
 	@Test
 	void testEqualityAndHashCode() {
-		Item item1Copy = Item.getInstance("Bread", new GenericTag<FoodGroup>(FoodGroup.GRAIN),
-				new GenericTag<>(FoodFreshness.FRESH), 3, date1);
+		Item item1Copy = Item.getInstance("Bread", new GenericTag<FoodGroup>(FoodGroup.GRAIN), new GenericTag<>(FoodFreshness.FRESH), 3, date1);
 		assertEquals(item1, item1Copy);
 		assertEquals(item1.hashCode(), item1Copy.hashCode());
 	}
@@ -88,16 +86,15 @@ class ItemTest {
 
 	@Test
 	void testInvalidDateFormat() {
-		assertThrows(RuntimeException.class,
-				() -> Item.getInstance("Bad Date Item", null, new GenericTag<>(FoodFreshness.FRESH), 1, "31-02-2024"));
+		assertThrows(RuntimeException.class, () -> Item.getInstance("Bad Date Item", null,
+				new GenericTag<>(FoodFreshness.FRESH), 1, "31-02-2024"));
 	}
 
 	@Test
 	void testToString() throws ParseException {
 		Date date = new SimpleDateFormat("dd-MMMM-yyyy").parse("09-january-2024");
 
-		Item item = Item.getInstance("Test Item", new GenericTag<>(FoodGroup.DAIRY),
-				new GenericTag<>(FoodFreshness.FRESH), 1, date);
+		Item item = Item.getInstance("Test Item", new GenericTag<>(FoodGroup.DAIRY), new GenericTag<>(FoodFreshness.FRESH), 1, date);
 		String expected = "Item{name='Test Item', foodGroupTags=Dairy, foodFreshnessTag=Fresh, quantity=1, expiryDate=Tue Jan 09 00:00:00 EST 2024}";
 		assertEquals(expected, item.toString(), "toString does not format item as expected.");
 	}
@@ -106,8 +103,8 @@ class ItemTest {
 	void testEdgeCaseDateLeapYear() throws ParseException {
 		Date leapYearDate = new SimpleDateFormat("dd-MMMM-yyyy").parse("29-February-2024");
 
-		Item leapYearItem = Item.getInstance("Leap Year Item", new GenericTag<FoodGroup>(FoodGroup.DAIRY),
-				new GenericTag<>(FoodFreshness.FRESH), 1, leapYearDate);
+		Item leapYearItem = Item.getInstance("Leap Year Item", new GenericTag<FoodGroup>(FoodGroup.DAIRY), new GenericTag<>(FoodFreshness.FRESH), 1,
+				leapYearDate);
 		assertEquals(leapYearDate, leapYearItem.getExpiryDate(), "Leap year date is not set correctly.");
 	}
 

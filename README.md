@@ -29,19 +29,11 @@ public class info {
 
 }
 ```
-3. Sign up at [SpoonacularApi](https://spoonacular.com/food-api) on free plan (Allows 150 requests per day). 
-Go to your console and get the api key. 
-Make the SpoonacularApi class in domain.logic.recipe package, copy the code below, and paste in your api key.
-```java
-package domain.logic.recipe;
-
-public class SpoonacularApi {
-    public static String SpoonacularApiKey = "...";
-}
-```
-4. `RecipeApiClient` uses gson 2.10.1 contained in `lib` folder. It is an external library that does JSON parsing. You will need to add this jar file to your build path (Eclipse) or project structure (IntelliJ).
-5. Run the DBDef.sql queries in the database package. The init.sql queries are optional (if you want to setup some default values.
-6. Install JDBC for postgreSQL and put it on your buildpath.
+3. `RecipeApiClient` uses gson 2.10.1 contained in `lib` folder. It is an external library that does JSON parsing. You will need to add this jar file to your build path (Eclipse) or project structure (IntelliJ).
+4. Run the the following queries that are located in the database package... DB_drop.sql > DB_init.sql > DB_populate.sql (in this order)
+5. Install JDBC for postgreSQL and put it on your buildpath.
+6. src/gui/HomeView -> Run
 To setup gradle:
 7. In the terminal, run `./gradlew build` (Linux/OSX) or `./gradlew.bat build` (Windows)
 8. Run `./gradlew start` (Linux/OSX) or `./gradlew.bat start` (Windows) to run the program.
+
