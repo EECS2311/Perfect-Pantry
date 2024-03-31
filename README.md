@@ -42,4 +42,6 @@ public class SpoonacularApi {
 4. `RecipeApiClient` uses gson 2.10.1 contained in `lib` folder. It is an external library that does JSON parsing. You will need to add this jar file to your build path (Eclipse) or project structure (IntelliJ).
 5. Run the DBDef.sql queries in the database package. The init.sql queries are optional (if you want to setup some default values.
 6. Install JDBC for postgreSQL and put it on your buildpath.
-7. src/gui/HomeView -> Run
+To setup gradle:
+7. In the terminal, run `./gradlew build` (Linux/OSX) or `./gradlew.bat build` (Windows)
+8. Run `./gradlew start` (Linux/OSX) or `./gradlew.bat start` (Windows) to run the program.
