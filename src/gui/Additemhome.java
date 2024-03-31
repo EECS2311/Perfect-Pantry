@@ -1,42 +1,39 @@
 package gui;
 
-import java.awt.GridLayout;
+import javax.swing.*;
+import domain.logic.Item;
+import domain.logic.ItemUtility;
+
+import java.awt.*;
+import java.awt.event.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
-import domain.logic.container.Container;
-import domain.logic.item.Item;
-import gui.home.HomeView;
+import java.util.List;
 
 public class Additemhome extends JDialog {
     private JTextField itemNameField = new JTextField(10);
-    private JComboBox<Container> containerComboBox = new JComboBox<>();
+    private JComboBox<String> containerComboBox = new JComboBox<>(); // Changed to String type
     private JTextField expiryDateField = new JTextField(10);
     private JTextField quantityField = new JTextField(10);
     private JButton addButton = new JButton("Add");
 
+   // private ItemsListView itemsListPanel;
+    
     public Additemhome(JFrame owner) {
         super(owner, "Add New Item", true);
-        setLayout(new GridLayout(5, 3));
+        setLayout(new GridLayout(5, 2));
 
         add(new JLabel("Item Name:"));
         add(itemNameField);
 
         add(new JLabel("Container:"));
-        for (Container container : HomeView.getContainerMap().values()) {
-            containerComboBox.addItem(container);
+        List<String> containerNames = HomeView.data.retrieveContainers(); // Retrieve container names
+        for (String containerName : containerNames) {
+            containerComboBox.addItem(containerName); // Add container names to the combo box
         }
         add(containerComboBox);
 
-        add(new JLabel("Expiry Date (yyyy-MM-dd):"));
+        add(new JLabel("Expiry Date (dd-MMM-yy):"));
         add(expiryDateField);
 
         add(new JLabel("Quantity:"));
@@ -51,21 +48,27 @@ public class Additemhome extends JDialog {
 
     private void addItem() {
         String itemName = itemNameField.getText();
-        Container selectedContainer = (Container) containerComboBox.getSelectedItem();
+        String containerName = (String) containerComboBox.getSelectedItem(); // Get the selected container name
         String expiryDateStr = expiryDateField.getText();
         String quantityStr = quantityField.getText();
+        boolean isValid = ItemUtility.verifyAddItem(itemName, quantityStr, expiryDateStr,
+                (errorMsg) -> JOptionPane.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE));
 
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            int quantity = Integer.parseInt(quantityStr);
-            Item newItem = Item.getInstance(itemName, quantity, sdf.parse(expiryDateStr));
-            selectedContainer.addNewItem(newItem);
+        if (isValid) {
+            Item item = Item.getInstance(itemName, Integer.parseInt(quantityStr.trim()), expiryDateStr);
+           
+          //  boolean addedToData = HomeView.data.addItem(itemsListPanel.getC(), item.getName(), item);
+            
+            if (!isValid) {
+                JOptionPane.showMessageDialog(this, "No Duplicate Items!", "Add Item Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+          //  itemsListPanel.addItem(item);
+           
+            itemNameField.setText("");
+            quantityField.setText("");
+            expiryDateField.setText("");
 
-            JOptionPane.showMessageDialog(this, "Item '" + itemName + "' added successfully.");
-            dispose();
-        } catch (NumberFormatException | ParseException e) {
-            JOptionPane.showMessageDialog(this, "Invalid input.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 }
-
+}
