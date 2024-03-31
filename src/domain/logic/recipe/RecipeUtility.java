@@ -1,8 +1,9 @@
 package domain.logic.recipe;
 
-import gui.HomeView;
-
 import javax.swing.*;
+
+import gui.home.HomeView;
+
 import java.util.List;
 import java.util.Set;
 

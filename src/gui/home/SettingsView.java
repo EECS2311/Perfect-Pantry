@@ -1,4 +1,4 @@
-package gui;
+package gui.home;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import domain.logic.Settings;
+import domain.logic.home.Settings;
 
 public class SettingsView  implements ActionListener{
 

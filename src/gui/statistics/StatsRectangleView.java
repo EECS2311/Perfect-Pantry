@@ -1,4 +1,4 @@
-package gui;
+package gui.statistics;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,9 +6,10 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import domain.logic.StatsUtilities;
+import domain.logic.statistics.StatsUtilities;
+import gui.home.HomeView;
 
-public class StatsRectangle extends JPanel {
+public class StatsRectangleView extends JPanel {
 	
 	
 	public ArrayList<String> allItems;
@@ -18,7 +19,7 @@ public class StatsRectangle extends JPanel {
 	private final int LEFT_EDGE = 100;
 	private final int yLevel = 400;
 	
-	public StatsRectangle(String cName) {
+	public StatsRectangleView(String cName) {
 		
 		allItems = HomeView.data.getTotalCount(cName);
 		totalItemCount = allItems.size();

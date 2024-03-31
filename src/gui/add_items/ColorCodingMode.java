@@ -1,4 +1,4 @@
-package gui;
+package gui.add_items;
 
 public enum ColorCodingMode {
     OFF,

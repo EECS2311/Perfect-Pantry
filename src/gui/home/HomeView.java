@@ -1,4 +1,4 @@
-package gui;
+package gui.home;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,10 +18,15 @@ import javax.swing.WindowConstants;
 
 import database.DB;
 import database.StubDB;
-import domain.logic.Container;
-import domain.logic.ContainerUtility;
-import domain.logic.ItemUtility;
-import domain.logic.Settings;
+import domain.logic.container.Container;
+import domain.logic.container.ContainerUtility;
+import domain.logic.home.Settings;
+import domain.logic.item.ItemUtility;
+import gui.SeeContainersView;
+import gui.grocery.GroceryListView;
+import gui.recipe.RecipeListView;
+import gui.recipe.StarredRecipeListView;
+import gui.statistics.StatsView;
 
 /**
  * The main GUI frame for the application, serving as the entry point for user
@@ -129,7 +134,7 @@ public class HomeView implements ActionListener {
 		ItemUtility.updateFreshness();
 
 		if(notificationOn) {
-			new Notification();
+			new NotificationView();
 		}
 
 	}

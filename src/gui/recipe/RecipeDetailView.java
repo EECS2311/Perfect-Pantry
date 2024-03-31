@@ -1,7 +1,8 @@
-package gui;
+package gui.recipe;
 
 import domain.logic.recipe.Recipe;
 import domain.logic.recipe.RecipeUtility;
+import gui.home.HomeView;
 
 import javax.swing.*;
 import javax.swing.text.Utilities;

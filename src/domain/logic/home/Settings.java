@@ -1,7 +1,7 @@
-package domain.logic;
+package domain.logic.home;
 
 import database.DB;
-import gui.HomeView;
+import gui.home.HomeView;
 
 public class Settings {
 	private int fontSize;
