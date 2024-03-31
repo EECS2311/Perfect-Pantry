@@ -132,7 +132,7 @@ public class RecipeDetailView extends JPanel implements ActionListener {
             HomeView.getFrame().remove(this);
         }
         else if (e.getSource() == starRecipeButton) {
-            boolean isRecipeExists = RecipeUtility.verifySaveRecipeToDatabase(recipe);
+            boolean isRecipeExists = RecipeUtility.verifySaveRecipeToDatabase(recipe, HomeView.data);
             if (!isRecipeExists) {
                 JOptionPane.showMessageDialog(this, "This recipe is already saved.");
             }

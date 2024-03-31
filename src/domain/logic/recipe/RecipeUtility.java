@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import database.DB;
 import gui.home.HomeView;
 
 /**
@@ -60,13 +61,14 @@ public class RecipeUtility {
      * If the recipe already exists, it does not perform any operation and returns false.
      *
      * @param recipe The Recipe object to save to the database.
+     * @param database The database
      * @return true if the recipe was successfully saved (i.e., it did not exist in the database),
      *         false if the recipe already exists in the database and was not saved.
      */
-    public static boolean verifySaveRecipeToDatabase(Recipe recipe){
-        boolean isRecipeExists = RecipeUtility.isRecipeInDatabase(recipe.getId());
+    public static boolean verifySaveRecipeToDatabase(Recipe recipe, DB database){
+        boolean isRecipeExists = RecipeUtility.isRecipeInDatabase(recipe.getId(), database);
         if (!isRecipeExists) {
-            HomeView.data.saveRecipeToDatabase(recipe);
+            database.saveRecipeToDatabase(recipe);
             return true;
         } else {
             return false;
@@ -80,10 +82,11 @@ public class RecipeUtility {
      * is already stored. It is used internally to avoid duplicating recipes in the database.
      *
      * @param recipeId The unique identifier of the recipe to check in the database.
+     * @param database The database
      * @return true if the recipe exists in the database, false otherwise.
      */
-    private static boolean isRecipeInDatabase(int recipeId) {
-        return HomeView.data.isRecipeInDatabase(recipeId);
+    private static boolean isRecipeInDatabase(int recipeId, DB database) {
+        return database.isRecipeInDatabase(recipeId);
     }
 
 }
