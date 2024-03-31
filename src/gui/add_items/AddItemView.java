@@ -35,7 +35,7 @@ public class AddItemView extends JPanel {
      * @param itemsListPanel The text area where details of added items will be displayed.
      */
     public AddItemView(ItemsListView itemsListPanel) {
-        this.itemsListPanel = itemsListPanel; // Initialize the reference
+        this.itemsListPanel = itemsListPanel;
         
         setLayout(new FlowLayout());
         add(itemName);
@@ -67,7 +67,6 @@ public class AddItemView extends JPanel {
         if (isValid) {
             Item item = Item.getInstance(name, Integer.parseInt(quantityStr.trim()), expiryDate);
 
-            // Assume itemsListPanel.getC() gets a context or container where items are to be added
             boolean addedToData = HomeView.data.addItem(itemsListPanel.getC(), item.getName(), item);
 
             if (!addedToData) {
@@ -77,7 +76,6 @@ public class AddItemView extends JPanel {
 
             itemsListPanel.addItem(item);
 
-            // Clear the input fields and run the success callback logic
             itemNameField.setText("");
             itemQuantityField.setText("");
             itemExpiryField.setText("");
@@ -107,7 +105,7 @@ public class AddItemView extends JPanel {
      */
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(super.getPreferredSize().width, 100); // You can adjust the height as needed.
+        return new Dimension(super.getPreferredSize().width, 100);
     }
 
 

@@ -1,8 +1,9 @@
 package gui;
 
 import javax.swing.*;
-import domain.logic.Item;
-import domain.logic.ItemUtility;
+import domain.logic.item.Item;
+import domain.logic.item.ItemUtility;
+import gui.home.HomeView;
 
 import java.awt.*;
 import java.awt.event.*;
