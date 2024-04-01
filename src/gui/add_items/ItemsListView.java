@@ -105,8 +105,8 @@ public class ItemsListView extends JPanel {
 
 		add(new JScrollPane(getTable()), BorderLayout.CENTER);
 
-		ItemUtility.assignFoodFreshness(this.getC());
-		ItemUtility.initItems(container, tableModel);
+		ItemUtility.assignFoodFreshness(this.getC(), HomeView.data);
+		ItemUtility.initItems(container, tableModel, HomeView.data);
 
 		popup = new JPopupMenu();
 		removeItem = new JMenuItem("Delete Item");
@@ -191,8 +191,8 @@ public class ItemsListView extends JPanel {
 		String customTags = "";
 		tableModel.addRow(
 				new Object[] { item.getName(), item.getQuantity(), item.getExpiryDate().toString(), null, null, customTags});
-		ItemUtility.assignFoodFreshness(this.getC());
-		ItemUtility.initItems(this.getC(), tableModel);
+		ItemUtility.assignFoodFreshness(this.getC(), HomeView.data);
+		ItemUtility.initItems(this.getC(), tableModel, HomeView.data);
 	}
 
 	/**
@@ -222,9 +222,9 @@ public class ItemsListView extends JPanel {
 		String itemName = (String) table.getModel().getValueAt(row, CustomTableModel.NAME_COLUMN);
 		Object newValue = table.getModel().getValueAt(row, column);
 
-		ItemUtility.updateItemFoodGroupTag(getC(), itemName, newValue, column);
-		ItemUtility.assignFoodFreshness(this.getC());
-		ItemUtility.initItems(this.getC(), tableModel);
+		ItemUtility.updateItemFoodGroupTag(getC(), itemName, newValue, column, HomeView.data);
+		ItemUtility.assignFoodFreshness(this.getC(), HomeView.data);
+		ItemUtility.initItems(this.getC(), tableModel, HomeView.data);
 	}
 
 	/**

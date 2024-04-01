@@ -47,7 +47,7 @@ public class ActionListenerManager {
             int row = table.getSelectedRow();
             if (row != CustomTableModel.NOT_VALID_COLUMN) {
                 String name = table.getValueAt(row, CustomTableModel.NAME_COLUMN).toString();
-                if (ItemUtility.verifyDeleteItem(name, itemsListView.getC())) {
+                if (ItemUtility.verifyDeleteItem(name, itemsListView.getC(), HomeView.data)) {
                     itemsListView.removeItem(name);
                 }
             }
@@ -66,7 +66,7 @@ public class ActionListenerManager {
             int row = table.getSelectedRow();
             if (row != CustomTableModel.NOT_VALID_COLUMN) {
                 String name = table.getValueAt(row, CustomTableModel.NAME_COLUMN).toString();
-                String sTip = ItemUtility.retrieveStorageTip(name);
+                String sTip = ItemUtility.retrieveStorageTip(name, HomeView.data);
                 if (sTip != null) {
                     JOptionPane.showMessageDialog(HomeView.getFrame(),
                             "<html><body><p style='width:300px;'>" + sTip + "</p></body></html>",
@@ -95,7 +95,7 @@ public class ActionListenerManager {
                 ItemUtility.verifyEditQuantity(val, data, itemsListView.getC(), name,
                         (errorMsg) -> JOptionPane.showMessageDialog(itemsListView, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE),
                         () -> table.setValueAt(val, row, CustomTableModel.QUANTITY_COLUMN));
-                ItemUtility.initItems(itemsListView.getC(), (CustomTableModel) tableModel);
+                ItemUtility.initItems(itemsListView.getC(), (CustomTableModel) tableModel, HomeView.data);
             }
         };
         editQty.addActionListener(listener);

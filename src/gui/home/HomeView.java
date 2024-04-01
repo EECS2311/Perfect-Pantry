@@ -139,7 +139,7 @@ public class HomeView implements ActionListener {
 
 		setHomeViewVisibility(true);
 
-		ItemUtility.updateFreshness();
+		ItemUtility.updateFreshness(HomeView.data);
 
 		if(notificationOn) {
 			new NotificationView();

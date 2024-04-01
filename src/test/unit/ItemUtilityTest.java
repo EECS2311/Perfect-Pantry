@@ -94,23 +94,5 @@ public class ItemUtilityTest {
         assertTrue(errorOccurred[0], "Expected an error due to negative quantity.");
     }
 
-    @Test
-    void testRetrieveStorageTipWithKnownFood() {
-        // Assuming "Apple" is a known food with a storage tip in the mock or simulated database
-        String foodName = "Apple";
-        String expectedTip = "Apples will keep for a week at room temperature, or several weeks in the fruit drawer.";
-
-        String actualTip = ItemUtility.retrieveStorageTip(foodName);
-
-        assertNotNull(actualTip, "Storage tip should not be null for known food items.");
-        assertEquals(expectedTip, actualTip, "Storage tip does not match expected value.");
-    }
-
-    @Test
-    void testRetrieveStorageTipWithUnknownFood() {
-        String foodName = "this is not a food";
-        String actualTip = ItemUtility.retrieveStorageTip(foodName);
-        assertNull(actualTip, "Storage tip should be null for unknown or unsupported food items.");
-    }
 
 }

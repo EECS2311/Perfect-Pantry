@@ -24,15 +24,12 @@ public class ItemUtility {
 	 *
 	 * @param itemName  The name of the item to verify and delete.
 	 * @param container The container from which to delete the item.
+	 * @param database The database object
 	 * @return Boolean indicating the success or failure of the item deletion.
 	 */
-	public static Boolean verifyDeleteItem(String itemName, Container container) {
-
-		// Checking to see if item is in the database
-		if (HomeView.data.getItem(container, itemName) != null) {
-			// Remove the item if its present
-			HomeView.data.removeItem(container, itemName);
-
+	public static Boolean verifyDeleteItem(String itemName, Container container, DB database) {
+		if (database.getItem(container, itemName) != null) {
+			database.removeItem(container, itemName);
 			return true;
 		} else
 			return false;
@@ -136,11 +133,12 @@ public class ItemUtility {
 	 * @param newValue  The new value to be set for the item's property.
 	 * @param column    The column index corresponding to the property to be
 	 *                  updated.
+	 * @param database The database object
 	 * @return true if the item was successfully updated, false otherwise.
 	 */
-	public static void updateItemFoodGroupTag(Container container, String itemName, Object newValue, int column) {
+	public static void updateItemFoodGroupTag(Container container, String itemName, Object newValue, int column, DB database) {
 		if (column == 3 && newValue instanceof FoodGroup) {
-			HomeView.data.updateItemFoodGroup(container, itemName, (FoodGroup) newValue);
+			database.updateItemFoodGroup(container, itemName, (FoodGroup) newValue);
 		}
 	}
 
@@ -150,12 +148,13 @@ public class ItemUtility {
 	 * 
 	 * @param c          Container object to initialize the items for
 	 * @param tableModel the table object to initialize the rows for
+	 * @param database The database object
 	 */
-	public static void initItems(Container c, DefaultTableModel tableModel) {
-		List<Item> items = HomeView.data.retrieveItems(c);
+	public static void initItems(Container c, DefaultTableModel tableModel, DB database) {
+		List<Item> items = database.retrieveItems(c);
 		tableModel.setRowCount(0);
 		for (Item item : items) {
-			String tag = HomeView.data.getItemTag(item.getName());
+			String tag = database.getItemTag(item.getName());
 			tableModel.addRow(new Object[] { item.getName(), item.getQuantity(), dateFormat(item.getExpiryDate()),
 					item.getFoodGroupTag(), item.getFoodFreshnessTag(), tag });
 		}
@@ -178,25 +177,27 @@ public class ItemUtility {
 	 * Assigns FoodFreshness tags to items based on their expiry dates.
 	 * 
 	 * @param container The container whose items' freshness will be updated.
+	 * @param database The database object
 	 */
-	public static void assignFoodFreshness(Container container) {
-		HomeView.data.batchUpdateItemFreshness(container);
+	public static void assignFoodFreshness(Container container, DB database) {
+		database.batchUpdateItemFreshness(container);
 	}
 
 	/**
 	 * Retrieves storage tips for a specific food item from the database. This
-	 * method queries the database through the {@code HomeView.data} interface to
+	 * method queries the database through its interface to
 	 * find storage tips associated with the given food name. If a tip is found, it
 	 * is returned as a string.
 	 *
 	 * @param foodName The name of the food item for which storage tips are being
 	 *                 retrieved.
+	 * @param database The database object
 	 * @return A string containing storage tips for the specified food item. Returns
 	 *         {@code null} if no tips are found or if there's an error in
 	 *         retrieving the data.
 	 */
-	public static String retrieveStorageTip(String foodName) {
-		return HomeView.data.getStorageTip(foodName);
+	public static String retrieveStorageTip(String foodName, DB database) {
+		return database.getStorageTip(foodName);
 
 	}
 
@@ -204,13 +205,13 @@ public class ItemUtility {
 	 * Verifies and updates the quantity of an item in the list.
 	 * 
 	 * @param val             The user inputed value.
-	 * @param data            The database object
+	 * @param database            The database object
 	 * @param c               The container that belongs to the item
 	 * @param item            The name of the item which needs the quantity edited
 	 * @param errorHandler    A Consumer thsat handles error messages.
 	 * @param successCallback A Runnable that is executed upon successful addition.
 	 */
-	public static void verifyEditQuantity(String val, DB data, Container c, String item, Consumer<String> errorHandler,
+	public static void verifyEditQuantity(String val, DB database, Container c, String item, Consumer<String> errorHandler,
 			Runnable successCallback) {
 		try {
 			if (val == null) {
@@ -227,11 +228,11 @@ public class ItemUtility {
 				errorHandler.accept("You can't have a negative quantity!");
 				return;
 			} else if (o == 0) {
-				verifyDeleteItem(item, c);
+				verifyDeleteItem(item, c, database);
 				successCallback.run();
 
 			} else {
-				data.updateQuantity(item, o, c);
+				database.updateQuantity(item, o, c);
 				successCallback.run();
 			}
 
@@ -242,15 +243,14 @@ public class ItemUtility {
 
 	}
 	
-	public static void updateFreshness() {
-		DB db = HomeView.data;
-		
-		 List<String> s =  db.retrieveContainers();
+	public static void updateFreshness(DB database) {
+
+		 List<String> s =  database.retrieveContainers();
 	       Container c;
 	       for (String containerName: s) {
 	    	   
 	    	   c = new Container(containerName);
-	    	   db.batchUpdateItemFreshness(c);
+			   database.batchUpdateItemFreshness(c);
 	       }
 	}
 	
