@@ -64,27 +64,11 @@ public class AllItemsView extends JPanel implements ActionListener {
 		backButton.setFont(font);
 		
 		displayAllItems();
+		rowClickTransition();
 		allItemsTable.setFont(font);
 		
 		add(new JScrollPane(allItemsTable), BorderLayout.CENTER);
 
-		allItemsTable.addMouseListener(new MouseAdapter() {
-			
-			public void mousePressed(MouseEvent e) {
-				int row = allItemsTable.getSelectedRow();
-				if (row != -1) {
-					String name = tableModel.getValueAt(row, 5).toString();
-					
-					HomeView.getContainerMap().forEach((button, container) -> {
-						if (name.equals(container.getName())) {
-							container.getGUI();
-						}
-							
-					});
-				}
-			}
-		});
-		
 	}
 	
 	/**
@@ -171,6 +155,10 @@ public class AllItemsView extends JPanel implements ActionListener {
 		return this.allItemsTable;
 	}
 	
+	public DefaultTableModel getTableModel() {
+		return this.tableModel;
+	}
+	
 	/**
 	 * Updates the text fonts based on the assigned font settings
 	 */
@@ -178,5 +166,25 @@ public class AllItemsView extends JPanel implements ActionListener {
 		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
 		getTable().setFont(f);
 		getTable().setRowHeight(getTable().getRowHeight()+10);
+	}
+	
+	private void rowClickTransition() {
+		
+		allItemsTable.addMouseListener(new MouseAdapter() {
+			
+			public void mousePressed(MouseEvent e) {
+				int row = getTable().getSelectedRow();
+				if (row != -1) {
+					String name = getTableModel().getValueAt(row, 5).toString();
+					
+					HomeView.getContainerMap().forEach((button, container) -> {
+						if (name.equals(container.getName())) {
+							container.getGUI();
+						}
+							
+					});
+				}
+			}
+		});
 	}
 }
