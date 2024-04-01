@@ -69,7 +69,6 @@ public class DB {
 
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -94,7 +93,6 @@ public class DB {
 			}
 			return l;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
