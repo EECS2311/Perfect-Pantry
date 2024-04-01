@@ -215,7 +215,7 @@ public class CalendarView {
 		});
 
 		previousMonth.addActionListener(e -> {
-			if(nextCal.get(Calendar.MONTH )== 1) {
+			if(nextCal.get(Calendar.MONTH )== 0) {
 				nextCal.roll(Calendar.YEAR, false);
 			}
 			nextCal.roll(Calendar.MONTH, false);
