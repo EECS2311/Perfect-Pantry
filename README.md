@@ -48,12 +48,19 @@ public class info {
 * Set up a grocery list within the app and export it as a `.txt` file for later use
 
 ![image](https://github.com/EECS2311/EECS2311/assets/80595547/ddca1879-1ce4-4307-8a8a-a65957d3c20f)
+
 ![image](https://github.com/EECS2311/EECS2311/assets/80595547/b6f433f3-623a-461c-8467-70bc62133e74)
+
 ![image](https://github.com/EECS2311/EECS2311/assets/80595547/7e100ca4-3ddb-411a-bb89-9f57fc7df340)
+
 ![image](https://github.com/EECS2311/EECS2311/assets/80595547/3dc11725-1d73-4048-83ab-547cc71d0239)
+
 ![image](https://github.com/EECS2311/EECS2311/assets/80595547/ffe58f8a-242f-41b0-9bc0-76e76097dd97)
+
 ![image](https://github.com/EECS2311/EECS2311/assets/80595547/0b474bb7-e13c-4311-8309-92a333c8b996)
+
 ![image](https://github.com/EECS2311/EECS2311/assets/80595547/1b49c138-5f3b-4d04-9a01-e467fd9a4400)
+
 ![image](https://github.com/EECS2311/EECS2311/assets/80595547/4fa8f637-df1e-4b1a-9cd5-a52f01717ea5)
 
 
