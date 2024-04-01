@@ -1081,6 +1081,65 @@ public class DB {
         return success;
     }
 	
+    /**
+     * Adds a note for an item into the database
+     *
+     * @param itemName The name of the item
+     * @param note     The note to be added
+     */
+    public void addNote(String itemName, String note) {
+        Connection conn = init();
+        try {
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO note (item_name, note) VALUES (?, ?)");
+            statement.setString(1, itemName);
+            statement.setString(2, note);
+            statement.executeUpdate();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Deletes all notes for an item from the database
+     *
+     * @param itemName The name of the item
+     */
+    public void deleteNote(String itemName) {
+        Connection conn = init();
+        try {
+            String query = "DELETE FROM note WHERE item_name = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, itemName);
+            pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    // Method to retrieve notes for a specific item
+    public String getNote(String itemName) {
+        StringBuilder noteBuilder = new StringBuilder();
+        Connection conn = init();
+        try {
+            PreparedStatement statement = conn.prepareStatement("SELECT note FROM note WHERE item_name = ?");
+            statement.setString(1, itemName);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                if (noteBuilder.length() > 0) {
+                    noteBuilder.append("\n"); // Separate multiple notes with a new line
+                }
+                noteBuilder.append(resultSet.getString("note"));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return noteBuilder.toString();
+    }
 }
 
 
