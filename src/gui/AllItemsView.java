@@ -27,18 +27,34 @@ import gui.home.HomeView;
 
 public class AllItemsView extends JPanel implements ActionListener {
 	
-	public static AllItemsView instance;
-	
+	/**
+	 * Button to go from AllItemsView to HomeView
+	 */
 	private JButton backButton = new JButton("Back");
 	
+	/**
+	 * Table model that contains the information for tableModel
+	 */
 	private DefaultTableModel tableModel; 
 		
+	/**
+	 * Displaying JTable following the tableModel model
+	 */
 	private JTable allItemsTable;
 	
+	/**
+	 * The font and size that texts in the view will have
+	 */
 	private Font font;
 	
+	/**
+	 * Hash map containing the list of all the containers and their corresponding buttons from the database
+	 */
 	private static ConcurrentHashMap<JButton, Container> containerMap;
 		
+	/**
+	 * Constructor method that initializes all of the objects and tables on the page
+	 */
 	private AllItemsView() {
 		
 		setLayout(new BorderLayout());
@@ -71,10 +87,18 @@ public class AllItemsView extends JPanel implements ActionListener {
 		
 	}
 	
+	/**
+	 * Returns an instance of the AllItemsView object
+	 * @return an instance of the AllItemsView object
+	 */
 	public static AllItemsView getInstance() {
 		return new AllItemsView();
 	}
 	
+	/**
+	 * Method that initializes the JTable by calling and storing information about each container
+	 * and its items into the table model
+	 */
 	private void displayAllItems() {
 		
 		containerMap = HomeView.getContainerMap();
@@ -104,6 +128,10 @@ public class AllItemsView extends JPanel implements ActionListener {
 		addFonts();
 	}
 	
+	/**
+	 * Sets the visibility of the AllItemsView GUI depending on the boolean passed
+	 * @param b the value of whether the visibility is true or not
+	 */
 	public static void setAllItemsViewVisibility(boolean b) {
 		JFrame frame = HomeView.getFrame();
 		
@@ -122,6 +150,11 @@ public class AllItemsView extends JPanel implements ActionListener {
 		
 	}
 
+	/**
+	 * Handles action events triggered by GUI components.
+	 *
+	 * @param e The ActionEvent object containing details about the event.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == backButton) {
@@ -130,10 +163,17 @@ public class AllItemsView extends JPanel implements ActionListener {
 		
 	}
 	
+	/**
+	 * Provides access to the JTable
+	 * @return the current JTable object
+	 */
 	public JTable getTable() {
 		return this.allItemsTable;
 	}
 	
+	/**
+	 * Updates the text fonts based on the assigned font settings
+	 */
 	public void addFonts() {
 		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
 		getTable().setFont(f);
