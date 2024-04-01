@@ -3,7 +3,6 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,12 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+
 
 import domain.logic.container.Container;
 import domain.logic.item.Item;
@@ -42,10 +41,14 @@ public class AllItemsView extends JPanel implements ActionListener {
 	 */
 	private JTable allItemsTable;
 	
+	private JPanel topPanel;
+	
 	/**
 	 * The font and size that texts in the view will have
 	 */
 	private Font font;
+	
+	private JLabel viewInfo;
 	
 	/**
 	 * Hash map containing the list of all the containers and their corresponding buttons from the database
@@ -59,16 +62,20 @@ public class AllItemsView extends JPanel implements ActionListener {
 		
 		setLayout(new BorderLayout());
 		setBackground(new Color(253, 241, 203));
+		topPanel = new JPanel(new BorderLayout());
+		add(topPanel, BorderLayout.NORTH);
+		
 		backButton.addActionListener(this);
-		add(backButton, BorderLayout.NORTH);
-		backButton.setFont(font);
+		viewInfo = new JLabel("Click on an item to go to its container");	
+		
+		topPanel.add(backButton, BorderLayout.WEST);
+		topPanel.add(viewInfo, BorderLayout.CENTER);
 		
 		displayAllItems();
 		rowClickTransition();
-		allItemsTable.setFont(font);
-		
+				
 		add(new JScrollPane(allItemsTable), BorderLayout.CENTER);
-
+		addFonts();
 	}
 	
 	/**
@@ -109,7 +116,6 @@ public class AllItemsView extends JPanel implements ActionListener {
 		});
 		
 		allItemsTable = new JTable(tableModel);
-		addFonts();
 	}
 	
 	/**
@@ -155,19 +161,29 @@ public class AllItemsView extends JPanel implements ActionListener {
 		return this.allItemsTable;
 	}
 	
+	/**
+	 * Provides access to the DefaultTableModel
+	 * @return the current DefaultTableModel object
+	 */
 	public DefaultTableModel getTableModel() {
 		return this.tableModel;
 	}
 	
 	/**
-	 * Updates the text fonts based on the assigned font settings
+	 * Add fonts to components
 	 */
 	public void addFonts() {
 		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
 		getTable().setFont(f);
 		getTable().setRowHeight(getTable().getRowHeight()+10);
+		backButton.setFont(f);
+		viewInfo.setFont(f);
 	}
 	
+	/**
+	 * Implements clickable functionality to the JTable so that when a row is clicked
+	 * the view is changed to the container associated with the row
+	 */
 	private void rowClickTransition() {
 		
 		allItemsTable.addMouseListener(new MouseAdapter() {
