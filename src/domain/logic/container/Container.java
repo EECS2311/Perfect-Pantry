@@ -20,6 +20,11 @@ public class Container {
 	private HashMap<String, Item> listOfItem;
 	private ContainerView containerViewgui;
 
+	public ContainerView getContainerViewgui() {
+		return containerViewgui;
+	}
+
+
 	/**
 	 * Constructs a new Container with a name and associates it with a GUI view and
 	 * a Home instance.
