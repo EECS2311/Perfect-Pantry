@@ -68,9 +68,7 @@ public class CustomNoteView extends JPanel implements ActionListener {
 
         add(topPanel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.CENTER);
-        add(inputPanel, BorderLayout.SOUTH);
-        
-        addFonts();        
+        add(inputPanel, BorderLayout.SOUTH);       
     }
     public void addFonts() {
     	Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
@@ -78,9 +76,9 @@ public class CustomNoteView extends JPanel implements ActionListener {
         tablePanel.setFont(f);
         table.setRowHeight(f.getSize() + 5);
         saveButton.setFont(f);
-        inputPanel.setFont(f);
         backButton.setFont(f);
         table.setFont(f);
+        customNoteTextArea.setFont(f);
     }
 
     public static CustomNoteView getCustomNoteView() {
@@ -141,7 +139,7 @@ public class CustomNoteView extends JPanel implements ActionListener {
         	backButton.addActionListener(this);
             frame.getContentPane().removeAll();
             frame.getContentPane().add(this);
-            
+            addFonts();
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
