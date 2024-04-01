@@ -7,9 +7,8 @@ import domain.logic.recipe.*;
 
 public class RecipeApiClientDemo {
     public static void main(String[] args) {
-        // Example: Searching for recipes with apples,sugar,flour
         String ingredients = "apples,sugar,flour";
-        int numberOfRecipes = 5; // Number of recipes you want to retrieve
+        int numberOfRecipes = 5;
 
         List<Recipe> recipes = null;
         try {
