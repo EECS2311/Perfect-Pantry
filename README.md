@@ -1,4 +1,4 @@
-# EECS2311Z
+# EECS2311Z - Perfect Pantry App
 Group 7  
 
 Members:  
