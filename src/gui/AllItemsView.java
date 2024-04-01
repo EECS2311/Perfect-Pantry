@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import domain.logic.container.Container;
 import domain.logic.item.Item;
@@ -29,8 +32,10 @@ public class AllItemsView extends JPanel implements ActionListener {
 	private JButton backButton = new JButton("Back");
 	
 	private DefaultTableModel tableModel; 
-	
+		
 	private JTable allItemsTable;
+	
+	private Font font;
 	
 	private static ConcurrentHashMap<JButton, Container> containerMap;
 		
@@ -40,9 +45,11 @@ public class AllItemsView extends JPanel implements ActionListener {
 		setBackground(new Color(253, 241, 203));
 		backButton.addActionListener(this);
 		add(backButton, BorderLayout.NORTH);
+		backButton.setFont(font);
 		
-//		allItemsTable.setBackground(new Color(253, 241, 203));		
 		displayAllItems();
+		allItemsTable.setFont(font);
+		
 		add(new JScrollPane(allItemsTable), BorderLayout.CENTER);
 
 		allItemsTable.addMouseListener(new MouseAdapter() {
@@ -61,6 +68,7 @@ public class AllItemsView extends JPanel implements ActionListener {
 				}
 			}
 		});
+		
 	}
 	
 	public static AllItemsView getInstance() {
@@ -93,6 +101,7 @@ public class AllItemsView extends JPanel implements ActionListener {
 		});
 		
 		allItemsTable = new JTable(tableModel);
+		addFonts();
 	}
 	
 	public static void setAllItemsViewVisibility(boolean b) {
@@ -119,5 +128,15 @@ public class AllItemsView extends JPanel implements ActionListener {
 			setAllItemsViewVisibility(false);
 		}
 		
+	}
+	
+	public JTable getTable() {
+		return this.allItemsTable;
+	}
+	
+	public void addFonts() {
+		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+		getTable().setFont(f);
+		getTable().setRowHeight(getTable().getRowHeight()+10);
 	}
 }
