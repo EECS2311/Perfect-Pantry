@@ -91,6 +91,11 @@ public class SettingsView  implements ActionListener{
 		if(b) {
 			this.homePanel.add(settings, 0);
 
+			close.removeActionListener(this);
+			notifOn.removeActionListener(this);
+			decrease.removeActionListener(this);
+			increase.removeActionListener(this);
+
 			settings.setBounds(10, 80, 200, 300);
 			settings.setBackground(Color.PINK);
 			settings.setLayout(new BorderLayout(8, 20));
