@@ -17,6 +17,8 @@ public class CustomTableModel extends DefaultTableModel {
     public static final int EXPIRY_DATE_COLUMN = 2;
     public static final int FOOD_GROUP_COLUMN = 3;
     public static final int FOOD_FRESHNESS_COLUMN = 4;
+    public static final int CUSTOM_TAG_COLUMN = 5;
+
 
     /**
      * Determines whether a cell is editable. Only the FOOD_GROUP_COLUMN cells
@@ -28,7 +30,7 @@ public class CustomTableModel extends DefaultTableModel {
      */
     @Override
     public boolean isCellEditable(int row, int column) {
-        return column != NAME_COLUMN && column != QUANTITY_COLUMN && column != EXPIRY_DATE_COLUMN && column != FOOD_FRESHNESS_COLUMN;
+        return column != NAME_COLUMN && column != QUANTITY_COLUMN && column != EXPIRY_DATE_COLUMN && column != FOOD_FRESHNESS_COLUMN && column != CUSTOM_TAG_COLUMN;
     }
 
     /**
