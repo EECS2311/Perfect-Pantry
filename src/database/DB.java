@@ -367,10 +367,12 @@ public class DB {
 	public String getStorageTip(String name) {
 		Connection conn = init();
 		String tip = null;
+		
+		String formattedName = name.substring(0,1).toUpperCase() + (name.substring(1)).toLowerCase();
 
 		try {
 			Statement s = conn.createStatement();
-			ResultSet result = s.executeQuery(String.format("SELECT * FROM storage_tips WHERE name='%s'", name));
+			ResultSet result = s.executeQuery(String.format("SELECT * FROM storage_tips WHERE name='%s'", formattedName));
 
 			while (result.next()) {
 				tip = result.getString("info");
