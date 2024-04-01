@@ -121,4 +121,11 @@ public class ActionListenerManager {
         };
         customTag.addActionListener(listener);
     }
+    
+    public void attachCustomNoteListener(JMenuItem customNote) {
+    	ActionListener listener = e -> {
+			this.itemsListView.customNoteView.setCustomNoteViewVisibility(true);
+		};
+		customNote.addActionListener(listener);
+    }
 }

@@ -33,6 +33,7 @@ import domain.logic.item.FoodGroup;
 import domain.logic.item.GenericTag;
 import domain.logic.item.Item;
 import domain.logic.item.ItemUtility;
+import gui.customNote.CustomNoteView;
 import gui.home.HomeView;
 /**
  * Represents a panel that displays a list of items within a container. It
@@ -48,6 +49,7 @@ public class ItemsListView extends JPanel {
 	private JMenuItem editQty;
 	private JMenuItem generateTip;
 	private JMenuItem customTag;
+	private JMenuItem customNote;
 
 	private TableRowSorter<TableModel> sorter;
 
@@ -59,6 +61,7 @@ public class ItemsListView extends JPanel {
 	private DB data;
 	private Container container;
 	private CustomTag customTagHandler;
+	public CustomNoteView customNoteView;
 
 	/**
 	 * Constructs an ItemsListView panel associated with a specific container.
@@ -71,6 +74,9 @@ public class ItemsListView extends JPanel {
 		this.data = home.data;
 		this.container = container;
 		this.customTagHandler = new CustomTag(data);
+		this.customNoteView = new CustomNoteView(this);
+		this.customNoteView.populateTable(this.data.retrieveItems(container));
+		
 		
 		setLayout(new BorderLayout());
 
@@ -107,11 +113,13 @@ public class ItemsListView extends JPanel {
 		editQty = new JMenuItem("Update Quantity");
 		generateTip = new JMenuItem("Storage Tip");
 		customTag = new JMenuItem("Add Custom Tag (Enter Blank String to Remove)");
+		customNote = new JMenuItem("See/Edit Custom Notes");
 
 		popup.add(removeItem);
 		popup.add(editQty);
 		popup.add(generateTip);
 		popup.add(customTag);
+		popup.add(customNote);
 
 		getTable().setComponentPopupMenu(popup);
 		getTable().addMouseListener(new MouseAdapter() {
@@ -134,6 +142,7 @@ public class ItemsListView extends JPanel {
 		actionListenerManager.attachGenerateTipListener(generateTip);
 		actionListenerManager.attachEditQtyListener(editQty);
 		actionListenerManager.attachCustomTagListener(customTag);
+		actionListenerManager.attachCustomNoteListener(customNote);
 
 		sorter = new TableRowSorter<TableModel>(getTable().getModel());
 		getTable().setRowSorter(sorter);

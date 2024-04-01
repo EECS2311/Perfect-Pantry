@@ -22,21 +22,25 @@ public class Item implements Comparable<Item>{
     private Date expiryDate;
     
     private String customTag;
+    private String customNote;
 
     // Constructors are private to enforce the use of factory methods for instance creation.
     private Item(String name, int quantity, Date expiryDate){
         this(name, quantity);
         this.expiryDate = expiryDate;
         customTag = "";
+        customNote = "";
     }
     private Item(String name){
         this.name = name;
         customTag = "";
+        customNote = "";
     }
     private Item(String name, int quantity){
         this(name);
         this.quantity = quantity;
         customTag = "";
+        customNote = "";
     }
 
     /**
@@ -383,16 +387,26 @@ public class Item implements Comparable<Item>{
     
     // Method to add a custom tag to the item
     public void addCustomTag(String tag) {
-        customTag = tag;
+        this.customTag = tag;
     }
 
     // Method to remove a custom tag from the item
     public void removeCustomTag() {
-        customTag = "";
+        this.customTag = "";
     }
 
     // Method to retrieve all custom tags associated with the item
     public String getCustomTag() {
         return customTag;
     }
+    
+    // Method to add a custom note to the item
+	public void setCustomNote(String customNote) {
+		this.customNote = customNote;
+	}
+	
+	// Method to get the custom note
+	public String getCustomNote() {
+		return this.customNote;
+	}
 }
