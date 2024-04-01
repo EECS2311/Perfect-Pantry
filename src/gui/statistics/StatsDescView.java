@@ -1,13 +1,16 @@
 package gui.statistics;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import domain.logic.statistics.StatsUtilities;
+import gui.home.HomeView;
 
 public class StatsDescView extends JPanel {
 
@@ -42,10 +45,26 @@ public class StatsDescView extends JPanel {
 		add(fruit);
 		add(dairy);
 
+		addFonts();
+
 		setBounds(LEFT_EDGE, yLevel, 600, 30);
 		setBackground(new Color(0, 0, 0));
 		setVisible(true);
 
+	}
+
+	public void addFonts(){
+		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
+		protein.setFont(f);
+		vegetable.setFont(f);
+		grain.setFont(f);
+		fruit.setFont(f);
+		dairy.setFont(f);
+
+	}
+
+	public JScrollPane addJScrollPane(){
+		return new JScrollPane(this);
 	}
 
 	public void setDesc(ArrayList<String> allItems) {
