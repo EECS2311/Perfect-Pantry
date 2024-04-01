@@ -9,12 +9,26 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 
+/**
+ * Manages the attachment of action listeners to menu items in the GUI. This class
+ * encapsulates the logic required to interact with the items list, including
+ * removal, editing, and displaying tips for items.
+ */
 public class ActionListenerManager {
     private JTable table;
     private DefaultTableModel tableModel;
     private DB data;
-    private ItemsListView itemsListView; // Reference to ItemsListView for callback
+    private ItemsListView itemsListView;
 
+    /**
+     * Constructs an ActionListenerManager with the necessary components to interact
+     * with the GUI and the database.
+     *
+     * @param table The table where items are displayed.
+     * @param tableModel The table model used by the table.
+     * @param data The database connection object.
+     * @param itemsListView The view that displays the list of items.
+     */
     public ActionListenerManager(JTable table, DefaultTableModel tableModel, DB data, ItemsListView itemsListView) {
         this.table = table;
         this.tableModel = tableModel;
@@ -22,6 +36,12 @@ public class ActionListenerManager {
         this.itemsListView = itemsListView;
     }
 
+    /**
+     * Attaches an action listener to the JMenuItem that removes an item from the list.
+     * The removal is conditional upon verification.
+     *
+     * @param removeItem The menu item to which the listener will be attached.
+     */
     public void attachRemoveItemListener(JMenuItem removeItem) {
         ActionListener listener = e -> {
             int row = table.getSelectedRow();
@@ -35,6 +55,12 @@ public class ActionListenerManager {
         removeItem.addActionListener(listener);
     }
 
+    /**
+     * Attaches an action listener to the JMenuItem that generates and displays
+     * a storage tip for the selected item.
+     *
+     * @param generateTip The menu item to which the listener will be attached.
+     */
     public void attachGenerateTipListener(JMenuItem generateTip) {
         ActionListener listener = e -> {
             int row = table.getSelectedRow();
@@ -54,6 +80,12 @@ public class ActionListenerManager {
         generateTip.addActionListener(listener);
     }
 
+    /**
+     * Attaches an action listener to the JMenuItem that allows the quantity of
+     * an item to be edited.
+     *
+     * @param editQty The menu item to which the listener will be attached.
+     */
     public void attachEditQtyListener(JMenuItem editQty) {
         ActionListener listener = e -> {
             String val = JOptionPane.showInputDialog(HomeView.getFrame(), "Edit Quantity", "Enter a new Value", JOptionPane.QUESTION_MESSAGE);
@@ -69,6 +101,12 @@ public class ActionListenerManager {
         editQty.addActionListener(listener);
     }
 
+    /**
+     * Attaches an action listener to the JMenuItem that handles custom tagging
+     * for an item.
+     *
+     * @param customTag The menu item to which the listener will be attached.
+     */
     public void attachCustomTagListener(JMenuItem customTag) {
         ActionListener listener = e -> {
             int row = table.getSelectedRow();
