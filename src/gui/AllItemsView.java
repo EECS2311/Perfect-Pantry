@@ -114,7 +114,7 @@ public class AllItemsView extends JPanel implements ActionListener {
 		};
 		
 		containerMap.forEach((button, container) -> {
-			ItemUtility.assignFoodFreshness(container);
+			ItemUtility.assignFoodFreshness(container, HomeView.data);
 			
 			List<Item> items = HomeView.data.retrieveItems(container);
 			
