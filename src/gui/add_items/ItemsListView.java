@@ -75,11 +75,8 @@ public class ItemsListView extends JPanel {
 		setLayout(new BorderLayout());
 
 		tableModel = new CustomTableModel();
-
 		table = new CustomColorCodedTable(tableModel);
 
-
-		// Define table columns
 		tableModel.addColumn("Name");
 		tableModel.addColumn("Quantity");
 		tableModel.addColumn("Expiry Date (yyyy-mm-dd)");
