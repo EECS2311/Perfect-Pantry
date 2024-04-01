@@ -23,7 +23,7 @@ import domain.logic.container.Container;
 import domain.logic.container.ContainerUtility;
 import domain.logic.home.Settings;
 import domain.logic.item.ItemUtility;
-import gui.Additemhome;
+import gui.AddItemHomeView;
 import gui.SeeContainersView;
 import gui.grocery.GroceryListView;
 import gui.recipe.RecipeListView;
@@ -385,8 +385,8 @@ public class HomeView implements ActionListener {
 
 
 	private void openAddItemDialog() {
-		Additemhome dialog = new Additemhome(frame);
-		dialog.setVisible(true);
+		AddItemHomeView dialog = new AddItemHomeView(frame);
+	
 	}
 
 }
