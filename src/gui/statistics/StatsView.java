@@ -14,7 +14,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import gui.home.HomeView;
 
@@ -36,9 +35,6 @@ public class StatsView extends JPanel implements ItemListener {
 
 	private final int BAR_LENGTH = 600;
 	private final int LEFT_EDGE = 100;
-
-	JScrollPane scrollD1;
-	JScrollPane scrollDx;
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -62,12 +58,9 @@ public class StatsView extends JPanel implements ItemListener {
 		st = new StatsRectangleView(containers.get(0));
 		d1 = new StatsDescView(220);
 		d1.setDesc(allItems);
-		scrollD1 = d1.addJScrollPane();
-		scrollD1.setBounds(LEFT_EDGE, 220, 600, 60);
 		dx = new StatsDescView(450);
 		dx.setDesc(HomeView.data.getTotalCount(containers.get(0)));
-		scrollDx = dx.addJScrollPane();
-		scrollDx.setBounds(LEFT_EDGE, 450, 600, 60);
+	
 
 		b1 = new JLabel("All Pantries: " + totalItemCount + " Items");
 		b1.setBounds(LEFT_EDGE, 90, 300, 100);
@@ -95,35 +88,14 @@ public class StatsView extends JPanel implements ItemListener {
 		add(b1);
 		add(bx);
 		add(st);
-		add(scrollD1); //Yes
-		add(scrollDx); //Yes
-
-		addFonts();
+		add(d1);
+		add(dx);
 		
 		
 		
 		setBackground(new Color(253, 241, 203));
 		setLayout(null);
 		setVisible(true);
-
-	}
-
-	public void addFonts(){
-		Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
-		containerSelect.setFont(f);
-		backButton.setFont(f);
-		d1.addFonts();
-		dx.addFonts();
-
-		if(f.getSize() >= 22) {
-			backButton.setBounds(20, 20, 200, 50);
-			containerSelect.setBounds(LEFT_EDGE, 300, 300, 100);
-		}
-		else{
-			backButton.setBounds(20, 20, 80, 30);
-			containerSelect.setBounds(LEFT_EDGE, 300, 200, 50);
-
-		}
 
 	}
 
