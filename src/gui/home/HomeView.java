@@ -233,7 +233,7 @@ public class HomeView implements ActionListener {
 			statisticsButton.addActionListener(this);
 
 			homePanel.add(addItemButton);
-			addItemButton.addActionListener(e -> openAddItemDialog());
+			addItemButton.addActionListener(this);
 			addItemButton.setBounds(240, 350, 250, 40);  // Adjust the positioning as needed
 
 			addFonts();
@@ -348,6 +348,8 @@ public class HomeView implements ActionListener {
 			StarredRecipeListView.getInstance().setRecipeListViewVisibility(true);
 		} else if (source == statisticsButton) {
 			StatsView.getInstance().setStatsViewVisibility(true);
+		} else if (source == addItemButton) {
+			openAddItemDialog();
 		}
 	}
 
