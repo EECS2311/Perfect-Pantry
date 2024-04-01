@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.List;
 import java.util.Map.Entry;
@@ -28,27 +29,42 @@ public class AddItemHomeView {
    
     
     public AddItemHomeView(JFrame owner) {
-    	
+    	Font f = new Font("Lucida Grande", Font.PLAIN, HomeView.getSettings().getFontSize());
     	j = new JDialog(HomeView.getFrame(), "Add New Item");
  
         j.setLayout(new GridLayout(5, 2));
 
-        j.add(new JLabel("Item Name:"));
+        JLabel itemName = new JLabel("Item Name:");
+        itemName.setFont(f);
+        j.add(itemName);
+        
+        itemNameField.setFont(f);
         j.add(itemNameField);
 
-        j.add(new JLabel("Container:"));
+        JLabel container = new JLabel("Container:");
+        container.setFont(f);
+        j.add(container);
+        
         List<String> containerNames = HomeView.data.retrieveContainers(); // Retrieve container names
         for (String containerName : containerNames) {
             containerComboBox.addItem(containerName); // Add container names to the combo box
         }
+        containerComboBox.setFont(f);
         j.add(containerComboBox);
 
-        j.add(new JLabel("Expiry Date (dd-MMM-yy):"));
+        JLabel expiry = new JLabel("Expiry Date (dd-MMM-yy):");
+        expiry.setFont(f);
+        j.add(expiry);
+        expiryDateField.setFont(f);
         j.add(expiryDateField);
 
-        j.add(new JLabel("Quantity:"));
+        JLabel quantity = new JLabel("Quantity:");
+        quantity.setFont(f);
+        j.add(quantity);
+        quantityField.setFont(f);
         j.add(quantityField);
 
+        addButton.setFont(f);
         addButton.addActionListener(e -> addItem());
         j.add(addButton);
 
