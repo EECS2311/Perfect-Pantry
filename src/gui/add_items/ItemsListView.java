@@ -33,8 +33,8 @@ import domain.logic.item.FoodGroup;
 import domain.logic.item.GenericTag;
 import domain.logic.item.Item;
 import domain.logic.item.ItemUtility;
+import gui.customNote.CustomNoteView;
 import gui.home.HomeView;
-import main.java.gui.customNote.CustomNoteView;
 /**
  * Represents a panel that displays a list of items within a container. It
  * provides functionalities to add and remove items, and update item properties
@@ -42,12 +42,6 @@ import main.java.gui.customNote.CustomNoteView;
  * or food group, and includes a right-click menu for item management.
  */
 public class ItemsListView extends JPanel {
-	private static final int NOT_VALID_COLUMN = 1;
-	private static final int NAME_COLUMN = 0;
-	private static final int QUANTITY_COLUMN = 1;
-	private static final int EXPIRY_DATE_COLUMN = 2;
-	private static final int FOOD_GROUP_COLUMN = 3;
-	private static final int FOOD_FRESHNESS_COLUMN = 4;
 	private DefaultTableModel tableModel;
 	private JTable table;
 	private JPopupMenu popup;
@@ -86,112 +80,9 @@ public class ItemsListView extends JPanel {
 		
 		setLayout(new BorderLayout());
 
-		tableModel = new DefaultTableModel() {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != NAME_COLUMN && column != QUANTITY_COLUMN && column != EXPIRY_DATE_COLUMN && column != FOOD_FRESHNESS_COLUMN;
-			}
+		tableModel = new CustomTableModel();
+		table = new CustomColorCodedTable(tableModel);
 
-			@Override
-			public Class<?> getColumnClass(int columnIndex) {
-				switch (columnIndex) {
-				case NAME_COLUMN | EXPIRY_DATE_COLUMN:
-					return String.class;
-				case QUANTITY_COLUMN:
-					return Integer.class;
-				case FOOD_GROUP_COLUMN:
-					return FoodGroup.class;
-				case FOOD_FRESHNESS_COLUMN:
-					return FoodFreshness.class;
-				default:
-					return Object.class;
-				}
-			}
-		};
-
-		table = new JTable(tableModel) {
-
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-				Component c = super.prepareRenderer(renderer, row, column);
-				if (!isRowSelected(row)) {
-					switch (colorCodingMode) {
-						case BY_FRESHNESS:
-
-							int freshnessCol = table.getColumnModel().getColumnIndex("Food Freshness");
-
-							Object freshnessValue = getValueAt(row, freshnessCol);
-							String freshness = "";
-
-							if (freshnessValue instanceof GenericTag) {
-								freshness = ((GenericTag<FoodFreshness>) freshnessValue).toString();
-							} else if (freshnessValue != null) {
-								freshness = freshnessValue.toString();
-							}
-
-							switch (freshness) {
-								case "Expired":
-									c.setBackground(new Color(252, 156, 156));
-									break;
-								case "Near_Expiry":
-									c.setBackground(new Color(236, 236, 127));
-									break;
-								case "Fresh":
-									c.setBackground(new Color(145, 252, 145));
-									break;
-								default:
-									c.setBackground(Color.WHITE);
-									break;
-							}
-							break;
-						case BY_FOOD_GROUP:
-							int foodGroupCol = getTable().getColumnModel().getColumnIndex("Food Group");
-							Object foodGroupValue = getValueAt(row, foodGroupCol);
-
-							String foodGroup = "";
-
-							if (foodGroupValue instanceof GenericTag) {
-								foodGroup = ((GenericTag<FoodGroup>) foodGroupValue).toString();
-							} else if (foodGroupValue != null) {
-								foodGroup = foodGroupValue.toString();
-							}
-
-							switch (foodGroup) {
-								case "Grain":
-									c.setBackground(new Color(255, 235, 156));
-									break;
-								case "Protein":
-									c.setBackground(new Color(252, 156, 156));
-									break;
-								case "Vegetable":
-									c.setBackground(new Color(193,219,155));
-									break;
-								case "Fruit":
-									c.setBackground(new Color(195, 177, 225));
-									break;
-								case "Dairy":
-									c.setBackground(new Color(207,219,231));
-									break;
-								default:
-									c.setBackground(Color.WHITE);
-									break;
-							}
-							break;
-
-						case OFF:
-							c.setBackground(Color.WHITE);
-							break;
-					}
-				}else {
-					if (!isRowSelected(row)) {
-						c.setBackground(Color.WHITE);
-					}
-				}
-				return c;
-			}
-		};
-
-		// Define table columns
 		tableModel.addColumn("Name");
 		tableModel.addColumn("Quantity");
 		tableModel.addColumn("Expiry Date (yyyy-mm-dd)");
@@ -203,13 +94,13 @@ public class ItemsListView extends JPanel {
 			if (e.getType() == TableModelEvent.UPDATE) {
 				int row = e.getFirstRow();
 				int column = e.getColumn();
-				if (column == FOOD_GROUP_COLUMN) {
+				if (column == CustomTableModel.FOOD_GROUP_COLUMN) {
 					updateItemFromTable(row, column);
 				}
 			}
 		});
 
-		table.getColumnModel().getColumn(FOOD_GROUP_COLUMN).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
+		table.getColumnModel().getColumn(CustomTableModel.FOOD_GROUP_COLUMN).setCellEditor(new EnumComboBoxEditor(FoodGroup.values()));
 		table.getTableHeader().setReorderingAllowed(false);
 
 		add(new JScrollPane(getTable()), BorderLayout.CENTER);
@@ -245,69 +136,13 @@ public class ItemsListView extends JPanel {
 
 		});
 
-		removeItem.addActionListener(e -> {
+		ActionListenerManager actionListenerManager = new ActionListenerManager(table, tableModel, data, this);
 
-			int row = getTable().getSelectedRow();
-
-			if (row != NOT_VALID_COLUMN) {
-				String name = table.getValueAt(row, NAME_COLUMN).toString();
-				if (ItemUtility.verifyDeleteItem(name, this.getC())) {
-					this.removeItem(name);
-				}
-
-			}
-
-		});
-		generateTip.addActionListener(e -> {
-
-			int row = getTable().getSelectedRow();
-
-			if (row != NOT_VALID_COLUMN) {
-				String name = table.getValueAt(row, NAME_COLUMN).toString();
-				String sTip = ItemUtility.retrieveStorageTip(name);
-
-				if (sTip != null) {
-					JOptionPane.showMessageDialog(HomeView.getFrame(),
-							"<html><body><p style='width:300px;'>" + sTip + "</p></body></html>",
-							name + " - Storage Tip", JOptionPane.PLAIN_MESSAGE);
-				} else {
-					JOptionPane.showMessageDialog(HomeView.getFrame(), "No Storage Tips Available",
-							"NoStorageTipsError", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-
-		});
-		editQty.addActionListener(e -> {
-
-			String val = JOptionPane.showInputDialog(HomeView.getFrame(), "Edit Quantity", "Enter a new Value", 3);
-			int row = table.getSelectedRow();
-			if (row != NOT_VALID_COLUMN) {
-				String name = table.getValueAt(row, NAME_COLUMN).toString();
-				ItemUtility.verifyEditQuantity(val, data, this.getC(), name, (errorMsg) -> JOptionPane
-						.showMessageDialog(this, errorMsg, "Input Error", JOptionPane.ERROR_MESSAGE), () -> {
-							table.setValueAt(val, row, QUANTITY_COLUMN);
-						});
-				ItemUtility.initItems(this.getC(), tableModel);
-			}
-		});
-		
-		// ActionListener for the "Add Custom Tag" menu item
-		customTag.addActionListener(e -> {
-		    int row = getTable().getSelectedRow();
-		    if (row != -1) {
-		        String name = getTable().getValueAt(row, 0).toString();
-		        Item item = data.getItem(this.getC(),name);
-		        if (item != null) {
-		        	customTagHandler.handleCustomTag(item, this);
-		        }
-		    }
-		});
-		
-		customNote.addActionListener(e -> {
-			customNoteView.setCustomNoteViewVisibility(true);
-		});
-		
-		
+		actionListenerManager.attachRemoveItemListener(removeItem);
+		actionListenerManager.attachGenerateTipListener(generateTip);
+		actionListenerManager.attachEditQtyListener(editQty);
+		actionListenerManager.attachCustomTagListener(customTag);
+		actionListenerManager.attachCustomNoteListener(customNote);
 
 		sorter = new TableRowSorter<TableModel>(getTable().getModel());
 		getTable().setRowSorter(sorter);
@@ -368,7 +203,7 @@ public class ItemsListView extends JPanel {
 	public void removeItem(String itemName) {
 		// Iterate through the table to find the row with the given item name
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
-			if (itemName.equals(tableModel.getValueAt(i, NAME_COLUMN))) {
+			if (itemName.equals(tableModel.getValueAt(i, CustomTableModel.NAME_COLUMN))) {
 
 				tableModel.removeRow(i);
 
@@ -384,7 +219,7 @@ public class ItemsListView extends JPanel {
 	 * @param column The column index of the property that was changed.
 	 */
 	private void updateItemFromTable(int row, int column) {
-		String itemName = (String) table.getModel().getValueAt(row, NAME_COLUMN);
+		String itemName = (String) table.getModel().getValueAt(row, CustomTableModel.NAME_COLUMN);
 		Object newValue = table.getModel().getValueAt(row, column);
 
 		ItemUtility.updateItemFoodGroupTag(getC(), itemName, newValue, column);
@@ -410,7 +245,9 @@ public class ItemsListView extends JPanel {
 				colorCodingMode = ColorCodingMode.OFF;
 				break;
 		}
-		getTable().repaint();
+		if (table instanceof CustomColorCodedTable) {
+			((CustomColorCodedTable) table).setColorCodingMode(colorCodingMode);
+		}
 	}
 
 	public Container getC() {

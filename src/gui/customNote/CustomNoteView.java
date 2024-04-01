@@ -1,4 +1,4 @@
-package main.java.gui.customNote;
+package gui.customNote;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -11,6 +11,7 @@ import java.util.List;
 import domain.logic.item.Item;
 import domain.logic.container.Container;
 import database.DB;
+import gui.add_items.ContainerView;
 import gui.add_items.ItemsListView;
 import gui.home.HomeView;
 

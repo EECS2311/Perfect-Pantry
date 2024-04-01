@@ -34,6 +34,12 @@ public class ContainerView implements ActionListener {
 
 	private HomeView home;
 	private ItemsListView itemsListPanel;
+	public ItemsListView getItemsListPanel() {
+		return itemsListPanel;
+	}
+
+
+
 	private AddItemView addItemPanel;
 	private Container container;
 	

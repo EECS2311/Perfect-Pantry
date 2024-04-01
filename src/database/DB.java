@@ -975,6 +975,51 @@ public class DB {
 	}
 
 	/**
+	 * Clears all recipe-related data from the database.
+	 * This includes recipes, their ingredients links, and detailed instructions.
+	 */
+	public void clearRecipesTable() {
+		Connection conn = init();
+		if (conn != null) {
+			try {
+				conn.setAutoCommit(false);
+
+				String[] sqlStatements = {
+						"DELETE FROM detailed_instructions",
+						"DELETE FROM recipe_ingredients",
+						"DELETE FROM recipes"
+				};
+
+				for (String sql : sqlStatements) {
+					try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+						pstmt.executeUpdate();
+					}
+				}
+
+				conn.commit();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				try {
+					if (conn != null) {
+						conn.rollback();
+					}
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			} finally {
+				try {
+					if (conn != null) {
+						conn.setAutoCommit(true);
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
 	 * Retrieves a list of food group names from items stored in a specified container or all containers if none is specified.
 	 * If the 'container' parameter is null, the method returns food group names from all items. Otherwise, it returns
 	 * food group names from items in the specified container.
