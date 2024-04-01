@@ -73,13 +73,11 @@ CREATE TABLE detailed_instructions (
 CREATE TABLE item_tags (
     item_name VARCHAR(50),
     tag VARCHAR(50),
-    FOREIGN KEY (item_name) REFERENCES item(name) ON DELETE CASCADE,
     PRIMARY KEY (item_name, tag)
 );
 
 CREATE TABLE note (
     item_name VARCHAR(50),
     note VARCHAR(200),
-    FOREIGN KEY (item_name) REFERENCES item(name) ON DELETE CASCADE,
     PRIMARY KEY (item_name, note)
 );
