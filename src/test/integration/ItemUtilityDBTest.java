@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,9 +63,11 @@ class ItemUtilityDBTest {
         String itemName = "ToUpdateItem";
         int newQuantity = 10;
         Item itemToUpdate = Item.getInstance(itemName, 5, new java.sql.Date(System.currentTimeMillis()));
+
         database.addItem(testContainer, itemName, itemToUpdate);
         database.updateQuantity(itemName, newQuantity, testContainer);
         Item updatedItem = database.getItem(testContainer, itemName);
+
         assertNotNull(updatedItem, "The item should exist in the database after update.");
         assertEquals(newQuantity, updatedItem.getQuantity(), "The item's quantity should be updated in the database.");
     }
@@ -83,10 +86,8 @@ class ItemUtilityDBTest {
     @Test
     void testDeleteItemUsingUtility() {
         String itemName = "ToDeleteItem";
-        // Add an item first
         assertTrue(database.addItem(testContainer, itemName, Item.getInstance(itemName, 5, new java.sql.Date(System.currentTimeMillis()))), "Item should be added for deletion test.");
 
-        // Delete using utility
         assertTrue(ItemUtility.verifyDeleteItem(itemName, testContainer, database), "Item should be deleted.");
 
         Item retrievedItem = database.getItem(testContainer, itemName);
@@ -96,20 +97,44 @@ class ItemUtilityDBTest {
     @Test
     void testUpdateItemQuantityUsingUtility() {
         String itemName = "ToUpdateQuantity";
-        // Add an item
         assertTrue(database.addItem(testContainer, itemName, Item.getInstance(itemName, 5, new java.sql.Date(System.currentTimeMillis()))), "Item should be added for update test.");
 
-        // Prepare error handler and success callback
         Consumer<String> errorHandler = errorMsg -> fail("Error updating quantity: " + errorMsg);
         Runnable successCallback = () -> {}; // No operation, just for the sake of completeness
 
-        // Update using utility
         ItemUtility.verifyEditQuantity("10", database, testContainer, itemName, errorHandler, successCallback);
 
-        // Verify the update
         Item updatedItem = database.getItem(testContainer, itemName);
         assertNotNull(updatedItem, "The item should exist after update.");
         assertEquals(10, updatedItem.getQuantity(), "The item's quantity should be updated.");
+    }
+
+    @Test
+    void testAddItemWithBoundaryExpiryDate() {
+        // Test adding an item with an expiry date right at the boundary of being considered fresh or near expiry
+        String itemName = "BoundaryExpiryItem";
+        String quantity = "5";
+        // Assuming today's date is the boundary condition
+        String expiryDateToday = new SimpleDateFormat("dd-MMM-yyyy").format(new java.util.Date());
+
+        Consumer<String> errorHandler = errorMsg -> fail("Error: " + errorMsg);
+        assertTrue(ItemUtility.verifyAddItem(itemName, quantity, expiryDateToday, errorHandler), "Boundary expiry date item should be verified and added.");
+    }
+
+    @Test
+    void testUpdateItemExpiryDate() {
+        String itemName = "UpdateExpiryItem";
+        Item item = Item.getInstance(itemName, 1, new Date(System.currentTimeMillis()));
+        database.addItem(testContainer, itemName, item);
+
+        // New expiry date set to 10 days from now
+        String newExpiryDate = new SimpleDateFormat("dd-MMM-yyyy").format(new java.util.Date(System.currentTimeMillis() + 10 * 24 * 60 * 60 * 1000));
+
+        Consumer<String> errorHandler = errorMsg -> fail("Error updating expiry date: " + errorMsg);
+        Runnable successCallback = () -> {};
+
+        Item updatedItem = database.getItem(testContainer, itemName);
+        assertNotNull(updatedItem, "The item should exist after expiry date update.");
     }
 
     @Test
@@ -165,11 +190,9 @@ class ItemUtilityDBTest {
         database.addItem(testContainer, itemName, item);
         database.insertItemTag(itemName, oldTag);
 
-        // When updating the tag
         database.removeItemTag(itemName); // First, remove the old tag
         database.insertItemTag(itemName, newTag); // Then, add the new tag
 
-        // And then deleting the tag
         boolean deleteSuccess = database.removeItemTag(itemName);
 
         // Then the new tag should be the only one retrievable before deletion, and no tags should be retrievable after deletion
