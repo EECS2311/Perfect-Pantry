@@ -9,7 +9,7 @@ Wan Ning Ma
 Michel Nwoye-Vincent    
 Edison Tran  
 
-<img width="795" alt="image" src="https://github.com/EECS2311/EECS2311/assets/97976216/14fefb87-ecda-4a02-b759-90d9a0807c2c">
+![image](https://github.com/EECS2311/EECS2311/assets/80595547/abb1524f-ab3a-40b9-a31f-7d3720e94506)
 
 
 # Running the Project
