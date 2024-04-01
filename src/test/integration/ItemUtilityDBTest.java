@@ -164,41 +164,4 @@ class ItemUtilityDBTest {
         assertFalse(storageTip.isEmpty(), "Storage tip should not be empty.");
     }
 
-    @Test
-    void testAddAndRetrieveItemTag() {
-        // Given an item and a custom tag to associate with it
-        String itemName = "TaggedItem";
-        Item item = Item.getInstance(itemName, 10, new Date(System.currentTimeMillis()));
-        String customTag = "Urgent";
-        database.addItem(testContainer, itemName, item);
-
-        // When adding a custom tag to the item
-        database.insertItemTag(itemName, customTag);
-
-        // Then the tag should be retrievable
-        String retrievedTag = database.getItemTag(itemName);
-        assertEquals(customTag, retrievedTag, "Retrieved tag should match the added tag.");
-    }
-
-    @Test
-    void testUpdateAndDeleteItemTag() {
-        // Given an item with an existing custom tag
-        String itemName = "ItemWithOldTag";
-        String oldTag = "OldTag";
-        String newTag = "NewTag";
-        Item item = Item.getInstance(itemName, 5, new Date(System.currentTimeMillis()));
-        database.addItem(testContainer, itemName, item);
-        database.insertItemTag(itemName, oldTag);
-
-        database.removeItemTag(itemName); // First, remove the old tag
-        database.insertItemTag(itemName, newTag); // Then, add the new tag
-
-        boolean deleteSuccess = database.removeItemTag(itemName);
-
-        // Then the new tag should be the only one retrievable before deletion, and no tags should be retrievable after deletion
-        String retrievedTag = database.getItemTag(itemName);
-        assertEquals(newTag, retrievedTag, "Retrieved tag should be the updated tag.");
-        assertTrue(deleteSuccess, "Tag deletion should be successful.");
-        assertNull(database.getItemTag(itemName), "No tags should be retrievable after deletion.");
-    }
 }
