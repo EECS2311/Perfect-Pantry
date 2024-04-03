@@ -9,4 +9,4 @@ DROP TABLE IF EXISTS "ingredients" CASCADE;
 DROP TABLE IF EXISTS "detailed_instructions" CASCADE;
 DROP TABLE IF EXISTS "recipe_ingredients" CASCADE;
 DROP TABLE IF EXISTS "note";
-DROP TABLE IF EXISTS "tag";
+DROP TABLE IF EXISTS "item_tags";
