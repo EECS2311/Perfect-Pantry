@@ -166,6 +166,7 @@ public class HomeView implements ActionListener {
 			recipeListButton.removeActionListener(this);
 			starredRecipeListButton.removeActionListener(this);
 			statisticsButton.removeActionListener(this);
+			addItemButton.removeActionListener(this);
 
 
 			// Initialise all actionlisteners
